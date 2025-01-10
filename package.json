@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -11,9 +11,17 @@
     "format:fix": "prettier . --write"
   },
   "dependencies": {
+    "@mikecodeur/course-app-cli": "^1.0.23",
+    "@next/mdx": "15.1.4",
+    "@mdx-js/loader": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
+    "remark-gfm": "^4.0.0",
+    "remark-rehype": "^11.1.1",
+    "rehype-prism-plus": "^2.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.456.0",

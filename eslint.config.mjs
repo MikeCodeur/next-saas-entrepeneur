@@ -22,7 +22,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["src/app/components/ui/*"],
+    ignores: ["src/components/ui/*"],
   },
   ...compat.extends(
     "next/core-web-vitals",
