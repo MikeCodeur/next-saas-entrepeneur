@@ -1,9 +1,10 @@
-"use client"
-//@ts-expect-error normal mdx import
-import Instruction from "../../../INSTRUCTIONS.mdx"
-import {usePrismTheme} from "./hooks"
+'use client'
 
-export const dynamic = "force-dynamic"
+//@ts-expect-error normal mdx import
+import Instruction from '../../../INSTRUCTIONS.mdx'
+import {usePrismTheme} from './hooks'
+
+//export const dynamic = "force-dynamic"
 
 export default function Page() {
   const theme = usePrismTheme()

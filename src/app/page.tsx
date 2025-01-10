@@ -1,6 +1,6 @@
-import {ModeToggle} from "@/components/theme-toggle"
-import Image from "next/image"
-import Link from "next/link"
+import {ModeToggle} from '@/components/theme-toggle'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
         />
         <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
           <li className="mb-2">
-            Get started by editing{" "}
+            Get started by editing{' '}
             <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">
               src/app/page.tsx
             </code>
@@ -51,11 +51,9 @@ export default function Home() {
         </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <a
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/sign-in"
         >
           <Image
             aria-hidden
@@ -64,13 +62,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Learn
-        </a>
-        <a
+          Se connecter
+        </Link>
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/terms"
         >
           <Image
             aria-hidden
@@ -79,12 +75,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
-        </a>
-        <a
+          Terms
+        </Link>
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
           rel="noopener noreferrer"
         >
           <Image
@@ -95,7 +90,7 @@ export default function Home() {
             height={16}
           />
           Go to nextjs.org →
-        </a>
+        </Link>
       </footer>
     </div>
   )

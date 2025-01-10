@@ -5,7 +5,7 @@ const config = {
   tabWidth: 2,
   semi: false,
   bracketSpacing: false,
-  singleQuote: false,
+  singleQuote: true,
   trailingComma: "es5",
   printWidth: 80,
   endOfLine: "lf",
