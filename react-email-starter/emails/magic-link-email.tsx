@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   Body,
   Button,
@@ -22,7 +23,7 @@ export const MagicLinkMail = ({
   username = 'cher utilisateur',
 }: MagicLinkMailProps) => {
   return (
-    <Html>
+    <Html lang="fr">
       <Head />
       <Preview>Votre lien de connexion pour SaaS Tracker</Preview>
       <Tailwind>
