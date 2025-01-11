@@ -1,4 +1,4 @@
-# React Email
+# Dashboard Layout / Session Account
 
 ### 💡 Description longue de l'exercice
 
@@ -8,79 +8,130 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Dans ce module, nous allons explorer **React Email**, une bibliothèque puissante pour créer des emails dynamiques et réutilisables avec React.
+Nous allons maintenant gérer le `layout` du `dashboard` avec 2 routes simples
 
-Associée à **Resend**, une solution moderne pour l'envoi d'emails, nous apprendrons à concevoir et envoyer des emails professionnels facilement, tout en intégrant des pratiques modernes pour améliorer l'expérience utilisateur.
+- `Account` : Gestion du compte utilisateur
+- `Options` : Page d’option pour le `theme`
 
-Le développement y est simplifié car `react-email` inclus un server de visualisation
-
-📑 Le liens vers la doc [https://react.email/](https://react.email/)
-
-### Pour démarrer le server react-email
-
-- Aller dans le répertoire `react-email-starter`
-- exécuter : `pnpm i`
-- exécuter : `pnpm dev`
+Ce `layout` contiendra une `SideBar`, un menu à gauche qui contiendra le nom d’utilisateur ou email
 
 ## Exercice
 
-Maintenant que React-Email est configurer, tu peux générer un Email de ton choix. Maintenant il va falloir utiliser cet email avec `Resend` et `Next-Auth`
+Pour simplifier l’exercice, le `layout` du `dashboard` est fournis, il contient un composant `client  <Sidebar />`
 
-- **🐶 Adapte la configuration `Next-Auth` pour que `resend` envoie un react-email**
-
-Fichiers
-
-- `services/authentication/auth-config.ts`
-
-## Bonus
-
-### 1. 🚀 Email Service
-
-L’envoie d’email dans une application est essentiel. Il peut y en avoir pour les utilisateurs pour les connexions etc … mais aussi pour les administrateurs pour être notifié de ce qu’il se passe, comme par exemple la création d’un nouvelle utilisateur.
-
-Pour simplifier l’exercice nous avons créé le service email qui contient 2 fonctions
-
-- `SendEmail` (fonction que l’on pourra utiliser dans `auth-config` par exemple)
-- `sendInternalEmail` : fonction que le va utiliser sur `sign-up`
-
-```typescript
-export const sendEmail = async (
-  payload: CreateEmailOptions,
-  options?: CreateEmailRequestOptions
-) => {
-  if (process.env.NODE_ENV === 'development') {
-    payload.subject = `[DEV] ${payload.subject}`
-  }
-
-  const {error} = await resend.emails.send(
-    {
-      ...payload,
-      from: 'onboarding@resend.dev',
-      to: 'delivered@resend.dev',
-    },
-    options
+```tsx
+//app/(app)/layout.tsx
+const DashboardLayout = async ({children}: PropsWithChildren) => {
+  return (
+    <div className="flex h-screen flex-col md:flex-row xl:justify-center">
+      <div className="w-full p-4 md:w-64">
+        <Sidebar />
+      </div>
+      <div className="w-full max-w-7xl p-4 pt-8">{children}</div>
+    </div>
   )
-
-  if (error) {
-    console.error(error)
-    throw error
-  }
 }
 ```
 
-- **🐶** Utilise ces 2 fonctions : Dans `auth-config` et `sign-up`
+Pour le moment `SideBar` contient : USER UNDEFINED
+
+```tsx
+// component/dashboard/sidebar.tsx
+<p className="hidden grow text-center md:block md:grow-0">
+  USER UNDEFINED
+</p>
+```
+
+🐶 Dans cet exercice tu vas devoir récupérer le `user` coté client à partir de la session
+
+Dans un premier temps modifie `components/dashboard/sidebar.tsx`
+
+```tsx
+const session = useSession()
+console.log('session', session?.data?.user?.name)
+```
+
+🐶 Dans un second temps tu vas devoir ajouter le `sessionProvider` au `RootLayout`
+
+```tsx
+//app/layout.tsx
+<SessionProvider>{children}</SessionProvider>
+```
 
 Fichiers
 
-- `services/authentication/auth-config.ts`
-- `services/email-service.ts`
-- `app/(auth)/sign-up/action.ts`
+- `app/layout.tsx`
+- `components/dashboard/sidebar.tsx`
+- `app/(app)/layout.tsx`
 
-###
+## Bonus
 
-## Aller plus loin
+### 1. 🚀 Mise à jour de la session coté client
 
-📑 Le lien vers la doc [https://react.email/](https://react.email/)
+Pour tester la mise à jour de la session coté client il va d'abord falloir implémenter la route `account`. Ensuite, une fois que la mise a jour du compte est possible, nous voulons que le nom de l’utilisateur soit mis à jour dans la sidebar en temps réel (sans avoir à `refresh` la page)
+
+🐶 Dans un premier temps implémente le formulaire de modification du compte. Le formulaire est prêt, tu n’as plus qu’a implémenter l’action
+
+- `app/(app)/account/action.tsx`
+
+```tsx
+export const saveUserAction = async (values: UpdateUser) => {
+...
+
+```
+
+<aside>
+💡
+
+Constate que nous devons encore rafraichir la page pour voir le nom de l’utilisateur à jour dans la sidebar
+
+</aside>
+
+🐶 Pour mettre à jour la session coté client, nous allons devoir modifier `app/(app)/account/account-form.tsx` pour forcer la mise a jour de session
+
+```tsx
+//app/(app)/account/account-form.tsx
+const session = useSession()
+session.update()
+```
+
+Fichiers
+
+- `app/(app)/account/action.tsx`
+- `app/(app)/account/account-form.tsx`
+
+### 2. 🚀 Mise à jour utilisateur coté serveur
+
+Une autre manière plus simple est de fournir le `user` en `props` à la sidebar
+
+```tsx
+// app/(app)/layout.tsx
+const user = await getUserDal()
+<Sidebar user={user} />
+```
+
+- 🐶 Adapte le `dashboardLayout` et la `sidebar` dans un premier temps
+- 🐶 Gère la mise à jour du user avec `revalidatePath` dans `action`
+
+```tsx
+//app/(app)/account/action.tsx
+await updateUser(validateFields.data)
+revalidatePath('/account')
+```
+
+Fichiers
+
+- `app/(app)/layout.tsx`
+- `components/dashboard/sidebar.tsx`
+- `app/(app)/account/action.tsx`
+
+### 3. 🚀 Implémente la page de settings
+
+- 🐶 implémente la page de settings, elle contiens des buttons pour changer le thème
+
+Fichiers
+
+- `app/(app)/setting/page.tsx`
 
 ## Ils vont t’aider
 
@@ -92,4 +143,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=03%20React-Email).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=04%20Layout-Session-Account).

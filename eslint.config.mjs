@@ -22,7 +22,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['src/components/ui/*'],
+    ignores: ['src/components/ui/*', 'react-email-starter/emails/*'],
   },
   ...compat.extends(
     'next/core-web-vitals',
