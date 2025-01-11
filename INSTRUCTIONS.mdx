@@ -89,6 +89,13 @@ src/                 # Tests unitaires et d'intégration
 │           └── page.tsx
 ```
 
+Penser a avoir `AUTH_SECRET` avec par exemple `openssl rand -hex 32`
+
+```bash
+#.env.development
+AUTH_SECRET="xxx"
+```
+
 - Vérifie la présence de
   - [http://localhost:3000/sign-in](http://localhost:3000/sign-in)
   - [http://localhost:3000/sign-up](http://localhost:3000/sign-up)
