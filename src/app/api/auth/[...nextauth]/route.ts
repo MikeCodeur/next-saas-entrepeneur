@@ -1,3 +1,1 @@
-export * from './route.exercise'
-
-//export * from './route.final'
+export {GET, POST} from '@/services/authentication/auth-service'

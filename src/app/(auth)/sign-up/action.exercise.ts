@@ -1,5 +1,5 @@
 'use server'
-// 🐶 Implemente le sign-up resend
+// 🐶 envoie un email interne avec 'sendInternalEmail' apres la creation d'un user
 import {processUnknownError} from '@/lib/utils'
 import {signIn} from '@/services/authentication/auth-service'
 import {createUser, getUserByEmail} from '@/services/user-service'
@@ -7,6 +7,7 @@ import {createUserFormSchema} from '@/components/forms/form-validators/user-form
 import {SSRAction} from '@/types/actions-types'
 import {redirect} from 'next/navigation'
 import {SignUpState} from './sign-up-form'
+import {isRedirectError} from 'next/dist/client/components/redirect-error'
 
 export const signUpAction = async (
   prevState: SignUpState,
@@ -31,25 +32,24 @@ export const signUpAction = async (
         },
       } as SSRAction
     }
+    const result = await createUser(validateField.data)
+    // 🐶 envoie un email interne avec 'sendInternalEmail'
 
-    // 🐶 Crée un utilisateur
-    // const result = await createUser(validateField.data)
-
-    // 🐶 Appelle le signIn avec le provider resend
-    // const resultSignIn = await signIn('resend', {
-    //   email: result.email,
-    //   redirect: false,
-    // })
-
-    // 🐶 Si resultSignIn est un lien de redirection, redirige vers resultSignIn
+    const resultSignIn = await signIn('resend', {
+      email: result.email,
+      redirect: false,
+    })
+    if (resultSignIn.includes('error')) {
+      redirect(resultSignIn)
+    }
   } catch (error) {
-    // 🐶 Gestion des erreurs NEXT_REDIRECT workaround
     //https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-8046451
-    // if (isRedirectError(error)) {
-    //   throw error
-    // }
+    if (isRedirectError(error)) {
+      throw error
+    }
     return {
       message: processUnknownError(error),
     } as SSRAction
   }
+  redirect('/verify-request')
 }

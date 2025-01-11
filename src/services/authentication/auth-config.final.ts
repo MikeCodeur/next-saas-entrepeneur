@@ -3,11 +3,16 @@ import ResendProvider from 'next-auth/providers/resend'
 import {Resend} from 'resend'
 import {DrizzleAdapter} from '@auth/drizzle-adapter'
 import db from '@/data/db/client'
+import {MagicLinkMail} from '../../../react-email-starter/emails/magic-link-email'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const authConfig = {
   trustHost: true,
-  callbacks: {},
+  callbacks: {
+    async redirect({url, baseUrl}) {
+      return `${baseUrl}/dashboard`
+    },
+  },
   providers: [
     ResendProvider({
       apiKey: process.env.RESEND_API_KEY,
@@ -22,7 +27,7 @@ export const authConfig = {
           to: 'delivered@resend.dev',
           subject: 'Connexion sur la plateforme Tracker Entrepeneur',
           from: fromEmail,
-          html: `<p>Bonjour lien de connextion ${url}</p>`,
+          react: MagicLinkMail({url}),
         })
         if (error) {
           console.error('Error sending email', error)

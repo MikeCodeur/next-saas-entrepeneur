@@ -8,6 +8,7 @@ import {SSRAction} from '@/types/actions-types'
 import {redirect} from 'next/navigation'
 import {SignUpState} from './sign-up-form'
 import {isRedirectError} from 'next/dist/client/components/redirect-error'
+import {sendInternalEmail} from '@/services/email-service'
 
 export const signUpAction = async (
   prevState: SignUpState,
@@ -33,6 +34,10 @@ export const signUpAction = async (
       } as SSRAction
     }
     const result = await createUser(validateField.data)
+    await sendInternalEmail(
+      'Nouvel utilisateur',
+      `Nouvel utilisateur ${result.email}`
+    )
     const resultSignIn = await signIn('resend', {
       email: result.email,
       redirect: false,

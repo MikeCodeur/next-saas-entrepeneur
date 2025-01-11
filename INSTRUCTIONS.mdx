@@ -1,4 +1,4 @@
-# Next-Auth Resend
+# React Email
 
 ### 💡 Description longue de l'exercice
 
@@ -8,176 +8,79 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-**Dans les exercices précédents**, nous avons utilisé `next-auth` avec le mode `Credentials` (login / password) comme fournisseur. Cependant, ce mode est de moins en moins recommandé en raison des pratiques de sécurité actuelles.
+Dans ce module, nous allons explorer **React Email**, une bibliothèque puissante pour créer des emails dynamiques et réutilisables avec React.
 
-Dans ce module, nous allons utiliser **Resend**, un service qui permet à la fois :
+Associée à **Resend**, une solution moderne pour l'envoi d'emails, nous apprendrons à concevoir et envoyer des emails professionnels facilement, tout en intégrant des pratiques modernes pour améliorer l'expérience utilisateur.
 
-- **L'envoi d'e-mails** dans notre SaaS,
-- Et **la gestion de l'authentification** via l'envoi d'un lien magique pour une connexion sécurisée.
+Le développement y est simplifié car `react-email` inclus un server de visualisation
 
-Pour rappel `Next-Auth` est toujours utilisé avec `Drizzle` comme adapter, et le model est deja créé pour simplifié l’exercice car nous l’avons déjà fait dans les modules précèdent
+📑 Le liens vers la doc [https://react.email/](https://react.email/)
 
-- [https://authjs.dev/getting-started/adapters/drizzle](https://authjs.dev/getting-started/adapters/drizzle)
+### Pour démarrer le server react-email
 
-Nous allons maintenant configure le provider `Resend`
-
-- [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
-
-Pour cela il faut
-
-- ouvrir un compte gratuit [https://resend.com/](https://resend.com/) et
-- créer une clef API [https://resend.com/api-keys](https://resend.com/api-keys)
-
-La mettre dans `.env.developpement`
-
-```bash
-#.env.developpement
-RESEND_API_KEY="re_xxxxxxxxxx"
-```
-
-Dépendances
-
-- `"@auth/drizzle-adapter": "^1.7.4",`
-- `"resend": "^4.0.1",`
-
-note : pense a bien nettoyer tes `cookies` et `localstorage` pour bien déamrrer les exerices
-
-📑 Le liens vers la doc [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
+- Aller dans le répertoire `react-email-starter`
+- exécuter : `pnpm i`
+- exécuter : `pnpm dev`
 
 ## Exercice
 
-- **🐶** Dans un premier temps tu vas devoir configurer le provider `Resend` dans `Next-Auth` de la manière suivante dans `auth-config.ts`:
+Maintenant que React-Email est configurer, tu peux générer un Email de ton choix. Maintenant il va falloir utiliser cet email avec `Resend` et `Next-Auth`
 
-```tsx
-import NextAuth from "next-auth"
-import Resend from "next-auth/providers/resend"
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-   providers: [
-    ResendProvider({
-      apiKey: process.env.RESEND_API_KEY,
-      sendVerificationRequest: async ({identifier: email, url}) => {
-        const fromEmail = process.env.EMAIL_FROM
-
-        if (!fromEmail) {
-          throw new Error('EMAIL_FROM is not set')
-        }
-        const {error} = await resend.emails.send({
-          to: email,
-          subject: 'Connexion sur la plateforme Tracker Entrepeneur',
-          from: fromEmail,
-          html: `<p>Bonjour lien de connextion ${url}</p>`,
-        })
-        if (error) {
-          console.error('Error sending email', error)
-          throw error
-        }
-      },
-    }),
-  ],
-```
-
-Note : `EMAIL_FROM` et `EMAIL_TO` doit être un email vérifier en terme de domaine (ou l’email du compte `resend`) pour que l’email soit envoyer. Pour le mode test nous utiliseront : `onboarding@resend.dev`
-
-```bash
-#.env.developpement
-EMAIL_FROM="onboarding@resend.dev"
-```
-
-Pense à bien `configurer` l’`adapter` `nextauth`
-
-```tsx
-session: {
-    strategy: 'database',
-  },
-  adapter: DrizzleAdapter(db),
-```
-
-- **🐶** Dans un second temps tu vas pouvoir utiliser la fonction `sign-in` de `next-auth` avec le `provider resend` dans les `actions` de `sign-in` et `sign-up`
-
-```tsx
-const result = await signIn('resend', {
-  email: request.email,
-  redirect: false,
-})
-```
-
-- **🐶** La 3 -ème étape consiste à aller dans l’interface de [Resend](https://resend.com/emails) et cliquer sur le lien de l’email reçu après le `sign-in` (ou copier coller dans url).
-
-Ce lien est un lien vers un api route `next-auth`
-
-```tsx
-export {GET, POST} from '@/services/authentication/auth-service'
-```
-
-Quelques emails déjà en base de données
-
-- [`admin@gmail.com`](mailto:admin@gmail.com) (rôle `admin`)
-- `user@gmail.com`(rôle `user`)
+- **🐶 Adapte la configuration `Next-Auth` pour que `resend` envoie un react-email**
 
 Fichiers
 
 - `services/authentication/auth-config.ts`
-- `app/(auth)/sign-in/action`
-- `app/(auth)/sign-up/action`
-- `app/api/[...nextauth]/route.ts`
 
 ## Bonus
 
-### 1. 🚀 Créer une page `verify-request` custom
+### 1. 🚀 Email Service
 
-Dans l’exercice précèdent nous sommes rediriger vers la page `verify-request` par default de `next-auth`
+L’envoie d’email dans une application est essentiel. Il peut y en avoir pour les utilisateurs pour les connexions etc … mais aussi pour les administrateurs pour être notifié de ce qu’il se passe, comme par exemple la création d’un nouvelle utilisateur.
 
-```tsx
-if (result) {
-  redirect(result)
+Pour simplifier l’exercice nous avons créé le service email qui contient 2 fonctions
+
+- `SendEmail` (fonction que l’on pourra utiliser dans `auth-config` par exemple)
+- `sendInternalEmail` : fonction que le va utiliser sur `sign-up`
+
+```typescript
+export const sendEmail = async (
+  payload: CreateEmailOptions,
+  options?: CreateEmailRequestOptions
+) => {
+  if (process.env.NODE_ENV === 'development') {
+    payload.subject = `[DEV] ${payload.subject}`
+  }
+
+  const {error} = await resend.emails.send(
+    {
+      ...payload,
+      from: 'onboarding@resend.dev',
+      to: 'delivered@resend.dev',
+    },
+    options
+  )
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
 }
 ```
 
-**🐶 Dans cet exercice** tu vas devoir ne rediriger uniquement si `result` contient `error` (exemple `/api/auth/error?error=Configuration`)
-
-et à la fin rediriger fait notre propre route qui existe déjà (`redirect('/verify-request')`)
-
-- [http://localhost:3000/verify-request](http://localhost:3000/verify-request)
-
-Fichiers
-
-- `app/(auth)/sign-in/action`
-- `app/(auth)/sign-up/action`
-
-### 2. 🚀 Protéger les routes avec un HOC
-
-Pour cela nous utiliseront un HOC `withAuth` comme nous l’avons fait dans les modules précédents.
-
-**🐶** Protèges l’accès aux routes du `dashboard` avec `withAuth`
-
-Fichiers
-
-- `app/(app)/dashboard/layout`
-
-###
-
-### 3. 🚀 Redirection vers le dashboard
-
-Par default l’url envoyer par email est la page en cours (`sign-in`). Nous allons ici rediriger vers `Dashboard`
-
-- **🐶p**our cela adapte la config `next-auth`
-
-```tsx
- callbacks: {
-    async redirect({url, baseUrl}) {
-      return `${baseUrl}/dashboard`
-    },
-  },
-```
+- **🐶** Utilise ces 2 fonctions : Dans `auth-config` et `sign-up`
 
 Fichiers
 
 - `services/authentication/auth-config.ts`
+- `services/email-service.ts`
+- `app/(auth)/sign-up/action.ts`
+
+###
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
+📑 Le lien vers la doc [https://react.email/](https://react.email/)
 
 ## Ils vont t’aider
 
@@ -189,4 +92,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=02%20Next-Auth-Resend).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=03%20React-Email).
