@@ -1,97 +1,137 @@
-import {ModeToggle} from '@/components/theme-toggle'
+import {BadgeDollarSign, HeartPulse, Zap} from 'lucide-react'
+
+import Footer from '@/components/layout/footer'
+import Header from '@/components/layout/header'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Home() {
-  return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <ModeToggle />
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <Link
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent bg-foreground px-4 text-sm text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] sm:h-12 sm:px-5 sm:text-base"
-            href="/instructions"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Instructions
-          </Link>
-          <a
-            className="flex h-10 items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] sm:h-12 sm:min-w-44 sm:px-5 sm:text-base"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <Link
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/sign-in"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Se connecter
-        </Link>
-        <Link
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/terms"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Terms
-        </Link>
-        <Link
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </Link>
-      </footer>
-    </div>
+export default function Page() {
+  return (
+    <main className="flex min-h-screen flex-col">
+      <Header />
+      <div className="flex-1">
+        <section className="w-full py-6 sm:py-12 md:py-24 lg:py-32 xl:py-48">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    Plateforme de tracker <br />
+                    pour les entrepreneur
+                  </h1>
+                  <p className="max-w-[600px] text-foreground/50 md:text-xl">
+                    Commencez à traquer vos finances et vos exercice. Donnez
+                    vous les clefs de la réussite en gardant un oeil sur vos
+                    progrès et vos revenus.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <Link
+                    href="/sign-in"
+                    className={cn(buttonVariants(), 'px-8')}
+                  >
+                    Commencez
+                  </Link>
+                </div>
+              </div>
+              <div className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-video">
+                <Image
+                  src="/images/screenshot-dark.png"
+                  alt="Logo"
+                  width={1000}
+                  height={1000}
+                  className="hidden dark:block"
+                />
+
+                <Image
+                  src="/images/screenshot-light.png"
+                  alt="Logo"
+                  width={1000}
+                  height={1000}
+                  className="block dark:hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">
+                  Élément clé
+                </div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  Rapide, simple et fiable.
+                </h2>
+                <p className="max-w-[900px] text-foreground/50 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Une plateforme pour tracker vos performances. Rester focus vos
+                  objectifs tout en suivant votre évolution au lieu de perdre du
+                  temps et de l&apos;argent.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-10">
+              <div className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last">
+                <Image
+                  src="/images/element-key-dark.png"
+                  alt="Logo"
+                  width={1000}
+                  height={1000}
+                  className="hidden dark:block"
+                />
+
+                <Image
+                  src="/images/element-key-light.png"
+                  alt="Logo"
+                  width={1000}
+                  height={1000}
+                  className="block dark:hidden"
+                />
+              </div>
+              <div className="flex flex-col justify-center space-y-4">
+                <ul className="grid gap-6">
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="flex flex-row gap-x-2 text-xl font-bold">
+                        <BadgeDollarSign /> Argent
+                      </h3>
+                      <p className="text-foreground/50">
+                        Tracker vos finances sans vous prendre la tête.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="flex flex-row gap-x-2 text-xl font-bold ">
+                        <HeartPulse /> Santé
+                      </h3>
+                      <p className="text-foreground/50">
+                        Garder une trace de vos temps d&apos;exercice.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="flex flex-row gap-x-2 text-xl font-bold ">
+                        <Zap /> Rapide
+                      </h3>
+                      <p className="text-foreground/50">
+                        En quelques cliques, ajouter ou modifier rapidement vos
+                        finances et vos temps d&apos;exercice.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </main>
   )
 }

@@ -21,10 +21,11 @@
     "db:reset-seed": "pnpm db:clear && pnpm db:drop && pnpm db:generate && pnpm db:push && pnpm db:seed"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.7.4",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@mikecodeur/course-app-cli": "^1.0.23",
-    "@next/mdx": "15.1.4",
+    "@next/mdx": "15.0.3",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.1",
@@ -44,6 +45,7 @@
     "rehype-prism-plus": "^2.0.0",
     "remark-gfm": "^4.0.0",
     "remark-rehype": "^11.1.1",
+    "resend": "^4.0.1",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",

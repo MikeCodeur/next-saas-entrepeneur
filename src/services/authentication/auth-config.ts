@@ -1,9 +1,5 @@
-import type {NextAuthConfig} from 'next-auth'
+export * from './auth-config.exercise'
 
-export const authConfig = {
-  trustHost: true,
-  callbacks: {},
-  providers: [],
-  secret: process.env.AUTH_SECRET,
-  session: {},
-} satisfies NextAuthConfig
+//export * from './auth-config.final'
+
+//export * from './auth-config.bonus-3'
