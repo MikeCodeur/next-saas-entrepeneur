@@ -1,18 +1,102 @@
-# Demarrer
+# Initialisation du projet
 
-### 💡Demarrer les exercices
+### 💡 Vérifier que tout est en place
 
-Tape la commande
+## 📝 Tes notes
+
+Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+
+## Comprendre
+
+Ce projet démarre d’un `Create Next App` / `Shadcn` / `Drizzle` / `NextAuth` avec la même architecture que le module `Clean Architecture`
 
 ```bash
-go
+src/       # Tests unitaires et d'intégration
+├── app/            # Pages, API et layouts (App Router)
+├── components/     # Composants réutilisables
+├── db/             # Configuration et interactions avec la base de donné
+├── lib/            # Bibliothèques et fonctions utilitaires
+├── services/       # Logique métier (API, auth, etc.)
+└── types/          # Définitions des types TypeScript
 ```
 
-ou
+📑 Le liens vers la doc [https://fr.reactjs.org/docs/getting-started.html](https://fr.reactjs.org/docs/getting-started.html)
+
+## Exercice
+
+- **🐶** Dans un premier temps tu vas devoir créer une base de données `Postgres` sur `Vercel` et coller
 
 ```bash
-npx go
+#.env.development
+DATABASE_URL="postgres://default:xxxxx@hostname.tech:5432/verceldb?sslmode=require"
 ```
+
+Exécute les scripts de manipulation de BDD
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+pnpm db:check
+pnpm db:reset-seed
+```
+
+Fichiers
+
+- `.env.development`
+- `package.json`
+
+## Bonus
+
+### 1. 🚀 Générer la page d’accueil
+
+La `homepage` est une des pages les plus importantes d’un SaaS est mériterais une formation à part entière. Ce n’est pas le but de cette formation. Pour simplifier tu peux
+
+- **🐶** Demande a V0 de `Vercel` ou autre IA de te générer une `homepage` pour ton SaaS.
+- **🐶** Ou utilise celle dans `src/app/page.final`
+
+Fichiers
+
+- `src/app/page.final`
+- `src/app/page`
+
+### 2. 🚀 Vérification des routes
+
+Pour le moment tout est publique mais par la suite l’application sera découper en 3/
+
+- Toutes les routes publiques
+- Toutes les routes lié à l’authentification
+- Toutes les routes lié à l’application connecté
+
+```bash
+src/                 # Tests unitaires et d'intégration
+├── app/             # Pages, API et layouts (App Router)
+│   ├── (public)/      # Pages accessibles publiquement (landing page, contact, etc.)
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── terms/
+│   │       └── page.tsx
+│   ├── (auth)/        # Pages pour l'authentification (login, signup, etc.)
+│   │   ├── layout.tsx
+│   │   ├── sign-in/
+│   │   │   └── page.tsx
+│   │   └── sign-up/
+│   │       └── page.tsx
+│   ├── (app)/         # Pages protégées pour les utilisateurs authentifiés
+│       ├── layout.tsx
+│       ├── dashboard/
+│       │   └── page.tsx
+│       └── account/
+│           └── page.tsx
+```
+
+- Vérifie la présence de
+  - [http://localhost:3000/sign-in](http://localhost:3000/sign-in)
+  - [http://localhost:3000/sign-up](http://localhost:3000/sign-up)
+  - [http://localhost:3000/privacy](http://localhost:3000/privacy)
+  - [http://localhost:3000/terms](http://localhost:3000/terms)
+  - [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
+
+## Aller plus loin
 
 ## Ils vont t’aider
 
@@ -24,4 +108,4 @@ npx go
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=5.SAAS%20Entrepreneur&entry.533578441=01-initilisation).

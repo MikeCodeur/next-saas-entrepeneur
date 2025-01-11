@@ -2,19 +2,16 @@ import {BadgeDollarSign, HeartPulse, Zap} from 'lucide-react'
 
 import Footer from '@/components/layout/footer'
 import Header from '@/components/layout/header'
-import HeaderSkeleton from '@/app/_components/skeletons/header-skeleton'
 import Image from 'next/image'
 import Link from 'next/link'
-import {Suspense} from 'react'
+
 import {buttonVariants} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col">
-      <Suspense fallback={<HeaderSkeleton />}>
-        <Header />
-      </Suspense>
+      <Header />
       <div className="flex-1">
         <section className="w-full py-6 sm:py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
