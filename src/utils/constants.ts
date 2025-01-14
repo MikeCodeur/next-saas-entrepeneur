@@ -25,4 +25,10 @@ export const dashboardLinks: SidebarLink[] = [
   {href: '/dashboard', title: 'Dashboard', icon: Home},
   {href: '/account', title: 'Compte', icon: UserRound},
   {href: '/settings', title: 'Options', icon: Cog},
+  {href: '/finance', title: 'Finance', icon: BadgeEuro},
 ]
+
+export const paramPage = 'page' as const
+export const paramPageSize = 'pageSize' as const
+export const pageParamName = 'page' as const
+export const yearParamName = 'financeYear' as const

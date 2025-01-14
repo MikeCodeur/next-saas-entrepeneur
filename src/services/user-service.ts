@@ -8,7 +8,7 @@ import {
 import {
   canReadUser,
   canUpdateUser,
-} from '@/services/authorization/service-authorizations/user-authorization'
+} from '@/services/authorization/user-authorization'
 
 import type {CreateUser, UpdateUser} from '@/types/domain/user-types'
 import {DATA_ROWS_PER_PAGE} from '@/utils/constants'

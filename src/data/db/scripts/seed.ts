@@ -30,13 +30,27 @@ VALUES
   ('user@gmail.com', 'Bob', '2024-09-01', 'user', 'https://randomuser.me/api/portraits/med/men/3.jpg', 'public'),
   ('admin@gmail.com', 'Admin', NULL, 'admin', 'https://randomuser.me/api/portraits/med/men/4.jpg', 'public'),
   ('guest@gmail.com', 'Charlie', '2024-08-15', 'public', 'https://randomuser.me/api/portraits/med/men/5.jpg', 'public'),
-  ('user@gmail.com', 'Julien', '2024-08-15', 'user', 'https://randomuser.me/api/portraits/med/men/6.jpg', 'public'),
+  ('user-1@gmail.com', 'Julien', '2024-08-15', 'user', 'https://randomuser.me/api/portraits/med/men/6.jpg', 'public'),
   ('moderator@gmail.com', 'David', '2024-08-20', 'admin', 'https://randomuser.me/api/portraits/med/men/7.jpg', 'public'),
   ('ons@mikecodeur.com', 'Ons', '2024-09-03', 'admin', 'https://randomuser.me/api/portraits/med/women/8.jpg', 'public'),
   ('superadmin@gmail.com', 'Frank', '2024-09-04', 'admin', 'https://randomuser.me/api/portraits/med/men/9.jpg', 'public'),
   ('moderator-2@gmail.com', 'Julie', '2024-09-04', 'admin', 'https://randomuser.me/api/portraits/med/women/10.jpg', 'public'),
   ('redactor-2@gmail.com', 'Grace', '2024-09-02', 'user', 'https://randomuser.me/api/portraits/med/women/11.jpg', 'public');
  `)
+
+  await client.query(`
+  INSERT INTO "finance" ("userId", "date", "amount", "label", "category")
+    VALUES
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 100, 'Description 1', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 234, 'Description 2', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 333, 'Description 3', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 234, 'Description 4', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 4', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 5', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 6', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 7', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-02', 200, 'admin Description 8', 'revenus');
+  `)
 
   const end = Date.now()
 

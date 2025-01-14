@@ -4,7 +4,6 @@ import {eq, sql} from 'drizzle-orm'
 import db from '@/data/db/client'
 import {users} from '@/data/models/user-model'
 
-// POST
 export const createUserDao = async (user: CreateUser) => {
   const row = await db
     .insert(users)

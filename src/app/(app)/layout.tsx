@@ -1,6 +1,6 @@
 import {getUserDal} from '@/app/dal/user-dal'
 import withAuth from '@/components/auth/withAuth'
-import Sidebar from '@/components/dashboard/sidebar.bonus-2'
+import Sidebar from '@/components/dashboard/sidebar'
 
 import {Metadata} from 'next'
 import {PropsWithChildren} from 'react'

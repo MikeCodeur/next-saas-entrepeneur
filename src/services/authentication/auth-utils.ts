@@ -39,16 +39,18 @@ export function hasRequiredRole(
     return false
   }
   // Définir l'ordre des privilèges
-
   const useRole = userConnected?.role ?? 'public'
   const userRoleIndex = roleHierarchy.indexOf(useRole as UserRoles)
   const requestedRoleIndex = roleHierarchy.indexOf(requestedRole)
   if (requestedRoleIndex === -1 || userRoleIndex === -1) {
     return false
   }
-  //console.log('hasRequiredRole', useRole, requestedRole)
   if (userRoleIndex >= requestedRoleIndex) {
     return true
   }
   return false
+}
+
+export function idAdmin(user?: User) {
+  return hasRequiredRole(user as User, 'admin')
 }
