@@ -2,7 +2,7 @@ import type {CreateFinance, UpdateFinance} from '@/types/domain/finance-types'
 import {eq, sql, desc} from 'drizzle-orm'
 
 import db from '@/data/db/client'
-import {finance} from '@/data/models/finance-model.final'
+import {finance} from '@/data/models/finance-model'
 
 export const createFinanceByUidDao = async (
   financeParams: CreateFinance,

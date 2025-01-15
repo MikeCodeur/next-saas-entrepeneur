@@ -54,6 +54,20 @@ VALUES
       ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-02', 200, 'admin Description 8', 'revenus');
   `)
 
+  await client.query(`
+    INSERT INTO "health" ("userId", "date", "value", "category")
+      VALUES
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 3045, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 80, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-01', 2504, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-02', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-03', 180, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 2504, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-04', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 180, 'temps');
+    `)
+
   const end = Date.now()
 
   console.log('✅ Seed inserted in', end - start, 'ms')
