@@ -55,6 +55,21 @@ export const getFinancesDao = async () => {
   return rows
 }
 
+export const getYearsFinancesByUidDao = async (uid: string) => {
+  const rows = await db
+    .selectDistinct({
+      year: sql<string>`EXTRACT(YEAR FROM ${finance.date})`.as('year'),
+    })
+    .from(finance)
+    .where(eq(finance.userId, uid))
+    .orderBy(desc(sql`EXTRACT(YEAR FROM ${finance.date})`))
+
+  if (rows.length === 0) {
+    return
+  }
+  return rows
+}
+
 export const getFinancesWithPaginationByYearDao = async (
   year: string,
   uid: string,
@@ -63,6 +78,7 @@ export const getFinancesWithPaginationByYearDao = async (
     offset: number
   }
 ) => {
+  console.log('pagination', pagination)
   const [rows, [{count}]] = await Promise.all([
     db
       .select()
@@ -71,7 +87,7 @@ export const getFinancesWithPaginationByYearDao = async (
         sql`${finance.userId} = ${uid} AND EXTRACT(YEAR FROM ${finance.date}) = ${year}`
       )
       .limit(pagination.limit)
-      .orderBy(desc(finance.date))
+      .orderBy(desc(finance.date), desc(finance.id)) // ID comme "tie-breaker"
       .offset(pagination.offset),
     db
       .select({count: sql<number>`count(*)`})

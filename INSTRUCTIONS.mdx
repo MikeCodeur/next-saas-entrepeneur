@@ -1,6 +1,6 @@
-# Dashboard Layout / Session Account
+# Feature : Tracker de finance (Model / Table)
 
-### 💡 Description longue de l'exercice
+### 💡 Voila une spécification fonctionnelle
 
 ## 📝 Tes notes
 
@@ -8,130 +8,390 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Nous allons maintenant gérer le `layout` du `dashboard` avec 2 routes simples
+**👨‍✈️** Hugo Le chef de projet de donne une spécification fonctionnelle (formalisme agil scrum)
 
-- `Account` : Gestion du compte utilisateur
-- `Options` : Page d’option pour le `theme`
+### **Épique : Gestion des Finances Personnelles**
 
-Ce `layout` contiendra une `SideBar`, un menu à gauche qui contiendra le nom d’utilisateur ou email
+---
+
+### **User Stories**
+
+### **1. Visualisation des Données Financières**
+
+**En tant qu'utilisateur**
+
+Je veux voir un tableau de bord de mes finances
+
+Afin de suivre ma situation financière globale
+
+**Critères d'Acceptation** :
+
+- [ ] Affichage d'un graphique mensuel
+- [ ] Affichage d'un tableau des transactions
+- [ ] Filtrage par année
+- [ ] Distinction entre revenus, dépenses et actifs
+
+**Definition of Done** :
+
+- Interface responsive
+- Tests utilisateurs validés
+- Performance < 2s pour le chargement
+
+---
+
+### **2. Gestion des Transactions**
+
+**En tant qu'utilisateur**
+
+Je veux gérer mes transactions financières
+
+Afin de maintenir un suivi précis de mes mouvements d'argent
+
+**Critères d'Acceptation** :
+
+- [ ] Création d'une nouvelle transaction
+- [ ] Modification d'une transaction existante
+- [ ] Suppression d'une transaction
+- [ ] Catégorisation (revenus/dépenses/actifs)
+
+**Definition of Done** :
+
+- Validation des données
+- Mise à jour en temps réel du graphique
+- Confirmation des actions critiques
+
+---
+
+### **3. Analyse Graphique**
+
+**En tant qu'utilisateur**
+
+Je veux visualiser mes données sous forme de graphique
+
+Afin d'analyser les tendances de mes finances
+
+**Critères d'Acceptation** :
+
+- [ ] Graphique linéaire mensuel
+- [ ] Agrégation automatique par mois
+- [ ] Légende interactive
+- [ ] Tooltips informatifs
+
+---
+
+### **4. Navigation et Pagination**
+
+**En tant qu'utilisateur**
+
+Je veux naviguer facilement dans mes données
+
+Afin de retrouver rapidement les informations recherchées
+
+**Critères d'Acceptation** :
+
+- [ ] Pagination par 10 éléments
+- [ ] Sélecteur d'années
+- [ ] Tri par date
+- [ ] Indicateur de chargement
+
+---
+
+### **Product Backlog Items (PBI)**
+
+### **1. Sécurité et Accès**
+
+**Priorité** : Haute
+
+**Estimation** : 8 points
+
+- Authentification utilisateur
+- Autorisation CRUD
+- Protection des données personnelles
+
+---
+
+### **2. Interface Graphique**
+
+**Priorité** : Haute
+
+**Estimation** : 13 points
+
+- Composant graphique
+- Tableau de données
+- Formulaires CRUD
+- Design responsive
+
+---
+
+### **3. Gestion des Données**
+
+**Priorité** : Haute
+
+**Estimation** : 8 points
+
+- Modèle de données
+- Agrégation mensuelle
+- Pagination
+- Filtres
+
+---
+
+### **4. Performance**
+
+**Priorité** : Moyenne
+
+**Estimation** : 5 points
+
+- Optimisation des requêtes
+- Mise en cache
+- Chargement progressif
+
+---
+
+### **Risques et Dépendances**
+
+### **Risques**
+
+- Performance avec grand volume de données
+- Complexité des calculs d'agrégation
+- Expérience utilisateur sur mobile
+
+### **Dépendances**
+
+- Système d'authentification
+- Base de données performante
+- Bibliothèque de graphiques
+
+---
+
+### **Métriques de Succès**
+
+- Temps de chargement < 2s
+- Satisfaction utilisateur > 4/5
+- Taux d'erreur < 1%
+- Adoption > 80% des utilisateurs cibles
+
+---
+
+### **Planning Agile**
+
+### **Sprint 1 (1 semaine)**
+
+- Modélisation
+- CRUD transactions
+- Interface basique (Table)
+
+### **Sprint 2 (1 semaines)**
+
+- Graphiques
+- Agrégations
+
+### Dans cette exercice tu vas commencer par afficher les données finance dans un tableau.
+
+###
 
 ## Exercice
 
-Pour simplifier l’exercice, le `layout` du `dashboard` est fournis, il contient un composant `client  <Sidebar />`
+La première partie va consister a modéliser `Finance` avec `Drizzle` et créer un `repository` et un `service` .
+
+Pour Rappel :
+
+- `Model` : Définition des tables, colonnes, relations
+- `Repository` : Accès aux données
+- `Service` : Validation de données, autorisation
+
+🐶 Step 1 : Model Commence par implémenter le model `Finance` dans `data/model/finance-model.ts`
+
+- Pense à créer une isolation de types dans `types/domain/finance-types.ts`
+
+🐶 Step 2 : Repo : Implémente un CRUD
+
+- `createFinanceByUidDao` : Création d’un finance pour un user spécifique
+- `getFinanceByIdDao`: Récupération d’une finance par `id`
+- `updateFinanceByidDao` : Mise à jour d’une finance par `id`
+- `deleteFinanceByidDao`: Suppression d’une finance par `id`
+- `getFinancesByUidDao`: Toutes les finances d’un `userId`
+- `getYearsFinancesByUidDao`: Toutes années finance d’un `userId`
+- `getFinancesWithPaginationByYearDao`: Toutes les finances d’un `userId` sur une filtrer par années avec une pagination trier par date
+
+🐶 Step 3 : Service : Appelle toutes les fonctions du repository en ajoutant :
+
+- La validation des données `Zod` (Les schémas `Zod` sont fournis)
 
 ```tsx
-//app/(app)/layout.tsx
-const DashboardLayout = async ({children}: PropsWithChildren) => {
-  return (
-    <div className="flex h-screen flex-col md:flex-row xl:justify-center">
-      <div className="w-full p-4 md:w-64">
-        <Sidebar />
-      </div>
-      <div className="w-full max-w-7xl p-4 pt-8">{children}</div>
-    </div>
-  )
+import {
+  createFinanceServiceSchema,
+  updateFinanceServiceShema,
+} from './validations/finance-validation'
+```
+
+- Ajoute l’autorisation `canCreateFinance` etc … dans les fonctions du service. Dans un premier temps `l’authorization` fait une simple vérification sur le rôle admin (nous reviendrons dessus plus tard)
+
+```tsx
+export const canCreateFinance = async (resourceUid: string) => {
+  const authUser = await getUserAuthExtented()
+  const hasRoleAdmin = idAdmin(authUser?.user)
+  if (hasRoleAdmin) return true
+  return true
 }
 ```
 
-Pour le moment `SideBar` contient : USER UNDEFINED
+🐶 Step 4 : Route Finance : Appelle toutes les fonctions du service dans la route `/finance` (avec les bon paramètre), dans un premier temps ne te soucie pas de l’affiche en tableau nous le verrons dans l’exercice suivant :
 
-```tsx
-// component/dashboard/sidebar.tsx
-<p className="hidden grow text-center md:block md:grow-0">
-  USER UNDEFINED
-</p>
-```
+Implémente la route `/finance` **avec les caractéristiques suivantes**
 
-🐶 Dans cet exercice tu vas devoir récupérer le `user` coté client à partir de la session
-
-Dans un premier temps modifie `components/dashboard/sidebar.tsx`
-
-```tsx
-const session = useSession()
-console.log('session', session?.data?.user?.name)
-```
-
-🐶 Dans un second temps tu vas devoir ajouter le `sessionProvider` au `RootLayout`
-
-```tsx
-//app/layout.tsx
-<SessionProvider>{children}</SessionProvider>
-```
-
-Fichiers
-
-- `app/layout.tsx`
-- `components/dashboard/sidebar.tsx`
-- `app/(app)/layout.tsx`
-
-## Bonus
-
-### 1. 🚀 Mise à jour de la session coté client
-
-Pour tester la mise à jour de la session coté client il va d'abord falloir implémenter la route `account`. Ensuite, une fois que la mise a jour du compte est possible, nous voulons que le nom de l’utilisateur soit mis à jour dans la sidebar en temps réel (sans avoir à `refresh` la page)
-
-🐶 Dans un premier temps implémente le formulaire de modification du compte. Le formulaire est prêt, tu n’as plus qu’a implémenter l’action
-
-- `app/(app)/account/action.tsx`
-
-```tsx
-export const saveUserAction = async (values: UpdateUser) => {
-...
-
-```
+- Récupère tous les `queryParams` nécessaires au requêtage de données
+  - `financeYear`
+  - `page`
+  - `pageSize`
+- Appelle le service `getFinancesWithPaginationByYear`
+- Appelle le service `getYearsFinancesByUid`
 
 <aside>
 💡
 
-Constate que nous devons encore rafraichir la page pour voir le nom de l’utilisateur à jour dans la sidebar
+Fait des tests avec URL :[http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1](http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1)
 
 </aside>
 
-🐶 Pour mettre à jour la session coté client, nous allons devoir modifier `app/(app)/account/account-form.tsx` pour forcer la mise a jour de session
+Fichiers
+
+- `data/model/finance-model.ts`
+- `types/domain/finance-types.ts`
+- `data/repositories/finance-repository.ts`
+- `services/finance-repository.ts`
+- `services/authorization/finance-authorization.ts`
+- `app/(app)/finance/page.tsx`
+
+## Bonus
+
+### 1. 🚀 Shacn Data Table
+
+Tu vas devoir afficher un tableau pour les `Finance`, `Shadcn` propose un composant basé sur `Tantack Table` (anciennement React-Table)
+
+- [https://ui.shadcn.com/docs/components/data-table](https://ui.shadcn.com/docs/components/data-table)
+
+### Pour gagner du temps le composant `shadcn` est déjà ajouté
 
 ```tsx
-//app/(app)/account/account-form.tsx
-const session = useSession()
-session.update()
+pnpm dlx shadcn@latest add table
+pnpm add @tanstack/react-table
+```
+
+- L’étape de définition des `colonnes` est faite (`finance-columns.tsx`)
+- L’étape de définition de `dataTable` est faite (`data-table.tsx`)
+- L’étape de `row action` est faite (`data-table-row-actions.tsx`)
+- L’étape de pagination est faite (`data-table-pagination.tsx`)
+
+### Pour gagner du temps le composant `FinanceTable` (extension de React Table) est déjà ajouté
+
+- `component/dashboard/trackers/finance/finance-data-table.tsx` etc …
+
+```tsx
+type FinanceDataTableProps = {
+  uid: string
+  financeTable: {
+    data: FinanceDTO[]
+    pagination: Pagination
+  }
+}
+
+const FinanceDataTable = ({financeTable}: FinanceDataTableProps) => {
+  return <DataTable columns={financeColumns} dataTable={financeTable} />
+}
+
+export default FinanceDataTable
+```
+
+**Exercice :**
+
+Nous allons utiliser et adapter le `FinanceDataTable` .
+
+```tsx
+  <FinanceDataTable finances={finances} />
+
+  //qui est un wrapper de DataTable avec la defition de colonnes
+  const FinanceDataTable = ({finances}: FinanceDataTableProps) => {
+  return <DataTable columns={financeColumns} dataTable={finances} />
+
+```
+
+- 🐶 Dans un premier temps ajoute les colonnes nécessaires pour afficher les données de la Table dans `component/dashboard/trackers/finance/finance-columns.tsx`.
+
+`Tanstack Table` permet de définir des colonnes comme cela avec :
+
+📑 Le lien vers la do [https://tanstack.com/table/v8/docs/guide/column-defs](https://tanstack.com/table/v8/docs/guide/column-defs)
+
+```tsx
+export const financeColumns: ColumnDef<Finance>[] = [
+  {
+    accessorKey: 'date',
+    header: ({column}) => (
+      <DataTableColumnHeader column={column} title="Date" />
+    ),
+    cell: ({row}) => {
+      const date = new Date(row.getValue('date'))
+      const formatted = formattedDate(date)
+      return <div className="min-w-fit text-left md:w-[200px]">{formatted}</div>
+    },
+    filterFn: (row, date, value) => {
+      return value.includes(row.getValue(date))
+    },
+  },
+```
+
+- 🐶 Créer la `pagination` dans `data-table-pagination.tsx`. Le composant est repris de `chadcn` mais il faut choisir le comportement d’implémentation. Nous allons ici utiliser le `router` et changer les `queryParams` de la route `finance`. nous l’avons tester précédemment est nos `queryParam` sont censés retourner les bonnes données
+- [http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1](http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1)
+
+```tsx
+const router = useRouter()
+const searchParams = useSearchParams()
+const pathname = usePathname()
+
+//exemple changer les queryParam page 4
+ const params = new URLSearchParams(searchParams)
+ params.set('page', '4')
+ router.push(`${pathname}?${params.toString()}`)
 ```
 
 Fichiers
 
-- `app/(app)/account/action.tsx`
-- `app/(app)/account/account-form.tsx`
+- `app/(app)/finance/page.tsx`
+- `component/dashboard/trackers/finance/finance-columns.tsx`
+- `component/ui/data-table-pagination.tsx`
+- `component/dashboard/trackers/finance/finance-*.tsx`
+- `component/ui/data-*.tsx`
 
-### 2. 🚀 Mise à jour utilisateur coté serveur
+### 2. 🚀 Changement d’années : Select
 
-Une autre manière plus simple est de fournir le `user` en `props` à la sidebar
-
-```tsx
-// app/(app)/layout.tsx
-const user = await getUserDal()
-<Sidebar user={user} />
-```
-
-- 🐶 Adapte le `dashboardLayout` et la `sidebar` dans un premier temps
-- 🐶 Gère la mise à jour du user avec `revalidatePath` dans `action`
+Pour gagner du temps le composant `finance-year-select` est déjà présent
 
 ```tsx
-//app/(app)/account/action.tsx
-await updateUser(validateFields.data)
-revalidatePath('/account')
+<Card>
+      <CardHeader className="space-y-4 text-xl font-semibold">
+        <CardTitle>Finance</CardTitle>
+        <SelectTime
+          currentTime={currentYear ?? years?.[0].year}
+          times={years}
+          handleChange={handleChangeYear}
+          placeholder="Sélectionnez une année"
+        />
+      </CardHeader>
+      <CardContent className="p-4">{children}</CardContent>
+    </Card>
 ```
+
+- **🐶 Utilise ce composant au niveau de la route `/finance` dans un premier temps**
+- Ensuite édite le pour que `handleChangeYear` change l’année en `queryParams`
 
 Fichiers
 
-- `app/(app)/layout.tsx`
-- `components/dashboard/sidebar.tsx`
-- `app/(app)/account/action.tsx`
+- `app/(app)/finance/page.tsx`
+- `component/dashboard/trackers/finance/finance-year-select.tsx`
 
-### 3. 🚀 Implémente la page de settings
+## Aller plus loin
 
-- 🐶 implémente la page de settings, elle contiens des buttons pour changer le thème
-
-Fichiers
-
-- `app/(app)/setting/page.tsx`
+📑 Le lien vers la doc [https://tanstack.com/table/v8/docs/introduction](https://tanstack.com/table/v8/docs/introduction)
 
 ## Ils vont t’aider
 
@@ -143,4 +403,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=04%20Layout-Session-Account).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=05%20Feature%20finance-crud-table).

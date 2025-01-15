@@ -2,11 +2,9 @@
 
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
 import React, {useEffect} from 'react'
-import {createQueriesParams, createQueryParam} from '@/lib/utils'
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 
-import {ChartBodySkeleton} from '../../skeletons/chart-skeleton'
-import ChartSelectTime from '@/components/selects/select-time'
+import SelectTime from '@/components/selects/select-time'
 import {pageParamName, yearParamName} from '@/utils/constants'
 
 type FinanceChartTriggerProps = {
@@ -17,38 +15,24 @@ type FinanceChartTriggerProps = {
   children?: React.ReactNode
 }
 
-const FinanceChartTrigger = ({
+const FinanceYearSelect = ({
   years,
   currentYear,
   children,
 }: FinanceChartTriggerProps) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const yearParam = searchParams.get(yearParamName)
+  // 🐶 Appele useRouter, useSearchParams et usePathname
 
   const handleChangeYear = (newYear: string) => {
     if (currentYear === newYear) return
-
-    const url = createQueriesParams([
-      {
-        name: yearParamName,
-        value: newYear,
-      },
-      {
-        name: pageParamName,
-        value: 1,
-      },
-    ])
-    router.push(url.href, {scroll: false})
+    // 🐶 Ajouter l'année dans les paramètres de la requête
+    // 🐶 Retour à la première page quand on change l'année
   }
 
   return (
     <Card>
       <CardHeader className="space-y-4 text-xl font-semibold">
-        {!pathname.includes('finance') && <CardTitle>Finance</CardTitle>}
-        <ChartSelectTime
+        <CardTitle>Finance</CardTitle>
+        <SelectTime
           currentTime={currentYear ?? years?.[0].year}
           times={years}
           handleChange={handleChangeYear}
@@ -60,4 +44,4 @@ const FinanceChartTrigger = ({
   )
 }
 
-export default FinanceChartTrigger
+export default FinanceYearSelect

@@ -22,6 +22,7 @@ import {
   getFinancesByUidDao,
   getFinancesDao,
   getFinancesWithPaginationByYearDao,
+  getYearsFinancesByUidDao,
   updateFinanceByidDao,
 } from '@/data/repositories/finance-repository.final'
 import {DATA_ROWS_PER_PAGE} from '@/utils/constants'
@@ -104,6 +105,17 @@ export const getFinancesByUid = async (uid: string) => {
   }
 
   return finance
+}
+
+export const getYearsFinancesByUid = async (uid: string) => {
+  //Authorization
+  const granted = await canReadFinance(uid)
+  if (!granted) {
+    throw new GrantedError()
+  }
+  // Service Data Validation (not necessary to validate and uid)
+  // Sanitize (not necessary to validate and uid)
+  return await getYearsFinancesByUidDao(uid)
 }
 
 export const getFinancesWithPaginationByYear = async (

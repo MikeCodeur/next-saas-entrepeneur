@@ -41,6 +41,8 @@ VALUES
   await client.query(`
   INSERT INTO "finance" ("userId", "date", "amount", "label", "category")
     VALUES
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2023-09-01', 100, 'Description 23', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2024-09-01', 100, 'Description 24', 'revenus'),
       ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 100, 'Description 1', 'revenus'),
       ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 234, 'Description 2', 'revenus'),
       ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 333, 'Description 3', 'revenus'),

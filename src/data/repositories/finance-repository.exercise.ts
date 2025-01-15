@@ -27,6 +27,14 @@ export const getFinanceByUidDao = async (uid: string) => {
   // 🐶 Récupère les finances par l'id de l'utilisateur
 }
 
+export const getYearsFinancesByUidDao = async (uid: string) => {
+  // 🐶 Récupère les années des finances par l'id de l'utilisateur
+  // utilise
+  // .selectDistinct({
+  //   year: sql<string>`EXTRACT(YEAR FROM ${finance.date})`.as('year'),
+  // })
+}
+
 export const getFinancesWithPaginationByYearDao = async (
   year: string,
   uid: string,

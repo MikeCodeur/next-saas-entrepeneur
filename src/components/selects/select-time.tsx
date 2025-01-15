@@ -13,7 +13,7 @@ type ChartSelectTimeProps = {
   handleChange: (time: string) => void
   placeholder: string
 }
-const ChartSelectTime = ({
+const SelectTime = ({
   times,
   currentTime,
   handleChange,
@@ -39,4 +39,4 @@ const ChartSelectTime = ({
   )
 }
 
-export default ChartSelectTime
+export default SelectTime

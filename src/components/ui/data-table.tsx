@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-/* eslint-disable import/named */
+
 import {
   flexRender,
   getCoreRowModel,
@@ -23,7 +23,6 @@ import {
 
 import {DataTablePagination} from './data-table-pagination'
 import {DataTableToolbar} from '@/components/ui/data-table-toolbar'
-import {useSearchParams} from 'next/navigation'
 
 export interface Pagination {
   page: number
@@ -46,8 +45,6 @@ export function DataTable<TData, TValue, TPagination extends Pagination>({
   const {data, pagination} = dataTable
   const pageParam = dataTable.pagination.page
 
-  console.log('pageParam', pageParam)
-  console.log('dataTable', dataTable.pagination)
   const pageIndexParam = pageParam ? Number(pageParam) - 1 : 0
   const pageIndex = pageIndexParam < 0 ? 0 : pageIndexParam
 

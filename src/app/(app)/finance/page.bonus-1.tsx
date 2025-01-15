@@ -24,12 +24,21 @@ const Page = async (props: {searchParams?: SearchParams}) => {
 
   const params = await props.searchParams
   const defaultYear = new Date().getFullYear().toString()
-  const financeYear = params?.financeYear ?? defaultYear
+
   const page = Number(params?.page) || 1
   const limit = Number(params?.pageSize) || DATA_ROWS_PER_PAGE
 
-  //services
-  const years = (await getYearsFinancesByUid(userId)) ?? [{year: defaultYear}]
+  const years = (await getYearsFinancesByUid(userId)) ?? [
+    {year: new Date().getFullYear().toString()},
+  ]
+
+  const requestedYear = params?.financeYear
+  // Si l'année demandée existe dans years, on l'utilise, sinon on prend la première année disponible
+  const financeYear =
+    requestedYear && years.some((y) => y.year === requestedYear)
+      ? requestedYear
+      : years?.[0]?.year || defaultYear
+
   const finances = await getFinancesWithPaginationByYear(
     financeYear,
     userId,
@@ -42,11 +51,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
       <h1 className="text-2xl font-semibold">Finance</h1>
       <Separator className="my-4" />
 
-      {finances.data.map((finance) => (
-        <div key={finance.id}>{finance.label}</div>
-      ))}
-
-      {years?.map((finance) => <div key={finance.year}>{finance.year}</div>)}
+      <FinanceDataTable finances={finances} />
     </div>
   )
 }

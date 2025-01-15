@@ -7,15 +7,14 @@ import {financeColumns} from './finance-columns'
 import {canCreateFinance} from '@/services/authorization/finance-authorization'
 
 type FinanceDataTableProps = {
-  uid: string
-  financeTable: {
+  finances: {
     data: FinanceDTO[]
     pagination: Pagination
   }
 }
 
-const FinanceDataTable = ({financeTable}: FinanceDataTableProps) => {
-  return <DataTable columns={financeColumns} dataTable={financeTable} />
+const FinanceDataTable = ({finances}: FinanceDataTableProps) => {
+  return <DataTable columns={financeColumns} dataTable={finances} />
 }
 
 export default FinanceDataTable
