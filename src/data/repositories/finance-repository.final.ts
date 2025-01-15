@@ -1,7 +1,4 @@
-import type {
-  CreateFinance,
-  UpdateFinance,
-} from '@/types/domain/finance-types.final'
+import type {CreateFinance, UpdateFinance} from '@/types/domain/finance-types'
 import {eq, sql, desc} from 'drizzle-orm'
 
 import db from '@/data/db/client'
