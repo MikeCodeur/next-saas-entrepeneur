@@ -1,35 +1,27 @@
-# Feature : Tracker de finance (Model / Table)
+# Feature : Tracker de Heath(Model / Table)
 
-### 💡 Voila une spécification fonctionnelle
+### 💡 Spécification Tracker Santé
 
-## 📝 Tes notes
-
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
-
-## Comprendre
-
-**👨‍✈️** Hugo Le chef de projet de donne une spécification fonctionnelle (formalisme agil scrum)
-
-### **Épique : Gestion des Finances Personnelles**
+### **Épique : Tracker de Santé**
 
 ---
 
 ### **User Stories**
 
-### **1. Visualisation des Données Financières**
+### **1. Visualisation des Données de Santé**
 
 **En tant qu'utilisateur**
 
-Je veux voir un tableau de bord de mes finances
+Je veux voir un tableau de bord de mes données de santé
 
-Afin de suivre ma situation financière globale
+Afin de suivre mon état de santé global
 
 **Critères d'Acceptation** :
 
-- [ ] Affichage d'un graphique mensuel
-- [ ] Affichage d'un tableau des transactions
-- [ ] Filtrage par année
-- [ ] Distinction entre revenus, dépenses et actifs
+- [ ] Affichage d'un graphique des calories, poids et temps par jour
+- [ ] Affichage d'un tableau des entrées de santé (calories, poids, temps)
+- [ ] Filtrage par semaine et mois
+- [ ] Mise en évidence des tendances (progression, stagnation, régression)
 
 **Definition of Done** :
 
@@ -39,25 +31,25 @@ Afin de suivre ma situation financière globale
 
 ---
 
-### **2. Gestion des Transactions**
+### **2. Gestion des Entrées de Santé**
 
 **En tant qu'utilisateur**
 
-Je veux gérer mes transactions financières
+Je veux gérer mes entrées de données de santé
 
-Afin de maintenir un suivi précis de mes mouvements d'argent
+Afin de maintenir un suivi précis de mes progrès
 
 **Critères d'Acceptation** :
 
-- [ ] Création d'une nouvelle transaction
-- [ ] Modification d'une transaction existante
-- [ ] Suppression d'une transaction
-- [ ] Catégorisation (revenus/dépenses/actifs)
+- [ ] Création d'une nouvelle entrée (calories, poids, temps)
+- [ ] Modification d'une entrée existante
+- [ ] Suppression d'une entrée
+- [ ] Catégorisation (par activité ou objectif, par exemple sport, alimentation)
 
 **Definition of Done** :
 
 - Validation des données
-- Mise à jour en temps réel du graphique
+- Mise à jour en temps réel du tableau de bord
 - Confirmation des actions critiques
 
 ---
@@ -68,12 +60,12 @@ Afin de maintenir un suivi précis de mes mouvements d'argent
 
 Je veux visualiser mes données sous forme de graphique
 
-Afin d'analyser les tendances de mes finances
+Afin d’analyser mes tendances de santé
 
 **Critères d'Acceptation** :
 
-- [ ] Graphique linéaire mensuel
-- [ ] Agrégation automatique par mois
+- [ ] Graphique linéaire journalier ou hebdomadaire
+- [ ] Agrégation automatique par jour/semaine
 - [ ] Légende interactive
 - [ ] Tooltips informatifs
 
@@ -90,8 +82,8 @@ Afin de retrouver rapidement les informations recherchées
 **Critères d'Acceptation** :
 
 - [ ] Pagination par 10 éléments
-- [ ] Sélecteur d'années
-- [ ] Tri par date
+- [ ] Sélecteur de semaines et mois
+- [ ] Tri par date ou catégorie
 - [ ] Indicateur de chargement
 
 ---
@@ -129,8 +121,8 @@ Afin de retrouver rapidement les informations recherchées
 
 **Estimation** : 8 points
 
-- Modèle de données
-- Agrégation mensuelle
+- Modèle de données pour calories, poids, temps
+- Agrégation journalière et hebdomadaire
 - Pagination
 - Filtres
 
@@ -177,221 +169,159 @@ Afin de retrouver rapidement les informations recherchées
 
 ### **Sprint 1 (1 semaine)**
 
-- Modélisation
-- CRUD transactions
+- Modélisation des données
+- CRUD des entrées de santé
 - Interface basique (Table)
 
-### **Sprint 2 (1 semaines)**
+### **Sprint 2 (1 semaine)**
 
 - Graphiques
 - Agrégations
 
-### Dans cette exercice tu vas commencer par afficher les données finance dans un tableau.
+## 📝 Tes notes
 
-###
+Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+
+## Comprendre
+
+Nous allons faire la même chose que précédemment pour Finance mais avec `Heath`
+
+- Modélisation de `Heath`
+
+```tsx
+export const healthCategoryEnum = pgEnum('health_category', [
+  'calories',
+  'poids',
+  'temps',
+])
+
+export const health = pgTable('health', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  value: integer('value').notNull(),
+  date: timestamp('date', {withTimezone: true}).notNull(),
+  category: healthCategoryEnum('category').notNull(),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => users.id, {onDelete: 'cascade'}),
+})
+```
+
+- Repository `Heath`
+  - CRUD de base
+- Service `Heath`
+  - CRUD de base + Autorisation de base
+
+Comme c’est 80% identique pour la partie tableau, les exercices se concentrons sur les différences , le reste sera fourni.
 
 ## Exercice
 
-La première partie va consister a modéliser `Finance` avec `Drizzle` et créer un `repository` et un `service` .
+Un différence majeure par rapport à la feature `Finance` est que nous avons en plus des années, une agrégation par semaine. Nous voulons pouvoir tracker ce qu’un utilisateur a fait sur une semaine du lundi au dimanche la semaine X. Exemple
 
-Pour Rappel :
+- Lundi : Poids : 80 Kilos | Sport : 2 heures | Calories : 2000k
+- Mardi : Poids : 81 Kilos | Sport : 1 heures | Calories : 2200k
+- etc …
 
-- `Model` : Définition des tables, colonnes, relations
-- `Repository` : Accès aux données
-- `Service` : Validation de données, autorisation
+Les 2 grandes fonctions majeures ç adapter / créer sont
 
-🐶 Step 1 : Model Commence par implémenter le model `Finance` dans `data/model/finance-model.ts`
+- `getHealthsWithPaginationByWeekDao` : Les `heaths` par année et semaine pour un `user`
+- `getWeeksHealthsByYearDao`: Les `weeks` par `année` ou des données sont disponibles. Les semaines disponibles pourront etre inserer dans un seconde `<Select>` pour avoir par exemple les données du
+  - 2025 : Semaine du ‘28-07 au 03-08’
 
-- Pense à créer une isolation de types dans `types/domain/finance-types.ts`
+**🐶 Implémente ces 2 fonctions de le `repository Health`**
 
-🐶 Step 2 : Repo : Implémente un CRUD
-
-- `createFinanceByUidDao` : Création d’un finance pour un user spécifique
-- `getFinanceByIdDao`: Récupération d’une finance par `id`
-- `updateFinanceByidDao` : Mise à jour d’une finance par `id`
-- `deleteFinanceByidDao`: Suppression d’une finance par `id`
-- `getFinancesByUidDao`: Toutes les finances d’un `userId`
-- `getYearsFinancesByUidDao`: Toutes années finance d’un `userId`
-- `getFinancesWithPaginationByYearDao`: Toutes les finances d’un `userId` sur une filtrer par années avec une pagination trier par date
-
-🐶 Step 3 : Service : Appelle toutes les fonctions du repository en ajoutant :
-
-- La validation des données `Zod` (Les schémas `Zod` sont fournis)
+💡 Astuce pout `getHealthsWithPaginationByWeekDao` : `Postgrees` permet de filtrer par années comme cela
 
 ```tsx
-import {
-  createFinanceServiceSchema,
-  updateFinanceServiceShema,
-} from './validations/finance-validation'
+EXTRACT(YEAR FROM ${date}) = "2025"` //match avec les date de 2025
 ```
 
-- Ajoute l’autorisation `canCreateFinance` etc … dans les fonctions du service. Dans un premier temps `l’authorization` fait une simple vérification sur le rôle admin (nous reviendrons dessus plus tard)
+Pour filtrer par semaine il est possible de faire :
 
 ```tsx
-export const canCreateFinance = async (resourceUid: string) => {
-  const authUser = await getUserAuthExtented()
-  const hasRoleAdmin = idAdmin(authUser?.user)
-  if (hasRoleAdmin) return true
-  return true
-}
+EXTRACT(WEEK FROM ${date}) = 52 // match avec les 52ème semaine de l'année
 ```
 
-🐶 Step 4 : Route Finance : Appelle toutes les fonctions du service dans la route `/finance` (avec les bon paramètre), dans un premier temps ne te soucie pas de l’affiche en tableau nous le verrons dans l’exercice suivant :
+Nous verrons plus tard comment convertir `‘28-07 au 03-08’` en numéro de `week`
 
-Implémente la route `/finance` **avec les caractéristiques suivantes**
+Doc : [https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract](https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract)
 
-- Récupère tous les `queryParams` nécessaires au requêtage de données
-  - `financeYear`
-  - `page`
-  - `pageSize`
-- Appelle le service `getFinancesWithPaginationByYear`
-- Appelle le service `getYearsFinancesByUid`
+💡 Astuce pout `getWeeksHealthsByYearDao` :
 
-<aside>
-💡
+- Filtrer par `année` par `user`
+- Concaténer avec [CONCAT](https://neon.tech/postgresql/postgresql-string-functions/postgresql-concat-function#summary)
+- Avoir le lundi avoir [DATE_TRUNC(’week’)](https://neon.tech/postgresql/postgresql-date-functions/postgresql-date_trunc#summary)
+- Avoir le vendredi avec [`DATE(... + INTERVAL '6 day')`](https://neon.tech/postgresql/postgresql-tutorial/postgresql-interval)
 
-Fait des tests avec URL :[http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1](http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1)
+```tsx
+date_trunc('week', ${health.date}) //Donne le premier jour de la semaine de la date
+TO_CHAR(..., 'DD-MM') // Formate la date en format "DD-MM"
+DATE(... + INTERVAL '6 day') //Ajoute 6 jours à la date de début pour obtenir la fin de semaine (dimanche)
+```
 
-</aside>
+Pour éviter les doublons :
+
+```tsx
+.selectDistinct({
+      week: sql<string>`<SQL REQUETE>`.as(
+        'week'
+      ),
+    })
+```
 
 Fichiers
 
-- `data/model/finance-model.ts`
-- `types/domain/finance-types.ts`
-- `data/repositories/finance-repository.ts`
-- `services/finance-repository.ts`
-- `services/authorization/finance-authorization.ts`
-- `app/(app)/finance/page.tsx`
+- `data/repositories/health-repository.ts`
 
 ## Bonus
 
-### 1. 🚀 Shacn Data Table
+### 1. 🚀 Filtrer par semaine : Select
 
-Tu vas devoir afficher un tableau pour les `Finance`, `Shadcn` propose un composant basé sur `Tantack Table` (anciennement React-Table)
+Pour filtrer par semaine, la première chose a faire et d’ajouter un `queryParam` : `healthWeek` à la route `/heath`, par exemple :
 
-- [https://ui.shadcn.com/docs/components/data-table](https://ui.shadcn.com/docs/components/data-table)
+- `/health?healthWeek=28-07+au+03-08`
 
-### Pour gagner du temps le composant `shadcn` est déjà ajouté
-
-```tsx
-pnpm dlx shadcn@latest add table
-pnpm add @tanstack/react-table
-```
-
-- L’étape de définition des `colonnes` est faite (`finance-columns.tsx`)
-- L’étape de définition de `dataTable` est faite (`data-table.tsx`)
-- L’étape de `row action` est faite (`data-table-row-actions.tsx`)
-- L’étape de pagination est faite (`data-table-pagination.tsx`)
-
-### Pour gagner du temps le composant `FinanceTable` (extension de React Table) est déjà ajouté
-
-- `component/dashboard/trackers/finance/finance-data-table.tsx` etc …
+Dans un second temps il va falloir convertir cette chaine ‘`28-07+au+03-08`’ en numéro de semaine dans l’année, pour cela tu as a ta disposition `getWeekFromLabel`
 
 ```tsx
-type FinanceDataTableProps = {
-  uid: string
-  financeTable: {
-    data: FinanceDTO[]
-    pagination: Pagination
-  }
+export const getWeekFromLabel = (label: string, year: string) => {
+  // Extrait les 5 premiers caractères du label (format "DD-MM" depuis "DD-MM+au+DD-MM")
+  const week = label.slice(0, 5)
+  // Décompose la chaîne "DD-MM" en jour et mois
+  const [day, month] = week.split('-')
+  // Crée un objet Date à partir du jour, mois et année
+  // Format attendu par parse: "YYYY-MM-DD"
+  const parsedDate = parse(
+    `${year}-${month}-${Number(day)}`,  // Construit la chaîne de date complète
+    'yyyy-MM-dd',                        // Spécifie le format de la date
+    new Date()                           // Date de référence (fallback)
+  )
+  // Calcule le numéro de la semaine (1-53) pour la date donnée
+  const startWeek = getWeek(parsedDate)
+  return startWeek
 }
-
-const FinanceDataTable = ({financeTable}: FinanceDataTableProps) => {
-  return <DataTable columns={financeColumns} dataTable={financeTable} />
-}
-
-export default FinanceDataTable
 ```
 
-**Exercice :**
-
-Nous allons utiliser et adapter le `FinanceDataTable` .
-
-```tsx
-  <FinanceDataTable finances={finances} />
-
-  //qui est un wrapper de DataTable avec la defition de colonnes
-  const FinanceDataTable = ({finances}: FinanceDataTableProps) => {
-  return <DataTable columns={financeColumns} dataTable={finances} />
-
-```
-
-- 🐶 Dans un premier temps ajoute les colonnes nécessaires pour afficher les données de la Table dans `component/dashboard/trackers/finance/finance-columns.tsx`.
-
-`Tanstack Table` permet de définir des colonnes comme cela avec :
-
-📑 Le lien vers la do [https://tanstack.com/table/v8/docs/guide/column-defs](https://tanstack.com/table/v8/docs/guide/column-defs)
-
-```tsx
-export const financeColumns: ColumnDef<Finance>[] = [
-  {
-    accessorKey: 'date',
-    header: ({column}) => (
-      <DataTableColumnHeader column={column} title="Date" />
-    ),
-    cell: ({row}) => {
-      const date = new Date(row.getValue('date'))
-      const formatted = formattedDate(date)
-      return <div className="min-w-fit text-left md:w-[200px]">{formatted}</div>
-    },
-    filterFn: (row, date, value) => {
-      return value.includes(row.getValue(date))
-    },
-  },
-```
-
-- 🐶 Créer la `pagination` dans `data-table-pagination.tsx`. Le composant est repris de `chadcn` mais il faut choisir le comportement d’implémentation. Nous allons ici utiliser le `router` et changer les `queryParams` de la route `finance`. nous l’avons tester précédemment est nos `queryParam` sont censés retourner les bonnes données
-- [http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1](http://localhost:3000/finance?page=1&financeYear=2024&pageSize=1)
-
-```tsx
-const router = useRouter()
-const searchParams = useSearchParams()
-const pathname = usePathname()
-
-//exemple changer les queryParam page 4
- const params = new URLSearchParams(searchParams)
- params.set('page', '4')
- router.push(`${pathname}?${params.toString()}`)
-```
+- 🐶 Dans un premier temps , adapte la route (`app/(app)/health/page`) pour avoir les bons params et faire les bon appels aux services
+- 🐶 Dans un second temps, occuper toi du `Select Year Week` (`health-year-select.tsx`)
+  - Ajoute un deuxième select pour les `weeks`
+  - Change les `queryParams` lors d’un changement d’item dans le select
+  ```tsx
+  //exemple
+  const params = new URLSearchParams(searchParams)
+  params.set("param", "value")
+  router.push(`${pathname}?${params.toString()}`, {scroll: false})
+  ```
 
 Fichiers
 
-- `app/(app)/finance/page.tsx`
-- `component/dashboard/trackers/finance/finance-columns.tsx`
-- `component/ui/data-table-pagination.tsx`
-- `component/dashboard/trackers/finance/finance-*.tsx`
-- `component/ui/data-*.tsx`
-
-### 2. 🚀 Changement d’années : Select
-
-Pour gagner du temps le composant `finance-year-select` est déjà présent
-
-```tsx
-<Card>
-      <CardHeader className="space-y-4 text-xl font-semibold">
-        <CardTitle>Finance</CardTitle>
-        <SelectTime
-          currentTime={currentYear ?? years?.[0].year}
-          times={years}
-          handleChange={handleChangeYear}
-          placeholder="Sélectionnez une année"
-        />
-      </CardHeader>
-      <CardContent className="p-4">{children}</CardContent>
-    </Card>
-```
-
-- **🐶 Utilise ce composant au niveau de la route `/finance` dans un premier temps**
-- Ensuite édite le pour que `handleChangeYear` change l’année en `queryParams`
-
-Fichiers
-
-- `app/(app)/finance/page.tsx`
-- `component/dashboard/trackers/finance/finance-year-select.tsx`
+- `app/(app)/health/page`
+- `acomponent/dashboard/tracker/heath/health-year-select.tsx`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://tanstack.com/table/v8/docs/introduction](https://tanstack.com/table/v8/docs/introduction)
+📑 Le lien vers la doc [https://neon.tech/postgresql/postgresql-tutorial/](https://neon.tech/postgresql/postgresql-tutorial)
 
 ## Ils vont t’aider
 
@@ -403,4 +333,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=05%20Feature%20finance-crud-table).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=06-feature-health-crud).

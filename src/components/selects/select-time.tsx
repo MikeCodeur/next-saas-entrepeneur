@@ -28,8 +28,8 @@ const SelectTime = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {times.map((time) => (
-            <SelectItem key={time[propTime]} value={time[propTime]}>
+          {times.map((time, idx) => (
+            <SelectItem key={idx} value={time[propTime]}>
               {time[propTime]}
             </SelectItem>
           ))}
