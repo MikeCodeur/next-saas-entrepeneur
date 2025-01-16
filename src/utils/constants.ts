@@ -1,3 +1,5 @@
+import {FinanceCategory} from '@/types/domain/finance-types'
+import {HealthCategory} from '@/types/domain/health-types'
 import {
   BadgeEuro,
   BanknoteIcon,
@@ -35,3 +37,19 @@ export const pageParamName = 'page' as const
 export const yearParamName = 'financeYear' as const
 export const healthYearParamName = 'healthYear' as const
 export const healthWeekParamName = 'healthWeek' as const
+
+export const financeCategories = [
+  'revenus',
+  'dépenses',
+  'actifs',
+] as const satisfies FinanceCategory[]
+
+export const healthCategories = [
+  'calories',
+  'poids',
+  'temps',
+] as const satisfies HealthCategory[]
+
+export const trackers = ['finance', 'health'] as const
+
+export type TrackerType = 'finance' | 'health'

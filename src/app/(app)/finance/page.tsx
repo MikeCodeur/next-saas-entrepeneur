@@ -53,7 +53,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
 
       <FinanceYearSelect years={years} currentYear={financeYear}>
         {hasCurrentYear ? (
-          <FinanceDataTable finances={finances} />
+          <FinanceDataTable finances={finances} uid={userId} />
         ) : (
           <div>No data for this year</div>
         )}

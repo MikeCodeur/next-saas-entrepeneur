@@ -2,18 +2,29 @@
 
 import {DataTable, Pagination} from '@/components/ui/data-table'
 
-import type {ColumnDef} from '@tanstack/react-table'
 import {HealthDTO} from '@/types/domain/health-types'
 import {healthColumns} from './health-columns'
+import AddItemButton from '../add-item-button'
+import {Card} from '@/components/ui/card'
 
 type HealthDataTableClientProps = {
   healthTable: {
     data: HealthDTO[]
     pagination: Pagination
   }
+  uid: string
 }
-const HealthDataTableClient = ({healthTable}: HealthDataTableClientProps) => {
-  return <DataTable columns={healthColumns} dataTable={healthTable} />
+const HealthDataTableClient = ({
+  healthTable,
+  uid,
+}: HealthDataTableClientProps) => {
+  const label = 'Tracker un élément de santé'
+  return (
+    <Card className="flex w-full flex-col space-y-2 py-4 md:items-start md:px-8">
+      <AddItemButton trackerType="finance" uid={uid} label={label} />
+      <DataTable columns={healthColumns} dataTable={healthTable} />
+    </Card>
+  )
 }
 
 export default HealthDataTableClient

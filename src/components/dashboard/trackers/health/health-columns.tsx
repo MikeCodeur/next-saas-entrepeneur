@@ -81,7 +81,7 @@ export const healthColumns: ColumnDef<Health>[] = [
     cell: ({row}) => {
       return (
         <div className="-ml-4 min-w-fit text-right md:ml-0 md:px-8">
-          <DataTableRowActions data={{...row.original}} />
+          <DataTableRowActions data={{...row.original}} type="health" />
         </div>
       )
     },
