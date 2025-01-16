@@ -1,7 +1,4 @@
-import {
-  CreateEditFinanceModel,
-  FinanceModel,
-} from '@/data/models/finance-model.final'
+import {CreateEditFinanceModel, FinanceModel} from '@/data/models/finance-model'
 
 export type Finance = FinanceModel
 export type CreateFinance = CreateEditFinanceModel
