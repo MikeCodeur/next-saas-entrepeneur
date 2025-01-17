@@ -1,12 +1,12 @@
-/* eslint-disable unicorn/consistent-function-scoping */
 'use client'
 
 import {DeleteFinance} from '@/types/domain/finance-types'
 import {FormSubmitServerButton} from '@/components/forms/form-submit-button'
 import React from 'react'
-//import {deleteFinanceAction} from '../finance-action'
-import {toast} from 'sonner'
+
 import {useRouter} from 'next/navigation'
+import {deleteFinanceAction} from './finance-action'
+import {toast, useToast} from '@/components/hooks/use-toast'
 const DeleteFinanceForm = ({
   id,
   onClose,
@@ -14,21 +14,23 @@ const DeleteFinanceForm = ({
   id: DeleteFinance['id']
   onClose: () => void
 }) => {
-  const router = useRouter()
+  const {toast} = useToast()
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    // event.preventDefault()
-    // const deleteFinanceWithId = deleteFinanceAction.bind(undefined, {
-    //   id,
-    // })
-    // const result = await deleteFinanceWithId()
-    // if (result.success) {
-    //   toast.success(result.data)
-    // } else {
-    //   toast.error(result.message)
-    // }
-    // router.refresh()
-    // onClose()
+    event.preventDefault()
+
+    const result = await deleteFinanceAction(id)
+    console.log('result', result)
+    if (result.success) {
+      toast({title: 'Succes', description: result.data})
+    } else {
+      toast({
+        title: result.data,
+        description: result.data,
+        variant: 'destructive',
+      })
+    }
+    onClose()
   }
   return (
     <form onSubmit={onSubmit} className="space-y-4">

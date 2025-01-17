@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-//import {createFinanceAction, editFinanceAction} from '../finance-action'
 
 import {Button} from '@/components/ui/button'
 import {Calendar} from '@/components/ui/calendar'
@@ -32,10 +31,11 @@ import {fr} from 'date-fns/locale'
 import {financeCategories} from '@/utils/constants'
 import {toast} from 'sonner'
 import {useForm} from 'react-hook-form'
-import {useRouter} from 'next/navigation'
+
 import {zodResolver} from '@hookform/resolvers/zod'
 import {createEditFinanceFormSchema as createEditFinanceFormSchema} from '@/components/forms/form-validators/finance-form-schema'
 import {createFinanceAction, editFinanceAction} from './finance-action'
+import {useToast} from '@/components/hooks/use-toast'
 
 type CreateEditFinanceFormProps = {
   data?: Finance
@@ -44,10 +44,8 @@ type CreateEditFinanceFormProps = {
 }
 
 const CreateEditFinanceForm = (props: CreateEditFinanceFormProps) => {
-  const router = useRouter()
-
   const isEdit = !!props.data
-
+  const {toast} = useToast()
   const form = useForm<CreateEditFinance>({
     resolver: zodResolver(createEditFinanceFormSchema),
     defaultValues: props.data ?? {
@@ -61,35 +59,28 @@ const CreateEditFinanceForm = (props: CreateEditFinanceFormProps) => {
   const {
     formState: {errors},
   } = form
-  console.log('errors', errors)
 
   async function onSubmit(values: CreateEditFinance) {
-    console.log('onSubmit', values)
-
     const result = isEdit
       ? await editFinanceAction(values)
       : await createFinanceAction(values)
 
-    if (!result) {
-      toast.error(
-        'Une erreur est survenue lors de la validation du formulaire' as const
-      )
-      return
-    }
     if (result.errors) {
       for (const [key, value] of Object.entries(result.errors)) {
         form.setError(key as keyof CreateEditFinance, {
-          // message: value[0],
+          message: value[0],
         })
       }
     }
     if (result.success) {
-      toast.success(result.data)
+      toast({title: 'Succes', description: result.data})
     } else {
-      toast.error(result.message)
-      return
+      toast({
+        title: result.data,
+        description: result.data,
+        variant: 'destructive',
+      })
     }
-    router.refresh()
     props.onClose()
   }
   return (

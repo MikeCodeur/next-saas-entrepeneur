@@ -14,6 +14,7 @@ import {
 import {CSRAction} from '@/types/actions-types'
 import {CreateEditHealth, DeleteHealth} from '@/types/domain/health-types'
 import {formattedDate} from '@/utils/date-utils'
+import {revalidatePath} from 'next/cache'
 
 export const createHealthAction = async (
   values: CreateEditHealth,
@@ -27,6 +28,7 @@ export const createHealthAction = async (
     } satisfies CSRAction
   try {
     await createHealthByUid(validateFields.data, uid)
+    revalidatePath('/health')
   } catch (error) {
     return {
       success: false,
@@ -47,6 +49,7 @@ export const editHealthAction = async (values: CreateEditHealth) => {
     } satisfies CSRAction
   try {
     await updateHealth(validateFields.data)
+    revalidatePath('/health')
   } catch (error) {
     return {
       success: false,
@@ -58,9 +61,10 @@ export const editHealthAction = async (values: CreateEditHealth) => {
     data: `L(')(e) ${validateFields.data.category} du ${formattedDate(validateFields.data.date)} à était mis à jour`,
   } satisfies CSRAction
 }
-export const deleteHealthAction = async (values: DeleteHealth) => {
+export const deleteHealthAction = async (id: string) => {
   try {
-    await deleteHealthByid(values.id)
+    await deleteHealthByid(id)
+    revalidatePath('/health')
   } catch (error) {
     return {
       success: false,

@@ -57,18 +57,18 @@ VALUES
   await client.query(`
     INSERT INTO "health" ("userId", "date", "value", "category")
       VALUES
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 3045, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 80, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 120, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-04-01', 1212, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-04-02', 95, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-04-03', 120, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-01', 2604, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-02', 90, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-08-03', 180, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 2504, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-04', 90, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 180, 'temps');
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-01', 3045, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-02', 80, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-02-03', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-01', 1212, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-12-02', 95, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-12-03', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06', 2604, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-07', 180, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-08', 2504, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-13', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-14', 180, 'temps');
     `)
 
   const end = Date.now()

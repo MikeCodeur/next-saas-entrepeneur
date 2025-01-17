@@ -35,16 +35,18 @@ import {useRouter} from 'next/navigation'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {createEditHealthFormSchema} from '@/components/forms/form-validators/health-form-schema'
 import {healthCategories} from '@/utils/constants'
+import {createHealthAction, editHealthAction} from './health-action'
+import {useToast} from '@/components/hooks/use-toast'
 
-type FormAddHealthProps = {
+type CreateEditHealthFormProps = {
   data?: Health
   onClose: () => void
   uid?: string
 }
-const CreateEditHealthForm = (props: FormAddHealthProps) => {
-  const router = useRouter()
 
+const CreateEditHealthForm = (props: CreateEditHealthFormProps) => {
   const isEdit = !!props.data
+  const {toast} = useToast()
   const form = useForm<CreateEditHealth>({
     resolver: zodResolver(createEditHealthFormSchema),
     defaultValues: props.data ?? {
@@ -54,29 +56,31 @@ const CreateEditHealthForm = (props: FormAddHealthProps) => {
       userId: props.uid,
     },
   })
-  async function onSubmit(values: CreateEditHealth) {
-    // const result = isEdit
-    //   ? await editHealthAction(values)
-    //   : await createHealthAction(values, props.uid)
+  const {
+    formState: {errors},
+  } = form
 
-    // if (!result) {
-    //   toast.error(
-    //     'Une erreur est survenue lors de la validation du formulaire' as const
-    //   )
-    //   return
-    // }
-    // if (result.errors) {
-    //   for (const [key, value] of Object.entries(result.errors)) {
-    //     form.setError(key as keyof CreateEditHealth, {message: value[0]})
-    //   }
-    // }
-    // if (result.success) {
-    //   toast.success(result.data)
-    // } else {
-    //   toast.error(result.message)
-    //   return
-    // }
-    router.refresh()
+  async function onSubmit(values: CreateEditHealth) {
+    const result = isEdit
+      ? await editHealthAction(values)
+      : await createHealthAction(values, props?.uid ?? '')
+
+    if (result.errors) {
+      for (const [key, value] of Object.entries(result.errors)) {
+        form.setError(key as keyof CreateEditHealth, {
+          message: value[0],
+        })
+      }
+    }
+    if (result.success) {
+      toast({title: 'Succes', description: result.data})
+    } else {
+      toast({
+        title: result.data,
+        description: result.data,
+        variant: 'destructive',
+      })
+    }
     props.onClose()
   }
 

@@ -1,182 +1,6 @@
-# Feature : Tracker de Heath(Model / Table)
+# Formulaire / Modal
 
-### 💡 Spécification Tracker Santé
-
-### **Épique : Tracker de Santé**
-
----
-
-### **User Stories**
-
-### **1. Visualisation des Données de Santé**
-
-**En tant qu'utilisateur**
-
-Je veux voir un tableau de bord de mes données de santé
-
-Afin de suivre mon état de santé global
-
-**Critères d'Acceptation** :
-
-- [ ] Affichage d'un graphique des calories, poids et temps par jour
-- [ ] Affichage d'un tableau des entrées de santé (calories, poids, temps)
-- [ ] Filtrage par semaine et mois
-- [ ] Mise en évidence des tendances (progression, stagnation, régression)
-
-**Definition of Done** :
-
-- Interface responsive
-- Tests utilisateurs validés
-- Performance < 2s pour le chargement
-
----
-
-### **2. Gestion des Entrées de Santé**
-
-**En tant qu'utilisateur**
-
-Je veux gérer mes entrées de données de santé
-
-Afin de maintenir un suivi précis de mes progrès
-
-**Critères d'Acceptation** :
-
-- [ ] Création d'une nouvelle entrée (calories, poids, temps)
-- [ ] Modification d'une entrée existante
-- [ ] Suppression d'une entrée
-- [ ] Catégorisation (par activité ou objectif, par exemple sport, alimentation)
-
-**Definition of Done** :
-
-- Validation des données
-- Mise à jour en temps réel du tableau de bord
-- Confirmation des actions critiques
-
----
-
-### **3. Analyse Graphique**
-
-**En tant qu'utilisateur**
-
-Je veux visualiser mes données sous forme de graphique
-
-Afin d’analyser mes tendances de santé
-
-**Critères d'Acceptation** :
-
-- [ ] Graphique linéaire journalier ou hebdomadaire
-- [ ] Agrégation automatique par jour/semaine
-- [ ] Légende interactive
-- [ ] Tooltips informatifs
-
----
-
-### **4. Navigation et Pagination**
-
-**En tant qu'utilisateur**
-
-Je veux naviguer facilement dans mes données
-
-Afin de retrouver rapidement les informations recherchées
-
-**Critères d'Acceptation** :
-
-- [ ] Pagination par 10 éléments
-- [ ] Sélecteur de semaines et mois
-- [ ] Tri par date ou catégorie
-- [ ] Indicateur de chargement
-
----
-
-### **Product Backlog Items (PBI)**
-
-### **1. Sécurité et Accès**
-
-**Priorité** : Haute
-
-**Estimation** : 8 points
-
-- Authentification utilisateur
-- Autorisation CRUD
-- Protection des données personnelles
-
----
-
-### **2. Interface Graphique**
-
-**Priorité** : Haute
-
-**Estimation** : 13 points
-
-- Composant graphique
-- Tableau de données
-- Formulaires CRUD
-- Design responsive
-
----
-
-### **3. Gestion des Données**
-
-**Priorité** : Haute
-
-**Estimation** : 8 points
-
-- Modèle de données pour calories, poids, temps
-- Agrégation journalière et hebdomadaire
-- Pagination
-- Filtres
-
----
-
-### **4. Performance**
-
-**Priorité** : Moyenne
-
-**Estimation** : 5 points
-
-- Optimisation des requêtes
-- Mise en cache
-- Chargement progressif
-
----
-
-### **Risques et Dépendances**
-
-### **Risques**
-
-- Performance avec grand volume de données
-- Complexité des calculs d'agrégation
-- Expérience utilisateur sur mobile
-
-### **Dépendances**
-
-- Système d'authentification
-- Base de données performante
-- Bibliothèque de graphiques
-
----
-
-### **Métriques de Succès**
-
-- Temps de chargement < 2s
-- Satisfaction utilisateur > 4/5
-- Taux d'erreur < 1%
-- Adoption > 80% des utilisateurs cibles
-
----
-
-### **Planning Agile**
-
-### **Sprint 1 (1 semaine)**
-
-- Modélisation des données
-- CRUD des entrées de santé
-- Interface basique (Table)
-
-### **Sprint 2 (1 semaine)**
-
-- Graphiques
-- Agrégations
+### 💡 Faire un formulaire dans une modal (Dialog)
 
 ## 📝 Tes notes
 
@@ -184,144 +8,271 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Nous allons faire la même chose que précédemment pour Finance mais avec `Heath`
+Il existe un composant `Shadcn` permettant de gérer les `Dialog` avec (`radix`)
 
-- Modélisation de `Heath`
+📑 Le liens vers la doc : [https://ui.shadcn.com/docs/components/dialog](https://ui.shadcn.com/docs/components/dialog)
+
+Exemple :
 
 ```tsx
-export const healthCategoryEnum = pgEnum('health_category', [
-  'calories',
-  'poids',
-  'temps',
-])
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
-export const health = pgTable('health', {
-  id: uuid('id')
-    .default(sql`uuid_generate_v4()`)
-    .primaryKey(),
-  value: integer('value').notNull(),
-  date: timestamp('date', {withTimezone: true}).notNull(),
-  category: healthCategoryEnum('category').notNull(),
-  userId: uuid('userId')
-    .notNull()
-    .references(() => users.id, {onDelete: 'cascade'}),
-})
+export function DialogDemo() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Edit Profile</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 ```
 
-- Repository `Heath`
-  - CRUD de base
-- Service `Heath`
-  - CRUD de base + Autorisation de base
+Une première pourrait idée pourrait être de faire autant de `Dialog` que nécessaire (`Finance`, `Health`, `Login` etc …)
 
-Comme c’est 80% identique pour la partie tableau, les exercices se concentrons sur les différences , le reste sera fourni.
+Mais cela fait beaucoup de duplication de code :
+
+- `<Dialog>`
+- `<DialogTrigger asChild>`
+- `<DialogContent>` etc …
+
+Nous voulons ici une gestion unique des `Dialog` au sein de notre application. Nous allons pour ça utiliser le `State Management Pattern` et l’`API Context.` L'idée est de gérer les états (`states`) des dialogue dans un contexte commun.
+
+Il faut voir cela comme des states partagés dans notre application (et non pas uniquement dans un composant donné)
+
+Un des cas les plus classique pour représenter ce pattern est la gestion du thème dans une application
+
+### 1. **Créer un contexte**
+
+Crée un fichier pour ton contexte, par exemple `ThemeContext.tsx` :
+
+```tsx
+import { createContext, ReactNode, useContext, useState } from 'react';
+
+// Créer le contexte
+export const ThemeContext = createContext<{
+  theme: string;
+  toggleTheme: () => void;
+} | null>(null);
+
+// Fournir le contexte
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// Hook personnalisé pour simplifier l'utilisation du contexte
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};
+```
+
+Note : Depuis React 19 il est possible d’utiliser `use` à la place de `useContext`
+
+- [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
+
+### 2. **Utiliser le contexte dans l'application**
+
+Intègre le `ThemeProvider` dans l'arborescence de ton application.
+
+### `App.tsx`
+
+```tsx
+
+import { ThemeProvider } from './ThemeContext';
+import ThemeSwitcher from './ThemeSwitcher';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <div>
+        <h1>Exemple de Contexte</h1>
+        <ThemeSwitcher />
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+
+```
+
+Un composant qui nomme le contexte pour afficher et modifier le thème.
+
+### `ThemeSwitcher.tsx`
+
+```tsx
+
+import { useTheme } from './ThemeContext';
+
+const ThemeSwitcher = () => {
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <div>
+      <p>Thème actuel : {theme}</p>
+      <button onClick={toggleTheme}>
+        Basculer en {theme === 'light' ? 'sombre' : 'clair'}
+      </button>
+    </div>
+  );
+};
+
+export default ThemeSwitcher;
+
+```
 
 ## Exercice
 
-Un différence majeure par rapport à la feature `Finance` est que nous avons en plus des années, une agrégation par semaine. Nous voulons pouvoir tracker ce qu’un utilisateur a fait sur une semaine du lundi au dimanche la semaine X. Exemple
+Dans cet exercice tu vas devoir implémenter la gestion des modal (`shadcn`) avec le context API.
 
-- Lundi : Poids : 80 Kilos | Sport : 2 heures | Calories : 2000k
-- Mardi : Poids : 81 Kilos | Sport : 1 heures | Calories : 2200k
-- etc …
+- [https://react.dev/reference/react/createContext](https://react.dev/reference/react/createContext)
+- [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
 
-Les 2 grandes fonctions majeures ç adapter / créer sont
+**🐶** Dans un premier temps créer le `ModalProvider` / `ModalContext` et le hook `useModal` dans `componant/modal.ts`
 
-- `getHealthsWithPaginationByWeekDao` : Les `heaths` par année et semaine pour un `user`
-- `getWeeksHealthsByYearDao`: Les `weeks` par `année` ou des données sont disponibles. Les semaines disponibles pourront etre inserer dans un seconde `<Select>` pour avoir par exemple les données du
-  - 2025 : Semaine du ‘28-07 au 03-08’
-
-**🐶 Implémente ces 2 fonctions de le `repository Health`**
-
-💡 Astuce pout `getHealthsWithPaginationByWeekDao` : `Postgrees` permet de filtrer par années comme cela
-
-```tsx
-EXTRACT(YEAR FROM ${date}) = "2025"` //match avec les date de 2025
-```
-
-Pour filtrer par semaine il est possible de faire :
-
-```tsx
-EXTRACT(WEEK FROM ${date}) = 52 // match avec les 52ème semaine de l'année
-```
-
-Nous verrons plus tard comment convertir `‘28-07 au 03-08’` en numéro de `week`
-
-Doc : [https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract](https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract)
-
-💡 Astuce pout `getWeeksHealthsByYearDao` :
-
-- Filtrer par `année` par `user`
-- Concaténer avec [CONCAT](https://neon.tech/postgresql/postgresql-string-functions/postgresql-concat-function#summary)
-- Avoir le lundi avoir [DATE_TRUNC(’week’)](https://neon.tech/postgresql/postgresql-date-functions/postgresql-date_trunc#summary)
-- Avoir le vendredi avec [`DATE(... + INTERVAL '6 day')`](https://neon.tech/postgresql/postgresql-tutorial/postgresql-interval)
-
-```tsx
-date_trunc('week', ${health.date}) //Donne le premier jour de la semaine de la date
-TO_CHAR(..., 'DD-MM') // Formate la date en format "DD-MM"
-DATE(... + INTERVAL '6 day') //Ajoute 6 jours à la date de début pour obtenir la fin de semaine (dimanche)
-```
-
-Pour éviter les doublons :
-
-```tsx
-.selectDistinct({
-      week: sql<string>`<SQL REQUETE>`.as(
-        'week'
-      ),
-    })
-```
+**🐶 Ensuite utilise** `ModalProvider` dans le `RootLayout` pour pouvoir utiliser `useModal` partout dans l’application
 
 Fichiers
 
-- `data/repositories/health-repository.ts`
+- `componant/modal.ts`
+- `app/layout.ts`
 
 ## Bonus
 
-### 1. 🚀 Filtrer par semaine : Select
+### 1. 🚀 Modal à partir d’un bouton (Ajout)
 
-Pour filtrer par semaine, la première chose a faire et d’ajouter un `queryParam` : `healthWeek` à la route `/heath`, par exemple :
+Dans cet exercice tu vas devoir créer un bouton qui ouvre la modal qui contient le formulaire d’ajout
 
-- `/health?healthWeek=28-07+au+03-08`
+Pour gagner du temps les formulaires sont déjà créés avec [`shadcn /zod / rhf`](https://ui.shadcn.com/docs/components/form)
 
-Dans un second temps il va falloir convertir cette chaine ‘`28-07+au+03-08`’ en numéro de semaine dans l’année, pour cela tu as a ta disposition `getWeekFromLabel`
+- `component/dashboard/trackers/finance/forms/create-edit-finance-form.tsx`
+- `component/dashboard/trackers/finance/forms/delete-finance-form.tsx`
+- `component/dashboard/trackers/health/forms/create-edit-health-form.tsx`
+- `component/dashboard/trackers/health/forms/delete-health-form.tsx`
+
+Et le composant `AddItemButton` est déjà ajouté dans les `Tables`; nous allons pouvoir travailler directement dans ce composant
+
+- `component/dashboard/trackers/add-item-button.tsx`
 
 ```tsx
-export const getWeekFromLabel = (label: string, year: string) => {
-  // Extrait les 5 premiers caractères du label (format "DD-MM" depuis "DD-MM+au+DD-MM")
-  const week = label.slice(0, 5)
-  // Décompose la chaîne "DD-MM" en jour et mois
-  const [day, month] = week.split('-')
-  // Crée un objet Date à partir du jour, mois et année
-  // Format attendu par parse: "YYYY-MM-DD"
-  const parsedDate = parse(
-    `${year}-${month}-${Number(day)}`,  // Construit la chaîne de date complète
-    'yyyy-MM-dd',                        // Spécifie le format de la date
-    new Date()                           // Date de référence (fallback)
+const FinanceDataTable = ({finances, uid}: FinanceDataTableProps) => {
+  const label = 'Tracker une dépense / revenu'
+  return (
+    <Card className="flex w-full flex-col space-y-2 py-4 md:items-start md:px-8">
+	     {/* AddItemButton  */}
+      <AddItemButton trackerType="finance" uid={uid} label={label} />
+      <DataTable columns={financeColumns} dataTable={finances} />
+    </Card>
   )
-  // Calcule le numéro de la semaine (1-53) pour la date donnée
-  const startWeek = getWeek(parsedDate)
-  return startWeek
 }
 ```
 
-- 🐶 Dans un premier temps , adapte la route (`app/(app)/health/page`) pour avoir les bons params et faire les bon appels aux services
-- 🐶 Dans un second temps, occuper toi du `Select Year Week` (`health-year-select.tsx`)
-  - Ajoute un deuxième select pour les `weeks`
-  - Change les `queryParams` lors d’un changement d’item dans le select
-  ```tsx
-  //exemple
-  const params = new URLSearchParams(searchParams)
-  params.set("param", "value")
-  router.push(`${pathname}?${params.toString()}`, {scroll: false})
-  ```
+- **🐶 Dans cet exercice utilise le `hook useModal` créé précédemment de la manière suivante :**
+
+```tsx
+const {onClose, setModal, onOpen} = useModal()
+//
+return (
+  <Button
+    onClick={() => {
+      setModal({
+        title: `Ajout`,
+        children: <FormAdd onClose={onClose} uid={uid} />,
+      })
+      onOpen()
+    }}
+  >
+  </Button>
+  )
+
+```
+
+💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique, des :
+
+- `CreateEditFinanceForm` ou
+- `CreateEditHealthForm`
+
+💡 Vérifie l’appel des servers actions `health-action` / `finance-action`
 
 Fichiers
 
-- `app/(app)/health/page`
-- `acomponent/dashboard/tracker/heath/health-year-select.tsx`
+- `component/dashboard/trackers/add-item-button.tsx`
+
+### 2. 🚀 Modal dans une table (Update / Delete Item)
+
+Nous avions rajouter une colonnes action avec `update` / `delete` mais sans effet. Nous allons maintenant ouvrir les modal correspondant a `update` et `delete` avec le `Formulaire` correspondant. Tout ce passe dans `data-table-row-actions`
+
+```tsx
+  <DropdownMenu>
+      <DropdownMenuTrigger asChild className="p-2">
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Ouvrir menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>Editer</DropdownMenuItem>
+        <DropdownMenuItem>Supprimer</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+```
+
+💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique.
+
+💡 Vérifie l’appel des servers actions `health-action` / `finance-action`
+
+Fichiers
+
+- `component/ui/data-table-row-actions.tsx`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://neon.tech/postgresql/postgresql-tutorial/](https://neon.tech/postgresql/postgresql-tutorial)
+📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
 
 ## Ils vont t’aider
 
@@ -333,4 +284,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=06-feature-health-crud).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=07-modal-form-edition).

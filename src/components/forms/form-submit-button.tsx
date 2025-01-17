@@ -13,7 +13,7 @@ export const FormSubmitServerButton = ({
 }) => {
   const {pending} = useFormStatus()
   return (
-    <Button type="submit" aria-disabled={pending}>
+    <Button type="submit" aria-disabled={pending} disabled={pending}>
       <Loader2
         className={cn('mr-2 h-4 w-4 animate-spin', !pending && 'hidden')}
       />
@@ -30,7 +30,7 @@ export const FormSubmitClientButton = ({
   children: React.ReactNode
 }) => {
   return (
-    <Button type="submit" aria-disabled={pending}>
+    <Button type="submit" aria-disabled={pending} disabled={pending}>
       <Loader2
         className={cn('mr-2 h-4 w-4 animate-spin', !pending && 'hidden')}
       />

@@ -21,7 +21,7 @@ const HealthDataTableClient = ({
   const label = 'Tracker un élément de santé'
   return (
     <Card className="flex w-full flex-col space-y-2 py-4 md:items-start md:px-8">
-      <AddItemButton trackerType="finance" uid={uid} label={label} />
+      <AddItemButton trackerType="health" uid={uid} label={label} />
       <DataTable columns={healthColumns} dataTable={healthTable} />
     </Card>
   )

@@ -1,3 +1,4 @@
-//export * from './data-table-row-actions.exercise'
+export * from './data-table-row-actions.exercise'
 
-export * from './data-table-row-actions.final'
+// 2. 🚀 Modal dans une table (Update / Delete Item)
+//export * from './data-table-row-actions.final'

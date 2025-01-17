@@ -1,10 +1,7 @@
 'use server'
 
 import type {CSRAction} from '@/types/actions-types'
-import type {
-  CreateEditFinance,
-  DeleteFinance,
-} from '@/types/domain/finance-types'
+import type {CreateEditFinance} from '@/types/domain/finance-types'
 
 import {processUnknownError} from '@/lib/utils'
 import {
@@ -17,6 +14,7 @@ import {
   createEditFinanceFormSchema,
   updateFinanceFormShema,
 } from '@/components/forms/form-validators/finance-form-schema'
+import {revalidatePath} from 'next/cache'
 
 export const createFinanceAction = async (values: CreateEditFinance) => {
   console.log('createFinanceAction', values)
@@ -29,6 +27,7 @@ export const createFinanceAction = async (values: CreateEditFinance) => {
 
   try {
     await createFinanceByUid(validateFields.data, validateFields.data.userId)
+    revalidatePath('/finance')
   } catch (error) {
     return {
       success: false,
@@ -50,6 +49,7 @@ export const editFinanceAction = async (values: CreateEditFinance) => {
 
   try {
     await updateFinance(validateFields.data)
+    revalidatePath('/finance')
   } catch (error) {
     return {
       success: false,
@@ -62,9 +62,10 @@ export const editFinanceAction = async (values: CreateEditFinance) => {
     data: `${category} du ${formattedDate(date)} mis à jour`,
   } satisfies CSRAction
 }
-export const deleteFinanceAction = async (values: DeleteFinance) => {
+export const deleteFinanceAction = async (id: string) => {
   try {
-    await deleteFinanceByid(values.id)
+    await deleteFinanceByid(id)
+    revalidatePath('/finance')
   } catch (error) {
     return {
       message: processUnknownError(error),

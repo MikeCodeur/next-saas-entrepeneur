@@ -9,6 +9,7 @@ import {
 
 import {
   createHealthByUidDao,
+  deleteHealthByIdDao,
   getHealthByIdDao,
   getHealthsWithPaginationByWeekDao,
   getWeeksHealthsByYearDao,
@@ -27,6 +28,7 @@ export const createHealthByUid = async (
   healthParams: CreateHealth,
   uid: string
 ) => {
+  console.log('createHealthByUid', healthParams, uid)
   const granted = await canCreateHealth(uid)
   if (!granted) {
     throw new GrantedError()
@@ -57,7 +59,7 @@ export const deleteHealthByid = async (id: string) => {
   if (!granted) {
     throw new GrantedError()
   }
-  await deleteHealthByid(id)
+  await deleteHealthByIdDao({id})
 }
 
 export const updateHealth = async (healthParams: Health) => {

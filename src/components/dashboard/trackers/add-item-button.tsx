@@ -1,3 +1,4 @@
-//export {default} from './add-item-button.exercise'
+export {default} from './add-item-button.exercise'
 
-export {default} from './add-item-button.final'
+//1. 🚀 Modal à partir d’un bouton (Ajout)
+//export {default} from './add-item-button.bonus-1'

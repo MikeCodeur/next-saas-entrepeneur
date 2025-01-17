@@ -102,11 +102,15 @@ export const getWeeksHealthsByYearDao = async (year: string, uid: string) => {
       week: sql<string>`CONCAT(TO_CHAR(date_trunc('week', ${health.date}),'DD-MM'),' au ', TO_CHAR((DATE(date_trunc('week', ${health.date}) + INTERVAL '6 day')),'DD-MM'))`.as(
         'week'
       ),
+      // pour pouvoir trier par date dans un select distinct
+      weekStart: sql<Date>`date_trunc('week', ${health.date})`.as('week_start'),
     })
     .from(health)
     .where(
       sql`${health.userId} = ${uid} AND EXTRACT(YEAR FROM ${health.date}) = ${year}`
     )
+    .orderBy(desc(sql`week_start`))
+
   console.log('getWeeksHealthsByYearDao', rows)
   return rows
 }
