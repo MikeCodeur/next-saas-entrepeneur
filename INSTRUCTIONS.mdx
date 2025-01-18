@@ -1,6 +1,6 @@
-# Chart Finance (ReChart)
+# Chart Health Bar
 
-### 💡 Fait des graphiques
+### 💡 Faire un graphique de santé en barre (par semaine)
 
 ## 📝 Tes notes
 
@@ -8,192 +8,172 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Pour faire des graphiques il existe une excellent librairie React : [ReChart](https://recharts.org/en-US/)
+Le graphique de santé est un graphique sous forme de barres.
 
-De plus [shadcn](https://ui.shadcn.com/docs/components/chart) a introduit un composant chart basé sur reChart, nous l’avons ajouté au projet.
+- sur l’axe X : Les jours de la semaine sélectionnée
+- sur l’axe Y :
+  - 3 barres par jours (Poids / Calories / Temps de sport )
 
-```tsx
-pnpm dlx shadcn@latest add chart
-```
-
-Nous allons ici utiliser 2 types de graphiques
-
-- Sous forme de ligne `LineChart`
-- Sous forme de bar `BarChart`
-
-📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
-
-Pour gagner du temps nous avons mise en place dans `global.css`
-
-```css
---chart-1: 12 76% 61%;
---chart-2: 173 58% 39%;
---chart-3: 197 37% 24%;
---chart-4: 43 74% 66%;
---chart-5: 27 87% 67%;
-```
-
-que nous pouvons utiliser pour de la configuration comme par exemple
-
-### LineChart
-
-Exemple de configuration :
+Pour faire des graphique en barre nous avons à notre disposition avec [shadcn](https://ui.shadcn.com/docs/components/chart) un composant `<BarChart>` : Voila un exemple basique
 
 ```tsx
-const chartConfig = {
-  visitors: {
-    label: "Total Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
-```
-
-Exemple de graphique:
-
-```tsx
-   <ChartContainer
+<ChartContainer
       config={chartConfig}
       className="max-h-96 min-h-[200px] w-full"
     >
-      <LineChart
+      <BarChart
         accessibilityLayer
         data={[
-          {
-            browser: 'Chrome',
-            visitors: 275,
-          },
-          {browser: 'Firefox', visitors: 564},
-          {browser: 'Arc', visitors: 345},
-          {browser: 'Safari', visitors: 699},
-          {browser: 'Opera', visitors: 34},
+          {month: 'Jan', desktop: 4354, mobile: 120},
+          {month: 'Feb', desktop: 5688, mobile: 280},
+          {month: 'Mar', desktop: 0, mobile: 120},
+          {month: 'Jul', desktop: 2345, mobile: 394},
         ]}
       >
         <XAxis
-          dataKey="browser"
+          dataKey="month"
           tickLine={false}
+          tickMargin={10}
           axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value}
+          tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent indicator="dashed" />}
+        />
         <ChartLegend content={<ChartLegendContent />} />
-        <Line
-          dataKey="visitors"
-          type="monotone"
-          stroke="var(--color-revenus)"
-          strokeWidth={2}
-          dot={false}
+        <Bar
+          dataKey="desktop"
+          radius={4}
         />
-      </LineChart>
+        <Bar
+          dataKey="mobile"
+          radius={4}
+        />
+      </BarChart>
     </ChartContainer>
 ```
 
+📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
+
 ## Exercice
 
-Dans cet exercice tu vas devoir créer un `LineChart` pour les finances .
+Dans cet exercice nous allons devoir créer `une requête imbriquée`
 
-Le but est d’avoir toutes les données sur une années grouper par mois et types
-
-- Sur l’axe X : Les mois de l’années ou il y a des données
-- Sur l’axe Y : La valeurs en euros
-- Line 1 : La courbes des revenus
-- Line 2 : La courbes des dépenses
-- Line 3 : La courbes des actifs
-
-- **🐶 Dans un premier temps créé le Dao `getFinancesChartByYearDao`**
-
-Récupère les totaux mensuels des dépenses, revenus et actifs d'un utilisateur pour une année donnée, triés chronologiquement.
-
-En terme SQL :
-
-- filtre par année et user :
-  ```tsx
-   .where(
-        sql`${finance.userId} = ${uid} AND EXTRACT(YEAR FROM ${finance.date}) = ${year}`
-      )
-  ```
-- groupe par mois et années
-  ```tsx
-   .groupBy(
-        sql`EXTRACT(YEAR FROM ${finance.date})`,
-        sql`EXTRACT(MONTH FROM ${finance.date})`
-      )
-  ```
-- trie
-  ```tsx
-  .orderBy(
-      desc(sql`EXTRACT(YEAR FROM ${finance.date})`),
-      sql`EXTRACT(MONTH FROM ${finance.date})`
-    )
-  ```
-- Sommes de chaque `catégorie`
+- Dans un premier temps créer la requête permettant de de récupérer les données de santé pour :
+- Un `user` a une `année` et `semaine` precise
 
 ```tsx
-sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amount} END)`.as(
-          'dépenses'
-        ),
+.where(
+      sql`${health.userId} = ${uid} AND EXTRACT(WEEK FROM ${health.date} AT TIME ZONE 'UTC') = ${week} AND EXTRACT(YEAR FROM ${health.date} AT TIME ZONE 'UTC') = ${year}`
+    )
 ```
 
-- **🐶 Implémente cette fonction dans** `finance-repository.ts` dans**le but d’avoir cette forme la**
+- Groupé par jour de la semaine (monday … sunday)
 
 ```tsx
-[
-  { month: 'Jan', 'dépenses': 1234, revenus: 3434, actifs: 3000 },
-  { month: 'Feb', 'dépenses': 0, revenus: 345, actifs: 0 },
-  { month: 'Apr', 'dépenses': 699, revenus: 0, actifs: 0 },
-  { month: 'Sep', 'dépenses': 0, revenus: 1136, actifs: 0 }
+.groupBy(sql`EXTRACT(DAY FROM ${health.date} AT TIME ZONE 'UTC')`)
+```
+
+- Avec la sommes des éléments catégorie sur une jours : (ex : toutes les calories du jours X)
+
+```tsx
+ calories:
+    sql<number>`SUM(CASE WHEN ${health.category} = 'calories' THEN ${health.value} ELSE NULL END)`.as(
+      'calories'
+    ),
+```
+
+- Creation d’un alias
+
+```tsx
+.as('sq')
+```
+
+Nous pourrons ensuite faire une requête sur l’alias créé percement
+
+```tsx
+const rows = await db
+    .select({
+      week: sq.week,
+      calories: sq.calories,
+      temps: sq.temps,
+      poids: sq.poids,
+    })
+    .from(sq)
+    .orderBy(sq.week)
+```
+
+- **🐶 Dans cet exercice implémente `getHealthsChartbyWeekDao` dans** `health-repository.ts`
+
+Fais en sorte d’avoir des donnée sous cette forme
+
+```tsx
+healths [
+  {
+    week: '2025-01-13 00:00:00+00',
+    calories: '4354',
+    temps: '120',
+    poids: '90'
+  },
+  {
+    week: '2025-01-14 00:00:00+00',
+    calories: '5688',
+    temps: '280',
+    poids: '99'
+  },
 ]
 ```
 
-note : le service appelle déjà le repository, il n’y a rien a faire , tu peux appeler le service `getFinancesChartByYear` depuis la route
-
-- **🐶**Adapte la route `app/(app)/finance/page.ts` pour appeler `getFinancesChartByYear` et passer les données à notre `LineChart`
+- **🐶 Dans un second temps appelle cette fonction dans la route**
 
 ```tsx
-const financesForChart = await getFinancesChartByYear(financeYear, userId)
-<FinanceLineChart data={financeFormatted} />
-```
+const healths = await getHealthsChartbyWeek
+//helper pour formatter le jour
+const healthsFormatted = formatedHealthData(healths, 'week')
+//HealthBarChart
+ <HealthBarChart data={healthsFormatted} />
 
-Note : utilise `formatedFinanceData` une fonction qui formatte les valeurs `null` et `undefined` pour le graphique
+```
 
 Fichiers
 
-- `data/repositories/finance-repository.ts`
-- `app/(app)/finance/page.ts`
+- `data/repositories/health-repository.ts`
+- `app/(app)/health/page.tsx`
 
 ## Bonus
 
-### 1. 🚀 Chart Finance
+### 1. 🚀 Créer le graphique en barre
 
-**🐶** Dans cette exercice tu vas devoir créer le graphique en ligne `FinanceLineChart`
+Le graphique en barre s’utilise avec un `<BarChart accessibilityLayer data={data}>` et des `<Bar>` exemple
 
-- Step 1 : `chartConfig` avec les couleurs des lignes
-- Step 2 : Créer un `ChartContainer` `LineChart`
-- Step 3 : Créer un `XAxis` pour configurer l’axe des abscisses
-- Step 4 : Créer les 3 lignes avec le composant `Line`
+```tsx
+ <Bar
+	  dataKey="calories"
+	  fill="var(--color-calories)"
+	  radius={4}
+	  yAxisId={'calories'}
+	/>
+```
 
-Fichiers
-
-- `component/dashboard/finance/finance-line-chart.tsx`
-
-### 2. 🚀 Mettre les mois vide à zero
-
-Il se peut que l’utilisateur n’entre pas de données sur certains mois. Dans ce cas il est possible d’adapter `formatedFinanceData` pour mettre les mois à zéro
+- **🐶 Créé le graphique en barre**
 
 Fichiers
 
-- `chart-utils.tsx`
+- `/components/dashboard/trackers/health/health-bar-chart.tsx`
+
+### 2. 🚀 Valeur par default
+
+Fais en sorte d'avoir des valeur à zéro pour les jour vide
+
+Fichiers
+
+- `formatedHealthData`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc de [ReChart](https://recharts.org/en-US/)
+📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
 
 ## Ils vont t’aider
 
@@ -205,4 +185,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=08-chart-finance-line).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=09%20chart-bar-heath).

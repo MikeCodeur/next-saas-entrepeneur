@@ -11,6 +11,7 @@ import {
   createHealthByUidDao,
   deleteHealthByIdDao,
   getHealthByIdDao,
+  getHealthsChartbyWeekDao,
   getHealthsWithPaginationByWeekDao,
   getWeeksHealthsByYearDao,
   getYearsHealthsByUidDao,
@@ -138,4 +139,17 @@ export const getHealthsWithPaginationByWeek = async (
       rowCount: healthsByWeek.pagination.rowCount,
     },
   }
+}
+
+export const getHealthsChartbyWeek = async (
+  year: string,
+  week: number,
+  uid: string
+) => {
+  const granted = await canReadHealth(uid)
+
+  if (!granted) {
+    throw new GrantedError()
+  }
+  return await getHealthsChartbyWeekDao(year, week, uid)
 }

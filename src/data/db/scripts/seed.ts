@@ -2,6 +2,7 @@
 
 import pg from 'pg'
 import initDotEnv from './env'
+import {sql} from 'drizzle-orm'
 
 initDotEnv()
 
@@ -41,34 +42,42 @@ VALUES
   await client.query(`
   INSERT INTO "finance" ("userId", "date", "amount", "label", "category")
     VALUES
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2023-09-01', 100, 'Description 23', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2024-09-01', 100, 'Description 24', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 100, 'Description 1', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 234, 'Description 2', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 333, 'Description 3', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01', 234, 'Description 4', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 4', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 5', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 6', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01', 234, 'admin Description 7', 'revenus'),
-      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-02', 200, 'admin Description 8', 'revenus');
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2023-09-01'::timestamp AT TIME ZONE 'UTC', 100, 'Description 23', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2024-10-01'::timestamp AT TIME ZONE 'UTC', 234, 'Description 24', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-11-01'::timestamp AT TIME ZONE 'UTC', 154, 'Description 1', 'dépenses'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01'::timestamp AT TIME ZONE 'UTC', 678, 'Description 2', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01'::timestamp AT TIME ZONE 'UTC', 333, 'Description 3', 'actifs'),
+      ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-09-01'::timestamp AT TIME ZONE 'UTC', 345, 'Description 4', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-10-01'::timestamp AT TIME ZONE 'UTC', 653, 'admin Description 4', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-09-01'::timestamp AT TIME ZONE 'UTC', 234, 'admin Description 5', 'actifs'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-11-01'::timestamp AT TIME ZONE 'UTC', 456, 'admin Description 6', 'revenus'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-07-01'::timestamp AT TIME ZONE 'UTC', 500, 'admin Description 7', 'actifs'),
+      ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-06-02'::timestamp AT TIME ZONE 'UTC', 200, 'admin Description 8', 'dépenses');
   `)
 
   await client.query(`
     INSERT INTO "health" ("userId", "date", "value", "category")
       VALUES
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-01', 3045, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-02', 80, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-02-03', 120, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-01', 1212, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-12-02', 95, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-12-03', 120, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06', 2604, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06', 90, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-07', 180, 'temps'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-08', 2504, 'calories'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-13', 90, 'poids'),
-        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-14', 180, 'temps');
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-01'::timestamp AT TIME ZONE 'UTC', 3045, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-01-02'::timestamp AT TIME ZONE 'UTC', 80, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'user@gmail.com'), '2025-02-03'::timestamp AT TIME ZONE 'UTC', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-01'::timestamp AT TIME ZONE 'UTC', 1212, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-01'::timestamp AT TIME ZONE 'UTC', 98, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-01'::timestamp AT TIME ZONE 'UTC', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-02'::timestamp AT TIME ZONE 'UTC', 1612, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-02'::timestamp AT TIME ZONE 'UTC', 99, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-11-03'::timestamp AT TIME ZONE 'UTC', 220, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2024-12-03'::timestamp AT TIME ZONE 'UTC', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06'::timestamp AT TIME ZONE 'UTC', 2604, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-06'::timestamp AT TIME ZONE 'UTC', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-07'::timestamp AT TIME ZONE 'UTC', 180, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-08'::timestamp AT TIME ZONE 'UTC', 2504, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-13'::timestamp AT TIME ZONE 'UTC', 90, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-13'::timestamp AT TIME ZONE 'UTC', 4354, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-13'::timestamp AT TIME ZONE 'UTC', 120, 'temps'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-14'::timestamp AT TIME ZONE 'UTC', 99, 'poids'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-14'::timestamp AT TIME ZONE 'UTC', 3354, 'calories'),
+        ((SELECT id FROM "user" WHERE email = 'admin@gmail.com'), '2025-01-14'::timestamp AT TIME ZONE 'UTC', 280, 'temps');
     `)
 
   const end = Date.now()
