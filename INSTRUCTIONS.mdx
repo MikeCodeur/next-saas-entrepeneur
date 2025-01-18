@@ -1,6 +1,6 @@
-# Chart Health Bar
+# Créer un Dashboard optimisé
 
-### 💡 Faire un graphique de santé en barre (par semaine)
+### 💡 Utiliser le streaming pour un dashboard optimisé
 
 ## 📝 Tes notes
 
@@ -8,172 +8,66 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Le graphique de santé est un graphique sous forme de barres.
+Dans un premier temps nous allons créer un `dashboard` une route qui contiendra les 2 graphiques
 
-- sur l’axe X : Les jours de la semaine sélectionnée
-- sur l’axe Y :
-  - 3 barres par jours (Poids / Calories / Temps de sport )
-
-Pour faire des graphique en barre nous avons à notre disposition avec [shadcn](https://ui.shadcn.com/docs/components/chart) un composant `<BarChart>` : Voila un exemple basique
-
-```tsx
-<ChartContainer
-      config={chartConfig}
-      className="max-h-96 min-h-[200px] w-full"
-    >
-      <BarChart
-        accessibilityLayer
-        data={[
-          {month: 'Jan', desktop: 4354, mobile: 120},
-          {month: 'Feb', desktop: 5688, mobile: 280},
-          {month: 'Mar', desktop: 0, mobile: 120},
-          {month: 'Jul', desktop: 2345, mobile: 394},
-        ]}
-      >
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
-
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent indicator="dashed" />}
-        />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar
-          dataKey="desktop"
-          radius={4}
-        />
-        <Bar
-          dataKey="mobile"
-          radius={4}
-        />
-      </BarChart>
-    </ChartContainer>
-```
-
-📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
+.
 
 ## Exercice
 
-Dans cet exercice nous allons devoir créer `une requête imbriquée`
+- **🐶 Dans cet exercice tu va devoir implémenter la route `dashboard` qui contiendra les `queryParam` nécessaires.**
+- **Faire les appels aux services nécessaires**
+- Afficher les 2 Charts
 
-- Dans un premier temps créer la requête permettant de de récupérer les données de santé pour :
-- Un `user` a une `année` et `semaine` precise
+PS : Nous avons ajouter de la latence dans les repositories volontairement pour ensuite l’optimiser via le streaming (exo suivant)
 
-```tsx
-.where(
-      sql`${health.userId} = ${uid} AND EXTRACT(WEEK FROM ${health.date} AT TIME ZONE 'UTC') = ${week} AND EXTRACT(YEAR FROM ${health.date} AT TIME ZONE 'UTC') = ${year}`
-    )
-```
-
-- Groupé par jour de la semaine (monday … sunday)
+- 3 seconde pour `Health`
+- 5 pour `Finance`
 
 ```tsx
-.groupBy(sql`EXTRACT(DAY FROM ${health.date} AT TIME ZONE 'UTC')`)
-```
-
-- Avec la sommes des éléments catégorie sur une jours : (ex : toutes les calories du jours X)
-
-```tsx
- calories:
-    sql<number>`SUM(CASE WHEN ${health.category} = 'calories' THEN ${health.value} ELSE NULL END)`.as(
-      'calories'
-    ),
-```
-
-- Creation d’un alias
-
-```tsx
-.as('sq')
-```
-
-Nous pourrons ensuite faire une requête sur l’alias créé percement
-
-```tsx
-const rows = await db
-    .select({
-      week: sq.week,
-      calories: sq.calories,
-      temps: sq.temps,
-      poids: sq.poids,
-    })
-    .from(sq)
-    .orderBy(sq.week)
-```
-
-- **🐶 Dans cet exercice implémente `getHealthsChartbyWeekDao` dans** `health-repository.ts`
-
-Fais en sorte d’avoir des donnée sous cette forme
-
-```tsx
-healths [
-  {
-    week: '2025-01-13 00:00:00+00',
-    calories: '4354',
-    temps: '120',
-    poids: '90'
-  },
-  {
-    week: '2025-01-14 00:00:00+00',
-    calories: '5688',
-    temps: '280',
-    poids: '99'
-  },
-]
-```
-
-- **🐶 Dans un second temps appelle cette fonction dans la route**
-
-```tsx
-const healths = await getHealthsChartbyWeek
-//helper pour formatter le jour
-const healthsFormatted = formatedHealthData(healths, 'week')
-//HealthBarChart
- <HealthBarChart data={healthsFormatted} />
-
+export const getYearsHealthsByUid = async (uid: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 3000))
+export const getYearsFinancesByUid = async (uid: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 5000))
 ```
 
 Fichiers
 
-- `data/repositories/health-repository.ts`
-- `app/(app)/health/page.tsx`
+- `app/(apps)/dashboard/page.tsx`
 
 ## Bonus
 
-### 1. 🚀 Créer le graphique en barre
+### 1. 🚀 Optimisation : Streaming
 
-Le graphique en barre s’utilise avec un `<BarChart accessibilityLayer data={data}>` et des `<Bar>` exemple
+Les `Dashboards` sont souvent gourmant en ressources (Beacoup d’appels en base de de données / Calcul / agrégation etc … ) ce qui rend leur affichage plus ou moins long.
+
+Certains graphiques peuvent être rapide , d’autres plus longs. Dans le Dashboard précèdent l’affichage de la page arrive à la fin du graphique le plus long.
+
+- **🐶 Dans cet exercice tu vas devoir utiliser le streaming**
+
+Pour gagner du temps nous avons découper en deux RSC distinct (qui contiennent les appels à la base de données )
+
+- `finance-chart.tsx (<FinanceChart>)`
+- `finance-chart.tsx` `(<HealthChart>)`
+
+Utilise `<Suspense>` pour gérer le streaming
 
 ```tsx
- <Bar
-	  dataKey="calories"
-	  fill="var(--color-calories)"
-	  radius={4}
-	  yAxisId={'calories'}
-	/>
+<Suspense fallback={<ChartBodySkeleton />}>
+    <LongReactServerComposant />
+</Suspense>
 ```
 
-- **🐶 Créé le graphique en barre**
+ps : `ChartBodySkeleton` est un skeleton disponible pour les charts
 
 Fichiers
 
-- `/components/dashboard/trackers/health/health-bar-chart.tsx`
+- `app/(apps)/dashboard/page.tsx`
 
-### 2. 🚀 Valeur par default
-
-Fais en sorte d'avoir des valeur à zéro pour les jour vide
-
-Fichiers
-
-- `formatedHealthData`
+###
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
+📑 Le lien vers la doc [https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)
 
 ## Ils vont t’aider
 
@@ -185,4 +79,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=09%20chart-bar-heath).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=10%20dashbaord-streaming).
