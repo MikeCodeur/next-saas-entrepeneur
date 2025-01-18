@@ -89,13 +89,7 @@ export const financeColumns: ColumnDef<FinanceDTO>[] = [
     cell: ({row}) => {
       return (
         <div className="min-w-fit text-right md:ml-0 md:px-8">
-          <DataTableRowActions
-            data={{
-              ...row.original,
-              category: row.original.category || 'revenus',
-            }}
-            type="finance"
-          />
+          <DataTableRowActions data={{...row.original}} type="finance" />
         </div>
       )
     },
