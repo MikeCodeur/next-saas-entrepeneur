@@ -76,8 +76,8 @@ const CreateEditHealthForm = (props: CreateEditHealthFormProps) => {
       toast({title: 'Succes', description: result.data})
     } else {
       toast({
-        title: result.data,
-        description: result.data,
+        title: 'Error',
+        description: result.message,
         variant: 'destructive',
       })
     }

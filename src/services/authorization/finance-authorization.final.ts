@@ -4,46 +4,47 @@ import {
 } from '@/services/authentication/auth-utils'
 import {permissionAcces} from './authorization-service'
 
-export const canReadHealth = async (resourceUid: string) => {
+export const canReadFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const permission = permissionAcces(
     authUser?.user,
-    'health',
+    'finance',
     'read',
     resourceUid
   )
+
   return permission.granted
 }
-export const canDeleteHealth = async (resourceUid: string) => {
+
+export const canDeleteFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const permission = permissionAcces(
     authUser?.user,
-    'health',
+    'finance',
     'delete',
     resourceUid
   )
   return permission.granted
 }
 
-export const canCreateHealth = async (resourceUid: string) => {
+export const canCreateFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const permission = permissionAcces(
     authUser?.user,
-    'health',
+    'finance',
     'create',
     resourceUid
   )
   return permission.granted
 }
 
-export const canUpdateHealth = async (resourceUid: string) => {
+export const canUpdateFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const permission = permissionAcces(
     authUser?.user,
-    'health',
+    'finance',
     'update',
     resourceUid
   )
-
   return permission.granted
 }

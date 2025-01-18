@@ -79,7 +79,6 @@ export const updateHealth = async (healthParams: Health) => {
 }
 
 export const getYearsHealthsByUid = async (uid: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 3000))
   const granted = await canReadHealth(uid)
 
   if (!granted) {

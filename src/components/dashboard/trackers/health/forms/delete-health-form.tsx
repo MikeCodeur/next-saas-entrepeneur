@@ -25,8 +25,8 @@ const DeleteHealthForm = ({
       toast({title: 'Succes', description: result.data})
     } else {
       toast({
-        title: result.data,
-        description: result.data,
+        title: 'Erreur',
+        description: result.message,
         variant: 'destructive',
       })
     }

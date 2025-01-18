@@ -23,7 +23,6 @@ import {
   getYearsFinancesByUidDao,
   updateFinanceByidDao,
 } from '@/data/repositories/finance-repository'
-import {DATA_ROWS_PER_PAGE} from '@/utils/constants'
 
 export const createFinanceByUid = async (
   financeParams: CreateFinance,
@@ -31,8 +30,10 @@ export const createFinanceByUid = async (
 ) => {
   //Authorization
   const granted = await canCreateFinance(uid)
+  console.log(' createFinanceByUidgranted', granted)
   if (!granted) {
-    throw new GrantedError()
+    console.log(' createFinanceByUidgranted err', granted)
+    throw new GrantedError('Vous ne pouvez pas créer une finance')
   }
   // Service Data Validation
   const parsed = createFinanceServiceSchema.safeParse(financeParams)
@@ -65,7 +66,7 @@ export const updateFinance = async (financeParams: UpdateFinance) => {
   const granted = await canUpdateFinance(resourceUid)
 
   if (!granted) {
-    throw new GrantedError()
+    throw new GrantedError('Vous ne pouvez pas modifier une finance')
   }
   const parsed = updateFinanceServiceShema.safeParse(financeParams)
   if (!parsed.success) {
@@ -88,7 +89,7 @@ export const deleteFinanceByid = async (id: string) => {
   const granted = await canDeleteFinance(resourceUid)
 
   if (!granted) {
-    throw new GrantedError()
+    throw new GrantedError('Vous ne pouvez pas supprimer une finance')
   }
   await deleteFinanceByidDao(id)
 }
@@ -106,7 +107,6 @@ export const getFinancesByUid = async (uid: string) => {
 }
 
 export const getYearsFinancesByUid = async (uid: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000))
   //Authorization
   const granted = await canReadFinance(uid)
   if (!granted) {

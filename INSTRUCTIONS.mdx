@@ -1,6 +1,6 @@
-# Créer un Dashboard optimisé
+# Role Based Access Control
 
-### 💡 Utiliser le streaming pour un dashboard optimisé
+### 💡 Mettre en place RBAC
 
 ## 📝 Tes notes
 
@@ -8,66 +8,141 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Dans un premier temps nous allons créer un `dashboard` une route qui contiendra les 2 graphiques
+Dans une application il est important de gérer l’autorisation (`AuthZ`) . Cela permet de répondre à la question :
 
-.
+- Cet utilisateur a t-il le droit de faire tel action ?
+- Exemple : Le User avec le `Role Admin` peut t-il supprimer une donnée ?
+
+Pour le moment nous avons quelque règle simple basé sur le `Role`
+
+- Si `admin` on peut tout faire sinon (`user`) accès refusé
+
+```tsx
+// Si le user est admin il peut supprimer une finance
+export const canDeleteFinance = async () => {
+  const authUser = await getUserAuthExtented()
+  const hasRoleAdmin = idAdmin(authUser?.user)
+  if (hasRoleAdmin) return true
+  return false
+}
+```
+
+Mais dans une application complexe ou peut avoir besoin de gerer encore plus financement
+
+- ressources
+- action
+- attributs
+- etc …
+
+Et il devient vite compliqué d’implémenter toutes ces règles et de les maintenir. Des services tiers nous permettent de gérer cela ou des librairies
+
+Pour l’exercice nous allons utiliser une simple librairie : `accesscontrol` elle fonctionne comme ceci : Exemple
+
+```tsx
+let grantList = [
+    { role: 'admin', resource: 'video', action: 'create:any', attributes: '*, !views' },
+    { role: 'admin', resource: 'video', action: 'read:any', attributes: '*' },
+    { role: 'admin', resource: 'video', action: 'update:any', attributes: '*, !views' },
+    { role: 'admin', resource: 'video', action: 'delete:any', attributes: '*' },
+
+    { role: 'user', resource: 'video', action: 'create:own', attributes: '*, !rating, !views' },
+    { role: 'user', resource: 'video', action: 'read:any', attributes: '*' },
+    { role: 'user', resource: 'video', action: 'update:own', attributes: '*, !rating, !views' },
+    { role: 'user', resource: 'video', action: 'delete:own', attributes: '*' }
+];
+const ac = new AccessControl(grantList);
+
+const permission = ac.can('user').createOwn('video');
+console.log(permission.granted);    // —> true
+console.log(permission.attributes); // —> ['*'] (all attributes)
+
+permission = ac.can('admin').updateAny('video');
+console.log(permission.granted);    // —> true
+console.log(permission.attributes); // —> ['title']
+```
+
+Une fois mise en place dans notre code il nous suffit de modifier cette configuration (au lieu de modifier du code)
 
 ## Exercice
 
-- **🐶 Dans cet exercice tu va devoir implémenter la route `dashboard` qui contiendra les `queryParam` nécessaires.**
-- **Faire les appels aux services nécessaires**
-- Afficher les 2 Charts
+**🐶** Dans cette exercice tu vas devoir utiliser `accesscontrol` pour gérer le RBAC.
 
-PS : Nous avons ajouter de la latence dans les repositories volontairement pour ensuite l’optimiser via le streaming (exo suivant)
+Etape 1 : configuration
 
-- 3 seconde pour `Health`
-- 5 pour `Finance`
+- `rbac-config.ts`
+- Définie la configuration pour les rôles `admin`, `user` et `public`
+- Pour chaque rôle configure la `ressource`, `l’action` et les `attributs, par exemple`
 
 ```tsx
-export const getYearsHealthsByUid = async (uid: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 3000))
-export const getYearsFinancesByUid = async (uid: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+const grantAdminList= [
+  //admin peut creer et lire n'importe quel finance
+  {role: 'admin', resource: 'finance', action: 'create:any', attributes: '*'},
+  {role: 'admin', resource: 'finance', action: 'read:any', attributes: '*'},
+  //user peut creer et lire ses propres données
+  const grantUserList = [
+  {role: 'user', resource: 'finance', action: 'read:own', attributes: '*'},
+  {role: 'user', resource: 'finance', action: 'create:own', attributes: '*'},
+
+  const ac = new AccessControl([
+  ...grantAdminList,
+  ...grantUserList,
+])
+```
+
+Etape 2 : Utilisation
+
+Nous avons créé un service générique “`authorization`” qui va gérer le RBAC. L’idée de de pouvoir appeler une fonction `permissionAcces` qui appellera Access control del a manière suivante
+
+```tsx
+export const canReadFinance = async (resourceUid: string) => {
+  const authUser = await getUserAuthExtented()
+
+  const permission = permissionAcces(
+    authUser?.user,
+    'finance',
+    'read',
+    resourceUid
+  )
+  return permission?.granted
+}
+```
+
+```tsx
+export const permissionAcces = (
+  user: User | undefined,
+  ressourceType: Ressource,
+  action: GrantAction,
+  ressourceUid?: string
+) => {
+  ac.can('admin').readAny('finance')
+```
+
+Etape 3 : Utilisation de `permissionAcces`
+
+Utilise `permissionAcces` dans chaque service d’autorisation spécifique comme `finance-authorization`
+
+```tsx
+export const canReadFinance = async (resourceUid: string) => {
+  const authUser = await getUserAuthExtented()
+  const permission = permissionAcces(
+    authUser?.user,
+    'finance',
+    'read',
+    resourceUid
+  )
+  return permission.granted
+}
 ```
 
 Fichiers
 
-- `app/(apps)/dashboard/page.tsx`
+- `services/authorization/rbac-config.ts`
+- `services/authorization/authorization-service.ts`
+- `services/authorization/finance-authorization.ts`
 
 ## Bonus
 
-### 1. 🚀 Optimisation : Streaming
-
-Les `Dashboards` sont souvent gourmant en ressources (Beacoup d’appels en base de de données / Calcul / agrégation etc … ) ce qui rend leur affichage plus ou moins long.
-
-Certains graphiques peuvent être rapide , d’autres plus longs. Dans le Dashboard précèdent l’affichage de la page arrive à la fin du graphique le plus long.
-
-- **🐶 Dans cet exercice tu vas devoir utiliser le streaming**
-
-Pour gagner du temps nous avons découper en deux RSC distinct (qui contiennent les appels à la base de données )
-
-- `finance-chart.tsx (<FinanceChart>)`
-- `finance-chart.tsx` `(<HealthChart>)`
-
-Utilise `<Suspense>` pour gérer le streaming
-
-```tsx
-<Suspense fallback={<ChartBodySkeleton />}>
-    <LongReactServerComposant />
-</Suspense>
-```
-
-ps : `ChartBodySkeleton` est un skeleton disponible pour les charts
-
-Fichiers
-
-- `app/(apps)/dashboard/page.tsx`
-
 ###
-
-## Aller plus loin
-
-📑 Le lien vers la doc [https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)
 
 ## Ils vont t’aider
 
@@ -79,4 +154,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=10%20dashbaord-streaming).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=11%20RBAC).
