@@ -12,6 +12,7 @@ import {notFound} from 'next/navigation'
 import {getWeekFromLabel} from '@/utils/date-utils'
 import {formatedHealthData} from '@/components/charts/chart-utils'
 import HealthBarChart from '@/components/dashboard/trackers/health/health-bar-chart'
+import {getHealthsByWeekDal} from '@/app/dal/health-dal'
 
 type HealthDashboardProps = {
   healthYear?: string
@@ -51,7 +52,8 @@ const HealthDashboard = async (props: HealthDashboardProps) => {
   const hasCurrentWeek = weeks?.find((week) => week.week === healthWeek)?.week
 
   const weekFromLabel = getWeekFromLabel(healthWeek, healthYear)
-  const healthData = await getHealthsWithPaginationByWeek(
+
+  const healthData = await getHealthsByWeekDal(
     weekFromLabel,
     healthYear,
     userId,

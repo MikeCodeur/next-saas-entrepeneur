@@ -64,7 +64,7 @@ const grantUserList = [
     role: 'user',
     resource: 'health',
     action: 'update:own',
-    attributes: '*',
+    attributes: '*,!role',
   },
   {
     role: 'user',
@@ -75,7 +75,7 @@ const grantUserList = [
   {
     role: 'user',
     resource: 'health',
-    action: 'read:own',
+    action: 'read:any',
     attributes: '*,!category',
   },
   // user
@@ -100,6 +100,18 @@ const grantPublicList = [
     resource: 'users',
     action: 'read:any',
     attributes: ['id', 'name'],
+  },
+  {
+    role: 'public',
+    resource: 'finance',
+    action: 'read:any',
+    attributes: '*,!label,!category',
+  },
+  {
+    role: 'public',
+    resource: 'health',
+    action: 'read:any',
+    attributes: '*,!category',
   },
 ]
 const ac = new AccessControl([

@@ -46,6 +46,7 @@ export function userDTO(user: User): UserDTO | undefined {
   if (!user) return undefined
 
   return {
+    id: user?.id ?? '',
     email: user?.email ?? '',
     name: user?.name ?? '',
     role: user?.role,

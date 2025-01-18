@@ -12,6 +12,7 @@ import {notFound} from 'next/navigation'
 import React from 'react'
 import {formatedFinanceData} from '@/components/charts/chart-utils'
 import FinanceLineChart from '@/components/dashboard/trackers/finance/finance-line-chart'
+import {getFinancesByYearDal} from '@/app/dal/finance-dal'
 
 type FinanceDashboardProps = {
   financeYear?: string
@@ -43,12 +44,7 @@ const FinanceDashboard = async (props: FinanceDashboardProps) => {
 
   const hasCurrentYear = years?.find((year) => year.year === financeYear)?.year
 
-  const finances = await getFinancesWithPaginationByYear(
-    financeYear,
-    userId,
-    page,
-    limit
-  )
+  const finances = await getFinancesByYearDal(financeYear, userId, page, limit)
 
   const financesForChart = await getFinancesChartByYear(financeYear, userId)
   const financeFormatted = formatedFinanceData(financesForChart, 'month')

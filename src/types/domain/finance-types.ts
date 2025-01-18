@@ -10,4 +10,6 @@ export type CreateEditFinance = Omit<CreateEditFinanceModel, 'userId'> & {
   userId?: string
 }
 
-export type FinanceDTO = Finance
+export type FinanceDTO = Omit<Finance, 'category'> & {
+  category?: Finance['category']
+}

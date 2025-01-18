@@ -9,4 +9,6 @@ export type CreateHealth = Omit<Health, 'id' | 'userId'>
 export type UpdateHealth = Partial<CreateHealth> & Pick<Health, 'id'>
 export type DeleteHealth = Pick<Health, 'id'>
 
-export type HealthDTO = Health
+export type HealthDTO = Omit<Health, 'category'> & {
+  category?: Health['category']
+}
