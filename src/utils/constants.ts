@@ -53,3 +53,15 @@ export const healthCategories = [
 export const trackers = ['finance', 'health'] as const
 
 export type TrackerType = 'finance' | 'health'
+
+export const FINANCE_CATEGORIES = {
+  incomes: financeCategories[0],
+  outcomes: financeCategories[1],
+  assets: financeCategories[2],
+} as const
+
+export const HEALTH_CATEGORIES = {
+  calories: healthCategories[0],
+  poids: healthCategories[1],
+  temps: healthCategories[2],
+} as const

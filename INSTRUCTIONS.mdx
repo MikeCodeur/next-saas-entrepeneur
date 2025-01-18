@@ -1,6 +1,6 @@
-# Formulaire / Modal
+# Chart Finance (ReChart)
 
-### 💡 Faire un formulaire dans une modal (Dialog)
+### 💡 Fait des graphiques
 
 ## 📝 Tes notes
 
@@ -8,271 +8,192 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Il existe un composant `Shadcn` permettant de gérer les `Dialog` avec (`radix`)
+Pour faire des graphiques il existe une excellent librairie React : [ReChart](https://recharts.org/en-US/)
 
-📑 Le liens vers la doc : [https://ui.shadcn.com/docs/components/dialog](https://ui.shadcn.com/docs/components/dialog)
-
-Exemple :
+De plus [shadcn](https://ui.shadcn.com/docs/components/chart) a introduit un composant chart basé sur reChart, nous l’avons ajouté au projet.
 
 ```tsx
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
-export function DialogDemo() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
+pnpm dlx shadcn@latest add chart
 ```
 
-Une première pourrait idée pourrait être de faire autant de `Dialog` que nécessaire (`Finance`, `Health`, `Login` etc …)
+Nous allons ici utiliser 2 types de graphiques
 
-Mais cela fait beaucoup de duplication de code :
+- Sous forme de ligne `LineChart`
+- Sous forme de bar `BarChart`
 
-- `<Dialog>`
-- `<DialogTrigger asChild>`
-- `<DialogContent>` etc …
+📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
 
-Nous voulons ici une gestion unique des `Dialog` au sein de notre application. Nous allons pour ça utiliser le `State Management Pattern` et l’`API Context.` L'idée est de gérer les états (`states`) des dialogue dans un contexte commun.
+Pour gagner du temps nous avons mise en place dans `global.css`
 
-Il faut voir cela comme des states partagés dans notre application (et non pas uniquement dans un composant donné)
-
-Un des cas les plus classique pour représenter ce pattern est la gestion du thème dans une application
-
-### 1. **Créer un contexte**
-
-Crée un fichier pour ton contexte, par exemple `ThemeContext.tsx` :
-
-```tsx
-import { createContext, ReactNode, useContext, useState } from 'react';
-
-// Créer le contexte
-export const ThemeContext = createContext<{
-  theme: string;
-  toggleTheme: () => void;
-} | null>(null);
-
-// Fournir le contexte
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState('light');
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-// Hook personnalisé pour simplifier l'utilisation du contexte
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
+```css
+--chart-1: 12 76% 61%;
+--chart-2: 173 58% 39%;
+--chart-3: 197 37% 24%;
+--chart-4: 43 74% 66%;
+--chart-5: 27 87% 67%;
 ```
 
-Note : Depuis React 19 il est possible d’utiliser `use` à la place de `useContext`
+que nous pouvons utiliser pour de la configuration comme par exemple
 
-- [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
+### LineChart
 
-### 2. **Utiliser le contexte dans l'application**
-
-Intègre le `ThemeProvider` dans l'arborescence de ton application.
-
-### `App.tsx`
+Exemple de configuration :
 
 ```tsx
-
-import { ThemeProvider } from './ThemeContext';
-import ThemeSwitcher from './ThemeSwitcher';
-
-function App() {
-  return (
-    <ThemeProvider>
-      <div>
-        <h1>Exemple de Contexte</h1>
-        <ThemeSwitcher />
-      </div>
-    </ThemeProvider>
-  );
-}
-
-export default App;
-
+const chartConfig = {
+  visitors: {
+    label: "Total Visitors",
+  },
+  chrome: {
+    label: "Chrome",
+    color: "hsl(var(--chart-1))",
+  },
+  safari: {
+    label: "Safari",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig
 ```
 
-Un composant qui nomme le contexte pour afficher et modifier le thème.
-
-### `ThemeSwitcher.tsx`
+Exemple de graphique:
 
 ```tsx
-
-import { useTheme } from './ThemeContext';
-
-const ThemeSwitcher = () => {
-  const { theme, toggleTheme } = useTheme();
-
-  return (
-    <div>
-      <p>Thème actuel : {theme}</p>
-      <button onClick={toggleTheme}>
-        Basculer en {theme === 'light' ? 'sombre' : 'clair'}
-      </button>
-    </div>
-  );
-};
-
-export default ThemeSwitcher;
-
+   <ChartContainer
+      config={chartConfig}
+      className="max-h-96 min-h-[200px] w-full"
+    >
+      <LineChart
+        accessibilityLayer
+        data={[
+          {
+            browser: 'Chrome',
+            visitors: 275,
+          },
+          {browser: 'Firefox', visitors: 564},
+          {browser: 'Arc', visitors: 345},
+          {browser: 'Safari', visitors: 699},
+          {browser: 'Opera', visitors: 34},
+        ]}
+      >
+        <XAxis
+          dataKey="browser"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(value) => value}
+        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <Line
+          dataKey="visitors"
+          type="monotone"
+          stroke="var(--color-revenus)"
+          strokeWidth={2}
+          dot={false}
+        />
+      </LineChart>
+    </ChartContainer>
 ```
 
 ## Exercice
 
-Dans cet exercice tu vas devoir implémenter la gestion des modal (`shadcn`) avec le context API.
+Dans cet exercice tu vas devoir créer un `LineChart` pour les finances .
 
-- [https://react.dev/reference/react/createContext](https://react.dev/reference/react/createContext)
-- [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
+Le but est d’avoir toutes les données sur une années grouper par mois et types
 
-**🐶** Dans un premier temps créer le `ModalProvider` / `ModalContext` et le hook `useModal` dans `componant/modal.ts`
+- Sur l’axe X : Les mois de l’années ou il y a des données
+- Sur l’axe Y : La valeurs en euros
+- Line 1 : La courbes des revenus
+- Line 2 : La courbes des dépenses
+- Line 3 : La courbes des actifs
 
-**🐶 Ensuite utilise** `ModalProvider` dans le `RootLayout` pour pouvoir utiliser `useModal` partout dans l’application
+- **🐶 Dans un premier temps créé le Dao `getFinancesChartByYearDao`**
+
+Récupère les totaux mensuels des dépenses, revenus et actifs d'un utilisateur pour une année donnée, triés chronologiquement.
+
+En terme SQL :
+
+- filtre par année et user :
+  ```tsx
+   .where(
+        sql`${finance.userId} = ${uid} AND EXTRACT(YEAR FROM ${finance.date}) = ${year}`
+      )
+  ```
+- groupe par mois et années
+  ```tsx
+   .groupBy(
+        sql`EXTRACT(YEAR FROM ${finance.date})`,
+        sql`EXTRACT(MONTH FROM ${finance.date})`
+      )
+  ```
+- trie
+  ```tsx
+  .orderBy(
+      desc(sql`EXTRACT(YEAR FROM ${finance.date})`),
+      sql`EXTRACT(MONTH FROM ${finance.date})`
+    )
+  ```
+- Sommes de chaque `catégorie`
+
+```tsx
+sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amount} END)`.as(
+          'dépenses'
+        ),
+```
+
+- **🐶 Implémente cette fonction dans** `finance-repository.ts` dans**le but d’avoir cette forme la**
+
+```tsx
+[
+  { month: 'Jan', 'dépenses': 1234, revenus: 3434, actifs: 3000 },
+  { month: 'Feb', 'dépenses': 0, revenus: 345, actifs: 0 },
+  { month: 'Apr', 'dépenses': 699, revenus: 0, actifs: 0 },
+  { month: 'Sep', 'dépenses': 0, revenus: 1136, actifs: 0 }
+]
+```
+
+note : le service appelle déjà le repository, il n’y a rien a faire , tu peux appeler le service `getFinancesChartByYear` depuis la route
+
+- **🐶**Adapte la route `app/(app)/finance/page.ts` pour appeler `getFinancesChartByYear` et passer les données à notre `LineChart`
+
+```tsx
+const financesForChart = await getFinancesChartByYear(financeYear, userId)
+<FinanceLineChart data={financeFormatted} />
+```
+
+Note : utilise `formatedFinanceData` une fonction qui formatte les valeurs `null` et `undefined` pour le graphique
 
 Fichiers
 
-- `componant/modal.ts`
-- `app/layout.ts`
+- `data/repositories/finance-repository.ts`
+- `app/(app)/finance/page.ts`
 
 ## Bonus
 
-### 1. 🚀 Modal à partir d’un bouton (Ajout)
+### 1. 🚀 Chart Finance
 
-Dans cet exercice tu vas devoir créer un bouton qui ouvre la modal qui contient le formulaire d’ajout
+**🐶** Dans cette exercice tu vas devoir créer le graphique en ligne `FinanceLineChart`
 
-Pour gagner du temps les formulaires sont déjà créés avec [`shadcn /zod / rhf`](https://ui.shadcn.com/docs/components/form)
-
-- `component/dashboard/trackers/finance/forms/create-edit-finance-form.tsx`
-- `component/dashboard/trackers/finance/forms/delete-finance-form.tsx`
-- `component/dashboard/trackers/health/forms/create-edit-health-form.tsx`
-- `component/dashboard/trackers/health/forms/delete-health-form.tsx`
-
-Et le composant `AddItemButton` est déjà ajouté dans les `Tables`; nous allons pouvoir travailler directement dans ce composant
-
-- `component/dashboard/trackers/add-item-button.tsx`
-
-```tsx
-const FinanceDataTable = ({finances, uid}: FinanceDataTableProps) => {
-  const label = 'Tracker une dépense / revenu'
-  return (
-    <Card className="flex w-full flex-col space-y-2 py-4 md:items-start md:px-8">
-	     {/* AddItemButton  */}
-      <AddItemButton trackerType="finance" uid={uid} label={label} />
-      <DataTable columns={financeColumns} dataTable={finances} />
-    </Card>
-  )
-}
-```
-
-- **🐶 Dans cet exercice utilise le `hook useModal` créé précédemment de la manière suivante :**
-
-```tsx
-const {onClose, setModal, onOpen} = useModal()
-//
-return (
-  <Button
-    onClick={() => {
-      setModal({
-        title: `Ajout`,
-        children: <FormAdd onClose={onClose} uid={uid} />,
-      })
-      onOpen()
-    }}
-  >
-  </Button>
-  )
-
-```
-
-💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique, des :
-
-- `CreateEditFinanceForm` ou
-- `CreateEditHealthForm`
-
-💡 Vérifie l’appel des servers actions `health-action` / `finance-action`
+- Step 1 : `chartConfig` avec les couleurs des lignes
+- Step 2 : Créer un `ChartContainer` `LineChart`
+- Step 3 : Créer un `XAxis` pour configurer l’axe des abscisses
+- Step 4 : Créer les 3 lignes avec le composant `Line`
 
 Fichiers
 
-- `component/dashboard/trackers/add-item-button.tsx`
+- `component/dashboard/finance/finance-line-chart.tsx`
 
-### 2. 🚀 Modal dans une table (Update / Delete Item)
+### 2. 🚀 Mettre les mois vide à zero
 
-Nous avions rajouter une colonnes action avec `update` / `delete` mais sans effet. Nous allons maintenant ouvrir les modal correspondant a `update` et `delete` avec le `Formulaire` correspondant. Tout ce passe dans `data-table-row-actions`
-
-```tsx
-  <DropdownMenu>
-      <DropdownMenuTrigger asChild className="p-2">
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Ouvrir menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Editer</DropdownMenuItem>
-        <DropdownMenuItem>Supprimer</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-```
-
-💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique.
-
-💡 Vérifie l’appel des servers actions `health-action` / `finance-action`
+Il se peut que l’utilisateur n’entre pas de données sur certains mois. Dans ce cas il est possible d’adapter `formatedFinanceData` pour mettre les mois à zéro
 
 Fichiers
 
-- `component/ui/data-table-row-actions.tsx`
+- `chart-utils.tsx`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
+📑 Le lien vers la doc de [ReChart](https://recharts.org/en-US/)
 
 ## Ils vont t’aider
 
@@ -284,4 +205,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=07-modal-form-edition).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=08-chart-finance-line).

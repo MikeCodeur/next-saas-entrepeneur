@@ -17,6 +17,7 @@ import {
   deleteFinanceByidDao,
   getFinanceByIdDao,
   getFinancesByUidDao,
+  getFinancesChartByYearDao,
   getFinancesDao,
   getFinancesWithPaginationByYearDao,
   getYearsFinancesByUidDao,
@@ -142,4 +143,13 @@ export const getFinancesWithPaginationByYear = async (
       rowCount: finances.pagination.rowCount,
     },
   }
+}
+
+export const getFinancesChartByYear = async (year: string, uid: string) => {
+  const granted = await canReadFinance(uid)
+
+  if (!granted) {
+    throw new GrantedError()
+  }
+  return await getFinancesChartByYearDao(year, uid)
 }
