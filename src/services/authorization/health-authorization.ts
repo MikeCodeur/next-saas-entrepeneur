@@ -3,6 +3,7 @@ import {
   idAdmin,
 } from '@/services/authentication/auth-utils'
 import {permissionAcces} from './authorization-service'
+import {getUserByIdDao} from '@/data/repositories/user-repository'
 
 export const canReadHealth = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
@@ -12,7 +13,16 @@ export const canReadHealth = async (resourceUid: string) => {
     'read',
     resourceUid
   )
-  return permission.granted
+  const userToRead = await getUserByIdDao(resourceUid)
+
+  const isPublic = userToRead?.visibility === 'public'
+  const isGranted = permission?.granted
+  console.log('userToRead', userToRead)
+  console.log('isPublic', isPublic)
+  console.log('isGranted', isGranted)
+
+  if (isPublic || isGranted) return true
+  return false
 }
 export const canDeleteHealth = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()

@@ -2,7 +2,12 @@ import 'server-only'
 
 import {cache} from 'react'
 import {notFound, redirect} from 'next/navigation'
-import {getUser, getUserById, getUserId} from '@/services/user-service'
+import {
+  getPublicUsersWithPagination,
+  getUser,
+  getUserById,
+  getUserId,
+} from '@/services/user-service'
 import {getSessionAuth, isAuthAdmin} from '@/services/authentication/auth-utils'
 import {User, UserDTO} from '@/types/domain/user-types'
 import {z} from 'zod'
@@ -46,3 +51,9 @@ export function userDTO(user: User): UserDTO | undefined {
     role: user?.role,
   }
 }
+
+export const getPublicUsersDal = cache(
+  async (page: number, pageSize: number) => {
+    return await getPublicUsersWithPagination(page, pageSize)
+  }
+)

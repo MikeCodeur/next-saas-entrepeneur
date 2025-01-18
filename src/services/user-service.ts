@@ -90,3 +90,24 @@ export const getUserByEmail = async (email: string) => {
   const emailParamsSanitized = parsed.data.email
   return await getUserByEmailDao(emailParamsSanitized)
 }
+
+export const getPublicUsersWithPagination = async (
+  page: number,
+  limit: number
+) => {
+  // turn page into offset & limit data per page
+  const offset = (page - 1) * 10
+
+  const usersPagination = await getPublicUsersWithPaginationDao({limit, offset})
+
+  if (!usersPagination) return
+
+  return {
+    data: usersPagination.data,
+    pagination: {
+      page,
+      pageSize: usersPagination.pagination.pageSize,
+      rowCount: usersPagination.pagination.rowCount,
+    },
+  }
+}

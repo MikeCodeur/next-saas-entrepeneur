@@ -31,6 +31,11 @@ export const dashboardLinks: SidebarLink[] = [
   {href: '/health', title: 'Santé', icon: HeartPulse},
 ]
 
+export const trackersPublicLinks: SidebarLink[] = [
+  {href: '/finance', title: 'Finance', icon: BadgeEuro},
+  {href: '/health', title: 'Santé', icon: HeartPulse},
+]
+
 export const paramPage = 'page' as const
 export const paramPageSize = 'pageSize' as const
 export const pageParamName = 'page' as const

@@ -3,6 +3,7 @@ import {
   idAdmin,
 } from '@/services/authentication/auth-utils'
 import {permissionAcces} from './authorization-service'
+import {getUserByIdDao} from '@/data/repositories/user-repository'
 
 export const canReadFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
@@ -12,8 +13,13 @@ export const canReadFinance = async (resourceUid: string) => {
     'read',
     resourceUid
   )
+  const userToRead = await getUserByIdDao(resourceUid)
 
-  return permission.granted
+  const isPublic = userToRead?.visibility === 'public'
+  const isGranted = permission?.granted
+
+  if (isPublic || isGranted) return true
+  return false
 }
 
 export const canDeleteFinance = async (resourceUid: string) => {

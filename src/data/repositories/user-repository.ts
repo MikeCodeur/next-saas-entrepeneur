@@ -27,6 +27,7 @@ export const getUserByEmailDao = async (email: string) => {
   return row
 }
 export const getUserByIdDao = async (uid: string) => {
+  if (!uid) return
   const row = await db.query.users.findFirst({
     where: (user, {eq}) => eq(user.id, uid),
   })
