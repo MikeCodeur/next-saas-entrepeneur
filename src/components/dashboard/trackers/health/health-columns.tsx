@@ -3,11 +3,11 @@
 import {Badge} from '@/components/ui/badge'
 import type {ColumnDef} from '@tanstack/react-table'
 import {DataTableColumnHeader} from '@/components/ui/data-table-column-header'
-import {Health} from '@/types/domain/health-types'
+import {Health, HealthDTO} from '@/types/domain/health-types'
 import {formattedDate} from '@/utils/date-utils'
 import {DataTableRowActions} from '@/components/ui/data-table-row-actions'
 
-export const healthColumns: ColumnDef<Health>[] = [
+export const healthColumns: ColumnDef<HealthDTO>[] = [
   {
     accessorKey: 'date',
     header: ({column}) => (

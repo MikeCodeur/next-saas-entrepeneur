@@ -9,8 +9,8 @@ import {
 
 import {MoreHorizontal} from 'lucide-react'
 import {Button} from '@/components/ui/button'
-import {Finance} from '@/types/domain/finance-types'
-import {Health} from '@/types/domain/health-types'
+import {Finance, FinanceDTO} from '@/types/domain/finance-types'
+import {Health, HealthDTO} from '@/types/domain/health-types'
 import {useModal} from '@/components/modal'
 import CreateEditFinanceForm from '../dashboard/trackers/finance/forms/create-edit-finance-form'
 import CreateEditHealthForm from '../dashboard/trackers/health/forms/create-edit-health-form'
@@ -18,7 +18,7 @@ import DeleteFinanceForm from '../dashboard/trackers/finance/forms/delete-financ
 import DeleteHealthForm from '../dashboard/trackers/health/forms/delete-health-form'
 
 type DataTableRowActionsProps = {
-  data: Finance | Health
+  data: FinanceDTO | HealthDTO
   type: 'finance' | 'health'
 }
 

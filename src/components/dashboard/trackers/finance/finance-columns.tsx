@@ -7,7 +7,7 @@ import {DataTableRowActions} from '@/components/ui/data-table-row-actions'
 import {Finance, FinanceDTO} from '@/types/domain/finance-types'
 import {formattedDate} from '@/utils/date-utils'
 
-export const financeColumns: ColumnDef<Finance>[] = [
+export const financeColumns: ColumnDef<FinanceDTO>[] = [
   {
     accessorKey: 'date',
     header: ({column}) => (
@@ -89,7 +89,13 @@ export const financeColumns: ColumnDef<Finance>[] = [
     cell: ({row}) => {
       return (
         <div className="min-w-fit text-right md:ml-0 md:px-8">
-          <DataTableRowActions data={{...row.original}} type="finance" />
+          <DataTableRowActions
+            data={{
+              ...row.original,
+              category: row.original.category || 'revenus',
+            }}
+            type="finance"
+          />
         </div>
       )
     },

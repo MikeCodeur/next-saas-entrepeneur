@@ -1,6 +1,6 @@
-# Gérer les profils publiques
+# RBAC / DTO / Filter Attribute
 
-### 💡 Mettre en place les profils publiques
+### 💡 Description longue de l'exercice
 
 ## 📝 Tes notes
 
@@ -8,152 +8,160 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Dans l’application il y a un `feature` d’affichage des profils publiques pour les utilisateur qui voudraient partager leurs performances. Pour cela les utilisateur doivent passer leur compte en public (`user.visibility`) Pour cela nous avons a notre disposition dans le repository une fonction qui permet de faire cela `getPublicUsersWithPaginationDao` , elle est remonté au `user-service` et ensuite au `user-dal`
+Pour rappel, passer toutes les données de la base de données aux composants React n’est pas recommandé. Des données sensbile stocké en base de données pourraient se retrouvé exposées.
+
+Pour cela nous pouvons introduire un couche `DAL (Data Acces Layer)` qui a pour rôle d’accéder aux données et de ne retourner que les champs utiles pour la vue. Par exemple :
 
 ```tsx
 
-export const getPublicUsersWithPaginationDao = async (pagination: {
-  limit: number
-  offset: number
-}) => {
-  const [rows, [{count}]] = await Promise.all([
-    db
-      .select()
-      .from(users)
-      .where(eq(users.visibility, 'public'))
-      .limit(pagination.limit)
-      .offset(pagination.offset),
-    db
-      .select({count: sql<number>`count(*)`})
-      .from(users)
-      .where(eq(users.visibility, 'public')),
-  ])
+// Get user Dal ne retoune que 3 champs
+export const getConnectedUser = cache(async () => {
+  const user = await getUser()
+  if (!user) return
+  return userDTO(user as User)
+})
+
+export function userDTO(user: User): UserDTO | undefined {
+  if (!user) return undefined
+
   return {
-    data: rows.length === 0 ? [] : rows,
-    pagination: {
-      rowCount: count,
-      pageSize: pagination.limit,
-    },
+    email: user?.email ?? '',
+    name: user?.name ?? '',
+    role: user?.role,
   }
 }
 ```
 
-Pour gagner du temps les routes suivantes sont déjà créées :
+📑 Le liens vers la doc [https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer](https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer)
 
-- `/public`
-- `/public/[id]/finance`
-- `/public/[id]/heath`
+Dans cet exemple, le DTO supprime des champs. On pourrait utiliser la suppression des champs de manière optionnelle basé sur le ROLE et la configuration RBAC.
 
-Mais n’affiche aucune données
+Exemple : Un user qui lit des données `health` d’autres user, tous les champs sont autorisé sauf `category`
+
+```tsx
+ {
+    role: 'user',
+    resource: 'health',
+    action: 'read:any',
+    attributes: '*,!category',
+  },
+  // le champs role skip sur update dun user
+   {
+    role: 'user',
+    resource: 'health',
+    action: 'update:own',
+    attributes: '*,!role',
+  },
+```
+
+Pour gagner du temps nous avons à notre disposition 2 fonctions, la première : `canAccessField` :
+
+- `canAccessField(permission.attributes,'role')`
+  - Va retourner `true/false` si le champs est accessible ou pas
+
+```tsx
+
+export function canAccessField(attributes: string[], field: string): boolean {
+  // Vérifie s'il y a une exclusion pour le champ spécifié, par exemple "!rating"
+  const isFieldExcluded = attributes.some((attr) =>
+    new RegExp(`^!${field}$`).test(attr)
+  )
+
+  // Vérifie si `*` est présent (accès à tous les champs) et le champ n'est pas exclu
+  const hasAllAttributes = attributes.includes('*')
+
+  // Si `*` est présent mais le champ est explicitement exclu, accès refusé
+  if (hasAllAttributes && isFieldExcluded) {
+    return false
+  }
+
+  // Si le champ est explicitement exclu, retour `false`
+  if (isFieldExcluded) {
+    return false
+  }
+
+  // Si `*` est présent et aucune exclusion, retour `true`
+  if (hasAllAttributes) {
+    return true
+  }
+
+  // Si le champ est explicitement mentionné dans les attributs, accès accordé
+  return attributes.includes(field)
+}
+```
+
+et `filterRessourceFields` : permet de filtrer les attributs grace à `perms.filter(ressource)`
+
+```tsx
+export const filterRessourceFields = <T>(
+  user: User | undefined,
+  ressourceType: Ressource,
+  action: GrantAction,
+  ressources?: T[], // La ressource est maintenant de type générique T
+  ressourceUid?: string
+): T[] => {
+  const perms = permissionAcces(user, ressourceType, action, ressourceUid)
+  //console.log("perms", perms)
+  // Pour tous les éléments de `ressources`, on filtre les attribus perms.filter(ressource) rbac
+  const filteredRessource: T[] =
+    ressources?.map((ressource) => {
+      // eslint-disable-next-line unicorn/no-array-callback-reference
+      return perms.filter(ressource) as T // Assure que le type T est respecté
+    }) ?? []
+
+  return filteredRessource
+```
+
+Nous avons donc au niveau des autorisations `Heath` et `Finance` 2 fonctions spécialisées à notre disposition
+
+- `filterFinancesAttributes`
+- `canSeeFinanceField`
+- `filterHealthsAttributes`
+- `canSeeHealthField`
+
+Nous avons également ajouté 2 fichiers `DAL`
+
+- `finance-dal.ts` : `getFinancesWithPaginationByYear`
+- `health-dal.ts` : `getHealthsWithPaginationByWeek`
+
+Et les routes et composants appellent maintenant les `DAL` au lieu des services directement
 
 ## Exercice
 
-**🐶** Dans un premier temps utilise `getPublicUsersDal` pour afficher la liste des utilisateurs publiques et les afficher dans un tableau
-
-Note : Le tableau contient une définition des colonnes avec un liens pour visualiser les données d’un utilisation
+Dans cette exercice nous allons travailler sur les finances et filtrer la `catégorie` et le `label` car se sont des information privé (mais le `owner` ou `admin` peut voir). Nous avons donc rajouter la config pour les role public
 
 ```tsx
-
-//public-columns.tsx
-export const publicColumns: ColumnDef<Partial<User>>[] = [
-  {
-    accessorKey: 'name',
-    header: ({column}) => <DataTableColumnHeader column={column} title="Nom" />,
-    cell: ({row}) => {
-      const name = row.getValue('name') as string
-      return (
-        <Link
-          className="min-w-fit text-left hover:cursor-pointer md:w-[200px]"
-          href={`/public/${row.original.id}/finance`}
-        >
-          {name}
-        </Link>
-      )
-    },
-    filterFn: (row, name, value) => {
-      return value.includes(row.getValue(name))
-    },
+{
+    role: 'public',
+    resource: 'finance',
+    action: 'read:any',
+    attributes: '*,!label,!category',
   },
-]
 ```
 
-Note : Le lien devrait sortie une erreur si pas d’utilisateur connecté nous allons résoudre ça dans l’exercice suivant
+- **🐶 Dans `finance-dal` créer un DTO pour filtrer ces 2 champs**
+
+Il va falloir créer 2 fonctions (`canSeeCategory`, `canSeeLabel`) et filtrer dans le DTO
 
 Fichiers
 
-- `/app/(public)/public/page.tsx`
+- `app/dal/finance-dal.ts`
 
 ## Bonus
 
-### 1. 🚀 Gérer les ressources publiques
+### 1. 🚀 Patterns : Filtre automatique
 
-Le lien vers public finance (en mode déconnecté) devrait sortir une erreur car nous essayons d’accéder a des données Finance donc appel a `canReadFinance`
-
-```tsx
-export const canReadFinance = async (resourceUid: string) => {
-  const authUser = await getUserAuthExtented()
-  const permission = permissionAcces(
-    authUser?.user,
-    'finance',
-    'read',
-    resourceUid
-  )
-  return permission.granted
-}
-```
-
-Quand il n’y a pas d’utilisateur connecté `l’accesscontrol` suivant est activé
-
-```tsx
-return ac.can('public').readAny('finance')
-//or nous permettons pas à n'importe qui de read les finance
-// et nous allons pas l'authoriser dans les regles generiques
-```
-
-Par contre nous allons ajouter une spécificité dans le service finance authorisation
-
-- On check `permissionAcces` (si jamais un admin veux lire un user privé)
-- Et si pas d’accès on verifie le champs `visibility`
-- Si public on autorise
-
-```tsx
-
-export const canReadFinance = async (resourceUid: string) => {
-  const authUser = await getUserAuthExtented()
-  const permission = permissionAcces(
-    authUser?.user,
-    'finance',
-    'read',
-    resourceUid
-  )
-  const userToRead = await getUserByIdDao(resourceUid)
-
-  const isPublic = userToRead?.visibility === 'public'
-  const isGranted = permission?.granted
-
-  if (isPublic || isGranted) return true
-  return false
-}
-```
-
-- **🐶 Implémente cela dans `finance-authorization`**
+- **🐶 Nous allons filtrer tout les champs automatiquement avec `filterHealthsAttributes`**
 
 Fichiers
 
-- `/services/authorization/finance-authorization.ts`
+- `src/app/dal/health-dal.ts`
 
-### 2. 🚀 Redirection `/restricted`
+###
 
-Maintenant que nous protégeons correctement notre routes nous allons gérer l’erreur
-`GrantedError()` et rediriger vers une page `/restricted`
+## Aller plus loin
 
-- **🐶 Adapte la route** `/finance/page.tsx`
-
-Fichiers
-
-- `/(public)/public/[id]/(trackers)/finance/page.tsx`
-
-##
+📑 Le lien vers la doc [https://fr.wikipedia.org/wiki/Contrôle*d'accès*à_base_de_rôles](https://fr.wikipedia.org/wiki/Contr%C3%B4le_d%27acc%C3%A8s_%C3%A0_base_de_r%C3%B4les)
 
 ## Ils vont t’aider
 
@@ -165,4 +173,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=12-public-profil).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-react-avis).
