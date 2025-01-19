@@ -1,6 +1,6 @@
-# Husky
+# Github Action
 
-### 💡 Utiliser Husky
+### 💡 Description longue de l'exercice
 
 ## 📝 Tes notes
 
@@ -8,62 +8,90 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-[Husky](https://typicode.github.io/husky/) est un outil indispensable pour automatiser la qualité du code directement dans les hooks Git.
+"GitHub Actions est une solution d'intégration et de déploiement continu (CI/CD) directement intégrée à GitHub. Elle te permet d'automatiser des workflows comme les tests, les déploiements, ou les analyses de code à chaque push ou pull request. Simple à configurer grâce à des fichiers YAML, GitHub Actions offre une grande flexibilité pour personnaliser tes pipelines. Dans ce module, tu apprendras à créer et optimiser des workflows pour gagner en productivité et fiabilité.”
 
-Avec Husky, tu peux exécuter des tâches comme ESLint, Prettier ou des tests avant chaque commit ou push. Cela garantit un code propre et stable tout au long du projet. Dans ce module, tu apprendras à l'installer, le configurer, et l'utiliser efficacement pour sécuriser ton workflow de développement.”
+"Le dossier `.github` est le cœur de la configuration des **GitHub Actions** dans un projet. Il contient le répertoire `workflows`, où sont définis les pipelines d'automatisation comme les tests, les builds ou les déploiements. Dans ce module, apprends à utiliser ce dossier pour créer et personnaliser des workflows adaptés à tes besoins."
 
-### Ajouter husky
+Exemple de github action qui permet de :
 
-```bash
-npnm add husky --save-dev
+- lancer les tests
+- builder
+- executer les migration drizzle
+
+```yaml
+name: Vercel Preview Deployment
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  Test-and-Deploy-Preview:
+    runs-on: ubuntu-latest
+    environment: preview
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint Check
+        run: pnpm lint
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Run Tests
+        run: pnpm test
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Build Project
+        run: pnpm build
+        env:
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      # Installer Drizzle CLI
+      - name: Install Drizzle CLI
+        run: npm install -g drizzle-kit
+
+      # Exécuter les migrations Drizzle
+      - name: Run Drizzle migrations
+        working-directory: packages/persistence
+        run: pnpm db:migrate
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 ```
 
-Créer un dossier `.husky`
-
-```bash
-#!/bin/sh
-
-echo "🧪 Running tests before commit..."
-
-pnpm run test-husky
-
-if [ $? -ne 0 ]; then
-  echo "❌ Tests failed. commit aborted."
-  exit 1
-fi
-
-echo "✅ Tests passed. Commit allowed."
-```
-
-```bash
-#!/bin/sh
-
-echo "🧪 Running tests before push..."
-pnpm run test-husky
-pnpm lint
-pnpm build
-if [ $? -ne 0 ]; then
-  echo "❌ Tests failed. Push aborted."
-  exit 1
-fi
-
-echo "✅ Tests passed. Push allowed."
-```
+📑 Le liens vers la doc https://github.com/features/actions
 
 ## Exercice
 
-Adapte husky pour ton projet
+Adaptes les actions au besoins de ton projet
 
 Fichiers
 
-- .`husky/pre-commit`
-- .`husky/pre-push`
+- .`github/workflows/preview.yaml`
 
 ##
-
-## Aller plus loin
-
-📑 Le lien vers la doc [https://typicode.github.io/husky/](https://typicode.github.io/husky/)
 
 ## Ils vont t’aider
 
