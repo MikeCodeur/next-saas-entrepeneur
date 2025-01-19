@@ -1,6 +1,6 @@
-# Optimisation SSG
+# Husky
 
-### 💡 Description longue de l'exercice
+### 💡 Utiliser Husky
 
 ## 📝 Tes notes
 
@@ -8,181 +8,62 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Un `build` nous montre que presque tout est en dynamique.
+[Husky](https://typicode.github.io/husky/) est un outil indispensable pour automatiser la qualité du code directement dans les hooks Git.
 
-- C’est ok pour certaines comme le `dashboard` , `account` ,`health ,finance`
-- Mais pourquoi `/privacy` `/terms` etc le sont ?
-- Peut on optimiser le rendu des pages publiques ?
+Avec Husky, tu peux exécuter des tâches comme ESLint, Prettier ou des tests avant chaque commit ou push. Cela garantit un code propre et stable tout au long du projet. Dans ce module, tu apprendras à l'installer, le configurer, et l'utiliser efficacement pour sécuriser ton workflow de développement.”
 
-```html
-Route (app) Size First Load JS ┌ ƒ / 3.44 kB 153 kB ├ ○ /_not-found 990 B 107 kB
-├ ƒ /account 6.91 kB 144 kB ├ ƒ /api/auth/[...nextauth] 153 B 106 kB ├ ƒ
-/dashboard 4.94 kB 245 kB ├ ○ /error 2.33 kB 120 kB ├ ƒ /finance 1.45 kB 321 kB
-├ ƒ /health 1.7 kB 317 kB ├ ƒ /instructions 5.5 kB 112 kB ├ ƒ /logout 2.07 kB
-120 kB ├ ƒ /privacy 153 B 106 kB ├ ƒ /public 1.56 kB 165 kB ├ ƒ
-/public/[id]/finance 1.45 kB 321 kB ├ ƒ /public/[id]/health 1.7 kB 317 kB ├ ƒ
-/restricted 175 B 110 kB ├ ƒ /settings 3.15 kB 117 kB ├ ○ /sign-in 3.04 kB 120
-kB ├ ○ /sign-up 3.19 kB 121 kB ├ ƒ /terms 153 B 106 kB └ ○ /verify-request 153 B
-106 kB + First Load JS shared by all 106 kB ├
-chunks/1e75e89c-8aa0a1685f3aec44.js 53.4 kB ├ chunks/5996-a50e9f761cee33ed.js 51
-kB └ other shared chunks (total) 1.97 kB
+### Ajouter husky
+
+```bash
+npnm add husky --save-dev
+```
+
+Créer un dossier `.husky`
+
+```bash
+#!/bin/sh
+
+echo "🧪 Running tests before commit..."
+
+pnpm run test-husky
+
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. commit aborted."
+  exit 1
+fi
+
+echo "✅ Tests passed. Commit allowed."
+```
+
+```bash
+#!/bin/sh
+
+echo "🧪 Running tests before push..."
+pnpm run test-husky
+pnpm lint
+pnpm build
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. Push aborted."
+  exit 1
+fi
+
+echo "✅ Tests passed. Push allowed."
 ```
 
 ## Exercice
 
-Optimisation des routes publiques ont un layout en commun `PublicLayout` qui contient un `<Header />` qui contient du code dépendant des cookies nextauth. Cela rend automatiquement la page dynamique.
-
-```tsx
-const session = await auth()
-```
-
-Il s’agit ici de faire un compromis entre performance ou fonctionnalité.
-
-- Avoir l’information du user connecté ou non → Perte du rendu statique sur toutes les pages publiques avec ce layout
-
-Faisons le choix de perdre cette information et d’avoir un maximum de page publique statique .
-
-- **🐶 Créé une copie du `<Header>` que l’on appellera `<StaticHeader>` , composant ne contenant pas d’appel a `auth()` et utilisons le dans le `layout` des pages publiques**
-
-`/privacy` `/terms` devrait redevenir `static`
+Adapte husky pour ton projet
 
 Fichiers
 
-- `/app/(public)/layout.tsx`
-- `/components/layout/static-header.tsx`
+- .`husky/pre-commit`
+- .`husky/pre-push`
 
-## Bonus
-
-### 1. 🚀 Optimisation liste des user publiques
-
-Il n’est pas possible de rendre cette route statique ou mise en cache avec `revalidate` a cause des `queryParam`
-
-```tsx
-export const revalidate = 3600
-```
-
-Ce qui est couteux est l’appel aux données en base de données.
-
-- Ces données `sont mises en cache` dans le DAL avec `React Cache`
-
-```tsx
-import {cache} from 'react'
-
-export const getPublicUsersDal = cache(
-  async (page: number, pageSize: number) => {
-    return await getPublicUsersWithPagination(page, pageSize)
-  }
-)
-// nous avons mis une latence dans 'getPublicUsersWithPagination'
-// await new Promise((resolve) => setTimeout(resolve, 5000))
-```
-
-Malheureusement React Cache ne fonctionne qu’au niveau `“Request“` (Si lors d’une requête serveur plusieurs appels à `getPublicUsersDal` sont fait)
-
-Mais lors d’un nouvelle requête serveur, le cache est invalide.
-
-L’API Next nous propose un solution pour mettre en cache des données.
-
-- [https://nextjs.org/docs/app/api-reference/functions/unstable_cache](https://nextjs.org/docs/app/api-reference/functions/unstable_cache) `unstable_cache`
-
-```tsx
-import { getUser } from './data';
-import { unstable_cache } from 'next/cache';
-
-const getCachedUser = unstable_cache(
-  async (id) => getUser(id),
-  ['my-app-user']
-);
-
-export default async function Component({ userID }) {
-  const user = await getCachedUser(userID);
-  ...
-}
-```
-
-💡 Cette `unstable fonction` sera remplacée par `“use cache”` mais ce n’est pas encore officiel
-
-- [https://nextjs.org/docs/app/api-reference/directives/use-cache](https://nextjs.org/docs/app/api-reference/directives/use-cache)
-- **🐶 Dans cet exercise tu vas devoir mettre en cache les utilisateurs publiques (`getPublicUsersDal` ) pendant 1heure avec** `unstable_cache`
-
-Fichiers
-
-- `/app/(public)/public/page.tsx`
-
-### 2. 🚀 SSG public fiance/heath by user
-
-Step 1 : **🐶**La première étape est de rendre le `layout LayoutPublicUserId` SSG avec `generateStaticParams`
-
-```tsx
-//app/(public)/public/[id]/layout.tsx
-export const generateStaticParams = async () => {
-  const users = await getPublicUsersDal(1, 100)
-  return ...
-}
-```
-
-Step 2 : **🐶 Les routes**
-
-On ne peut pas rendre SSG car il y a des `queryParam`
-
-```tsx
-type SearchParams = Promise<{
-  financeYear?: string
-  page?: string
-  pageSize?: string
-}>
-
-type Params = Promise<{
-  id?: string
-}>
-```
-
-Un piste possible serait de les supprimer et de garder que la `route param (id)` et de gérer les `queryParam` uniquement dans des composants clients. De cette maniere nous pourrions avoir une page initiale statique. et des chargement si les params changent
-
-```tsx
-'use client'
-const searchParams = useSearchParams()
-const financeYear = searchParams.get('financeYear')
-const page = searchParams.get('page')
-const pageSize = searchParams.get('pageSize')
-```
-
-⚠️ Sauf que ! Il faudrait s’assurer qu’il n’y a aucune appel a un `dynamique function` (headers, cookies, nextauth etc …). Or, toutes nos appels au services sont protéger par un autorisation dépanadant de `nextAuth` ...
-
-- Solution : Exposer des services/DAL spéciaux sans auth pour avoir des données publiques utilisables par le SSG. (un peu long….)
-
-Nous allons ici plutôt essayer d’utiliser utiliser `nextCache` sur les fonction couteuses
-
-```tsx
-import { unstable_cache } from 'next/cache';
-const getCachedUsers = nextCache(
-    async () => getYearsFinancesByUid(userId),
-    [`getYearsFinancesByUid-${userId}`],
-    {revalidate: 3600}
-  )
-```
-
-Mais toujours des errors
-
-```tsx
- Error: Route /public/[id]/finance used "headers" inside a function cached
-  with "unstable_cache(...)".
-  Accessing Dynamic data sources inside a cache scope is not supported.
-  If you need this data inside a cached function use "headers"
-  outside of the cached function and pass the required dynamic data in as
-   an argument. See more info here:
-   https://nextjs.org/docs/app/api-reference/functions/unstable_cache
-```
-
-La seul solution : Exposer des services/DAL spéciaux sans auth
-
-Fichiers
-
-- `/app/(public)/public/[id]/layout.tsx`
+##
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://nextjs.org/docs/app/api-reference/functions/unstable_cache](https://nextjs.org/docs/app/api-reference/functions/unstable_cache)
+📑 Le lien vers la doc [https://typicode.github.io/husky/](https://typicode.github.io/husky/)
 
 ## Ils vont t’aider
 
