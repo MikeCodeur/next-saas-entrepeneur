@@ -1,8 +1,7 @@
 #!/bin/sh
 
 echo "🧪 Running tests before push..."
-pnpm test-all
-pnpm build:check
+pnpm run test-husky
 pnpm lint
 pnpm build
 if [ $? -ne 0 ]; then

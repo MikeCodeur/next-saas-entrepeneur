@@ -2,7 +2,7 @@
 
 echo "🧪 Running tests before commit..."
 
-pnpm test
+pnpm run test-husky
 
 if [ $? -ne 0 ]; then
   echo "❌ Tests failed. commit aborted."
