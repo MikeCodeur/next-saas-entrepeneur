@@ -29,7 +29,6 @@ export const createHealthByUid = async (
   healthParams: CreateHealth,
   uid: string
 ) => {
-  console.log('createHealthByUid', healthParams, uid)
   const granted = await canCreateHealth(uid)
   if (!granted) {
     throw new GrantedError()

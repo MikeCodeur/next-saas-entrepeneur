@@ -1,6 +1,6 @@
-# Actions conditionnées au RBAC
+# Mettre en place les tests avec Vitest
 
-### 💡 Actions conditionnées au Rôles
+### 💡 Description longue de l'exercice
 
 ## 📝 Tes notes
 
@@ -8,65 +8,185 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Dans une application il arrive souvent que des actions soient conditionnées aux différents utilisateurs. Exemple un `admin` a plus d’options qu’un `user`. Mais un user peut faire des actions sur ses propres `données`.
+Pour utiliser les tests dans notre projets nous avons ajouté les dépendances suivantes
 
-Nous allons utiliser les fonctions que nous avons maintenant a notre disposition dans le service `autorisation` pour gérer plus finement les actions dans l’application.
+```tsx
+"devDependencies": {
+  // Packages principaux de test
+  "@testing-library/jest-dom": "^6.6.3",
+  "@testing-library/react": "^16.1.0",
+  "@testing-library/user-event": "^14.5.2",
+  "@vitejs/plugin-react": "^4.3.4",
+  "@vitest/coverage-v8": "^1.6.0",
+  "vitest": "^1.6.0",
+  "jsdom": "^26.0.0",
 
-Par exemple toutes les fonctions
+  // Plugins ESLint pour les tests
+  "eslint-plugin-testing-library": "^6.5.0",
+  "eslint-plugin-vitest": "^0.5.4",
 
-- `canCreateXXX`
-- `isConnectedUserAdmin`
-- etc …
+  // Configuration des chemins pour les tests
+  "vite-tsconfig-paths": "^4.3.2",
+}
+```
+
+- Nous avons créer un fichier de configuration `vitest`
+
+```tsx
+//vitest.config.ts
+import {defineConfig} from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
+export default defineConfig({
+  plugins: [react(), tsconfigPaths()],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/__tests__/setup-test.ts'],
+    include: ['**/*.test.{ts,tsx}'],
+    alias: {
+      '@/*': './src/*',
+    },
+  },
+})
+
+```
+
+📑 Le liens vers la doc [https://vitest.dev/](https://vitest.dev/)
+
+Un test de composant React simple est déjà en place pour vérifier que l’environnement de test s’exécute
+
+```tsx
+describe('app', () => {
+  it('render title home page with `Plateforme de tracker pour les entrepreneur`', () => {
+    render(<Home />)
+    const text = screen.getByText(
+      /plateforme de tracker pour les entrepreneur/i
+    )
+    expect(text).toBeInTheDocument()
+  })
+})
+```
+
+- Il faut lancer la commande : `pnpm test`
+- Si tout est ok
+
+```tsx
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  10:53:48
+   Duration  162ms
+```
 
 ## Exercice
 
-**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des boutons d’ajouts
+Dans cet exercice tu vas devoir tester une des parties les plus importante de l’application, la `couche service.`
 
-- `Tracker un élément de santé`
-- `Tracker une dépense / revenus`
+En appelant des fonctions du services cela va utiliser la validation, l’autorisation et les repository.
 
-de telle manière que les personnes sur la partie publique ne puissent pas avoir les boutons (sauf le propriétaire ou admin)
+- Nous allons `mocker` les repositories (qui peuvent être testé séparément) exemp
+
+```tsx
+vi.mock('@/data/repositories/user-repository', () => ({
+  createUserDao: vi.fn(),
+  ...
+}))
+//valeur du mock
+beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(userRepository.getUserByIdDao).mockResolvedValue(userTest)
+  })
+```
+
+- Nous allons rédiger des jeux de tests pour s’assurer que les cas fonctionnels lié au RBAC sont respecté
+-
+
+**🐶 Dans un premier temps commence par les test du services user (CRUD) avec différents rôles (USER ADMIN PUBLIC)**
+
+- Nous avons a notre disposition `setupUserAuthExtented`, qui permet de simuler l’utilisateur connecté. Ce sera utile pour chaque test
+
+```tsx
+setupUserAuthExtented({user: userTest})
+```
+
+Les tests sont `skip` pour le moment pour les activer supprime le `skip`
+
+```tsx
+it.skip("[USER] devrait ...")
+it("[USER] devrait ...")
+```
+
+Test qu'un utilisateur connecté peut voir son propre profil
+
+- Test qu'un utilisateur connecté peut voir son propre profil
+- Test qu'un utilisateur ne peut pas voir le profil privé d'un autre utilisateur
+- Test qu'un administrateur peut voir le profil de n'importe quel utilisateur
+- Test qu'un visiteur peut voir un profil public
+- Test qu'un visiteur ne peut pas voir un profil privé
+- Test qu'un utilisateur connecté peut modifier son propre profil
+- Test qu'un utilisateur ne peut pas modifier le profil d'un autre utilisateur
+- Test qu'un administrateur peut modifier n'importe quel profil
+- Test qu'un visiteur ne peut pas modifier un profil public
+- Test qu'un visiteur ne peut pas modifier un profil privé
 
 Fichiers
 
-- `/components/dashboard/trackers/finance/finance-data-table.tsx`
-- `/components/dashboard/trackers/health/health-data-table.tsx`
+- `services/__tests__/user-service.test.ts`
 
 ## Bonus
 
-### 1. 🚀 Masquer des colonnes d’actions
+### 1. 🚀 Test finance
 
-**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des colonnes en fonctions de la permission.
+- **🐶 Test finance**
 
-Pour cela tu vas devoir adapté `finance-columns` et `health-columns` pour contenir
+Tests pour le service finance :
 
-- un liste de colonnes pour les `users` standards
-- un liste de colonnes pour les `users` avec plus de droits
-
-et conditionner les colonnes dans `finance-data-table` et `health-data-table`
-
-Fais des test dans les differents cas
-
-- un `admin` accède aux données public
-- un `user` accède aux données public (d’autres users)
-- un `user` accède aux données public (les siennes)
+- Test qu'un utilisateur peut créer une finance pour son propre compte
+- Test qu'un utilisateur ne peut pas créer une finance pour un autre utilisateur
+- Test qu'un administrateur peut créer une finance pour n'importe quel utilisateur
+- Test qu'un utilisateur peut voir ses propres finances
+- Test qu'un utilisateur ne peut pas voir les finances d'un autre utilisateur
+- Test qu'un administrateur peut voir les finances de tous les utilisateurs
+- Test qu'un utilisateur peut modifier ses propres finances
+- Test qu'un utilisateur ne peut pas modifier les finances d'un autre utilisateur
+- Test qu'un administrateur peut modifier les finances de n'importe quel utilisateur
+- Test qu'un utilisateur peut supprimer ses propres finances
+- Test qu'un utilisateur ne peut pas supprimer les finances d'un autre utilisateur
+- Test qu'un administrateur peut supprimer les finances de n'importe quel utilisateur
 
 Fichiers
 
-- `/components/dashboard/trackers/finance/finance-columns.tsx`
-- `/components/dashboard/trackers/health/health-columns.tsx`
-- `/components/dashboard/trackers/finance/finance-data-table.tsx`
-- `/components/dashboard/trackers/health/health-data-table.tsx`
+- `services/__tests__/finance-service.test.ts`
 
-### 2. 🚀 Adapter les routes `finance` / `health` publiques
+### 2. 🚀 Test Santé
 
-**🐶** Dans cet exercice tu vas devoir adapter les routes publiques pour les `users` n’ayant pas de données.
+La même chose pour santé
 
-Au lieu d’afficher `Pas de résultat`, un `admin ou proprietaire` verra un tableau vide et pourra le remplir
+Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
+
+- Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
+- Test qu'un utilisateur ne peut pas créer une donnée de santé pour un autre utilisateur
+- Test qu'un administrateur peut créer une donnée de santé pour n'importe quel utilisateur
+- Test qu'un utilisateur peut voir ses propres données de santé
+- Test qu'un utilisateur ne peut pas voir les données de santé d'un autre utilisateur
+
+6. Test qu'un administrateur peut voir les données de santé de tous les utilisateurs
+
+- Test qu'un utilisateur peut modifier ses propres données de santé
+- Test qu'un utilisateur ne peut pas modifier les données de santé d'un autre utilisateur
+- Test qu'un administrateur peut modifier les données de santé de n'importe quel utilisateur
+- Test qu'un utilisateur peut supprimer ses propres données de santé
+- Test qu'un utilisateur ne peut pas supprimer les données de santé d'un autre utilisateur
+- Test qu'un administrateur peut supprimer les données de santé de n'importe quel utilisateur
+
+Fichiers
+
+- `src/services/__tests__/health-service.test.ts`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc clerk rbac [https://clerk.com/docs/references/nextjs/basic-rbac](https://clerk.com/docs/references/nextjs/basic-rbac)
+📑 Le lien vers la doc [https://vitest.dev/](https://vitest.dev/)
 
 ## Ils vont t’aider
 
@@ -78,4 +198,4 @@ Au lieu d’afficher `Pas de résultat`, un `admin ou proprietaire` verra un tab
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=14-rbac-actions).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=15-tests-rbac).

@@ -56,10 +56,10 @@ export const updateUser = async (userParams: UpdateUser) => {
 }
 export const getUser = async () => {
   const session = await getSessionAuth()
-  //console.log("session", session)
+
   if (!session) return
   const uid = session.user?.id ?? ''
-  //console.log("uid", uid)
+
   return await getUserByIdDao(uid)
 }
 export const getUserId = async () => {

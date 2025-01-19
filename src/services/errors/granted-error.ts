@@ -4,7 +4,7 @@ export class GrantedError extends Error {
   constructor(message?: string) {
     super(message)
     this.name = 'GrantedError'
-    this.message = `${GRANTED_ERROR_MESSAGE} ${message ? ':' : ''} ${message ?? ''}`
+    this.message = `${GRANTED_ERROR_MESSAGE}${message ? ' : ' : ''}${message ?? ''}`
 
     // This is needed to preserve the stack trace
     if (typeof Error.captureStackTrace === 'function') {

@@ -30,9 +30,8 @@ export const createFinanceByUid = async (
 ) => {
   //Authorization
   const granted = await canCreateFinance(uid)
-  console.log(' createFinanceByUidgranted', granted)
+
   if (!granted) {
-    console.log(' createFinanceByUidgranted err', granted)
     throw new GrantedError('Vous ne pouvez pas créer une finance')
   }
   // Service Data Validation

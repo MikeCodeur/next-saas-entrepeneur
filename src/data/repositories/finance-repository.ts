@@ -75,7 +75,6 @@ export const getFinancesWithPaginationByYearDao = async (
     offset: number
   }
 ) => {
-  console.log('pagination', pagination)
   const [rows, [{count}]] = await Promise.all([
     db
       .select()

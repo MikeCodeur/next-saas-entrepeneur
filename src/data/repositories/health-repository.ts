@@ -113,7 +113,6 @@ export const getHealthsWithPaginationByWeekDao = async (
     offset: number
   }
 ) => {
-  console.log('getHealthsWithPaginationByWeekDao week', week)
   const [rows, [{count}]] = await Promise.all([
     db
       .select()

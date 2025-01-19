@@ -95,18 +95,12 @@ const grantUserList = [
 ] satisfies Grant[]
 
 const grantPublicList = [
-  {
-    role: 'public',
-    resource: 'users',
-    action: 'read:any',
-    attributes: ['id', 'name'],
-  },
-  {
-    role: 'public',
-    resource: 'finance',
-    action: 'read:any',
-    attributes: '*,!label,!category',
-  },
+  // {
+  //   role: 'public',
+  //   resource: 'finance',
+  //   action: 'read:any',
+  //   attributes: '*,!label,!category',
+  // },
   {
     role: 'public',
     resource: 'health',

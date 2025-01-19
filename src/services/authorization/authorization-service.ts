@@ -9,11 +9,6 @@ export const permissionAcces = (
   action: GrantAction,
   ressourceUid?: string
 ) => {
-  console.log('ressourceType', ressourceType)
-  console.log('action', action)
-  console.log('user', user)
-  console.log('ressourceUid', ressourceUid)
-
   if (user?.role.includes('admin')) {
     return ac.can('admin')[`${action}Any`](ressourceType) // Admin a toujours accès à `any`
   }
@@ -45,7 +40,7 @@ export const filterRessourceFields = <T>(
   ressourceUid?: string
 ): T[] => {
   const perms = permissionAcces(user, ressourceType, action, ressourceUid)
-  //console.log("perms", perms)
+
   // Pour tous les éléments de `ressources`, on filtre les attribus perms.filter(ressource) rbac
   const filteredRessource: T[] =
     ressources?.map((ressource) => {

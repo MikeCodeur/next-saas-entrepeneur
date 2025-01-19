@@ -24,9 +24,6 @@ export const canReadHealth = async (resourceUid: string) => {
 
   const isPublic = userToRead?.visibility === 'public'
   const isGranted = permission?.granted
-  console.log('userToRead', userToRead)
-  console.log('isPublic', isPublic)
-  console.log('isGranted', isGranted)
 
   if (isPublic || isGranted) return true
   return false
