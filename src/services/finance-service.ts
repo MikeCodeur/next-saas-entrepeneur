@@ -106,6 +106,7 @@ export const getFinancesByUid = async (uid: string) => {
 }
 
 export const getYearsFinancesByUid = async (uid: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   //Authorization
   const granted = await canReadFinance(uid)
   if (!granted) {

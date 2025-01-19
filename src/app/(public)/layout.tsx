@@ -1,21 +1,5 @@
-import Footer from '@/components/layout/footer'
-import Header from '@/components/layout/header'
-import {Metadata} from 'next'
-import {PropsWithChildren} from 'react'
+export {default} from './layout.exercise'
+export * from './layout.exercise'
 
-export const metadata: Metadata = {
-  title: 'Next SaaS',
-  description:
-    "Page de conditions d'utilisation et de politique de confidentialité",
-}
-const LegalLayout = ({children}: PropsWithChildren) => {
-  return (
-    <div>
-      <Header />
-      {children}
-      <Footer />
-    </div>
-  )
-}
-
-export default LegalLayout
+// export {default} from './layout.final'
+// export * from './layout.final'

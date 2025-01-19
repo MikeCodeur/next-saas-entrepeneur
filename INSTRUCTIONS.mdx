@@ -1,4 +1,4 @@
-# Mettre en place les tests avec Vitest
+# Optimisation SSG
 
 ### 💡 Description longue de l'exercice
 
@@ -8,185 +8,181 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Pour utiliser les tests dans notre projets nous avons ajouté les dépendances suivantes
+Un `build` nous montre que presque tout est en dynamique.
 
-```tsx
-"devDependencies": {
-  // Packages principaux de test
-  "@testing-library/jest-dom": "^6.6.3",
-  "@testing-library/react": "^16.1.0",
-  "@testing-library/user-event": "^14.5.2",
-  "@vitejs/plugin-react": "^4.3.4",
-  "@vitest/coverage-v8": "^1.6.0",
-  "vitest": "^1.6.0",
-  "jsdom": "^26.0.0",
+- C’est ok pour certaines comme le `dashboard` , `account` ,`health ,finance`
+- Mais pourquoi `/privacy` `/terms` etc le sont ?
+- Peut on optimiser le rendu des pages publiques ?
 
-  // Plugins ESLint pour les tests
-  "eslint-plugin-testing-library": "^6.5.0",
-  "eslint-plugin-vitest": "^0.5.4",
-
-  // Configuration des chemins pour les tests
-  "vite-tsconfig-paths": "^4.3.2",
-}
-```
-
-- Nous avons créer un fichier de configuration `vitest`
-
-```tsx
-//vitest.config.ts
-import {defineConfig} from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
-
-export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/__tests__/setup-test.ts'],
-    include: ['**/*.test.{ts,tsx}'],
-    alias: {
-      '@/*': './src/*',
-    },
-  },
-})
-
-```
-
-📑 Le liens vers la doc [https://vitest.dev/](https://vitest.dev/)
-
-Un test de composant React simple est déjà en place pour vérifier que l’environnement de test s’exécute
-
-```tsx
-describe('app', () => {
-  it('render title home page with `Plateforme de tracker pour les entrepreneur`', () => {
-    render(<Home />)
-    const text = screen.getByText(
-      /plateforme de tracker pour les entrepreneur/i
-    )
-    expect(text).toBeInTheDocument()
-  })
-})
-```
-
-- Il faut lancer la commande : `pnpm test`
-- Si tout est ok
-
-```tsx
-
- Test Files  1 passed (1)
-      Tests  1 passed (1)
-   Start at  10:53:48
-   Duration  162ms
+```html
+Route (app) Size First Load JS ┌ ƒ / 3.44 kB 153 kB ├ ○ /_not-found 990 B 107 kB
+├ ƒ /account 6.91 kB 144 kB ├ ƒ /api/auth/[...nextauth] 153 B 106 kB ├ ƒ
+/dashboard 4.94 kB 245 kB ├ ○ /error 2.33 kB 120 kB ├ ƒ /finance 1.45 kB 321 kB
+├ ƒ /health 1.7 kB 317 kB ├ ƒ /instructions 5.5 kB 112 kB ├ ƒ /logout 2.07 kB
+120 kB ├ ƒ /privacy 153 B 106 kB ├ ƒ /public 1.56 kB 165 kB ├ ƒ
+/public/[id]/finance 1.45 kB 321 kB ├ ƒ /public/[id]/health 1.7 kB 317 kB ├ ƒ
+/restricted 175 B 110 kB ├ ƒ /settings 3.15 kB 117 kB ├ ○ /sign-in 3.04 kB 120
+kB ├ ○ /sign-up 3.19 kB 121 kB ├ ƒ /terms 153 B 106 kB └ ○ /verify-request 153 B
+106 kB + First Load JS shared by all 106 kB ├
+chunks/1e75e89c-8aa0a1685f3aec44.js 53.4 kB ├ chunks/5996-a50e9f761cee33ed.js 51
+kB └ other shared chunks (total) 1.97 kB
 ```
 
 ## Exercice
 
-Dans cet exercice tu vas devoir tester une des parties les plus importante de l’application, la `couche service.`
-
-En appelant des fonctions du services cela va utiliser la validation, l’autorisation et les repository.
-
-- Nous allons `mocker` les repositories (qui peuvent être testé séparément) exemp
+Optimisation des routes publiques ont un layout en commun `PublicLayout` qui contient un `<Header />` qui contient du code dépendant des cookies nextauth. Cela rend automatiquement la page dynamique.
 
 ```tsx
-vi.mock('@/data/repositories/user-repository', () => ({
-  createUserDao: vi.fn(),
-  ...
-}))
-//valeur du mock
-beforeEach(() => {
-    vi.clearAllMocks()
-    vi.mocked(userRepository.getUserByIdDao).mockResolvedValue(userTest)
-  })
+const session = await auth()
 ```
 
-- Nous allons rédiger des jeux de tests pour s’assurer que les cas fonctionnels lié au RBAC sont respecté
--
+Il s’agit ici de faire un compromis entre performance ou fonctionnalité.
 
-**🐶 Dans un premier temps commence par les test du services user (CRUD) avec différents rôles (USER ADMIN PUBLIC)**
+- Avoir l’information du user connecté ou non → Perte du rendu statique sur toutes les pages publiques avec ce layout
 
-- Nous avons a notre disposition `setupUserAuthExtented`, qui permet de simuler l’utilisateur connecté. Ce sera utile pour chaque test
+Faisons le choix de perdre cette information et d’avoir un maximum de page publique statique .
 
-```tsx
-setupUserAuthExtented({user: userTest})
-```
+- **🐶 Créé une copie du `<Header>` que l’on appellera `<StaticHeader>` , composant ne contenant pas d’appel a `auth()` et utilisons le dans le `layout` des pages publiques**
 
-Les tests sont `skip` pour le moment pour les activer supprime le `skip`
-
-```tsx
-it.skip("[USER] devrait ...")
-it("[USER] devrait ...")
-```
-
-Test qu'un utilisateur connecté peut voir son propre profil
-
-- Test qu'un utilisateur connecté peut voir son propre profil
-- Test qu'un utilisateur ne peut pas voir le profil privé d'un autre utilisateur
-- Test qu'un administrateur peut voir le profil de n'importe quel utilisateur
-- Test qu'un visiteur peut voir un profil public
-- Test qu'un visiteur ne peut pas voir un profil privé
-- Test qu'un utilisateur connecté peut modifier son propre profil
-- Test qu'un utilisateur ne peut pas modifier le profil d'un autre utilisateur
-- Test qu'un administrateur peut modifier n'importe quel profil
-- Test qu'un visiteur ne peut pas modifier un profil public
-- Test qu'un visiteur ne peut pas modifier un profil privé
+`/privacy` `/terms` devrait redevenir `static`
 
 Fichiers
 
-- `services/__tests__/user-service.test.ts`
+- `/app/(public)/layout.tsx`
+- `/components/layout/static-header.tsx`
 
 ## Bonus
 
-### 1. 🚀 Test finance
+### 1. 🚀 Optimisation liste des user publiques
 
-- **🐶 Test finance**
+Il n’est pas possible de rendre cette route statique ou mise en cache avec `revalidate` a cause des `queryParam`
 
-Tests pour le service finance :
+```tsx
+export const revalidate = 3600
+```
 
-- Test qu'un utilisateur peut créer une finance pour son propre compte
-- Test qu'un utilisateur ne peut pas créer une finance pour un autre utilisateur
-- Test qu'un administrateur peut créer une finance pour n'importe quel utilisateur
-- Test qu'un utilisateur peut voir ses propres finances
-- Test qu'un utilisateur ne peut pas voir les finances d'un autre utilisateur
-- Test qu'un administrateur peut voir les finances de tous les utilisateurs
-- Test qu'un utilisateur peut modifier ses propres finances
-- Test qu'un utilisateur ne peut pas modifier les finances d'un autre utilisateur
-- Test qu'un administrateur peut modifier les finances de n'importe quel utilisateur
-- Test qu'un utilisateur peut supprimer ses propres finances
-- Test qu'un utilisateur ne peut pas supprimer les finances d'un autre utilisateur
-- Test qu'un administrateur peut supprimer les finances de n'importe quel utilisateur
+Ce qui est couteux est l’appel aux données en base de données.
+
+- Ces données `sont mises en cache` dans le DAL avec `React Cache`
+
+```tsx
+import {cache} from 'react'
+
+export const getPublicUsersDal = cache(
+  async (page: number, pageSize: number) => {
+    return await getPublicUsersWithPagination(page, pageSize)
+  }
+)
+// nous avons mis une latence dans 'getPublicUsersWithPagination'
+// await new Promise((resolve) => setTimeout(resolve, 5000))
+```
+
+Malheureusement React Cache ne fonctionne qu’au niveau `“Request“` (Si lors d’une requête serveur plusieurs appels à `getPublicUsersDal` sont fait)
+
+Mais lors d’un nouvelle requête serveur, le cache est invalide.
+
+L’API Next nous propose un solution pour mettre en cache des données.
+
+- [https://nextjs.org/docs/app/api-reference/functions/unstable_cache](https://nextjs.org/docs/app/api-reference/functions/unstable_cache) `unstable_cache`
+
+```tsx
+import { getUser } from './data';
+import { unstable_cache } from 'next/cache';
+
+const getCachedUser = unstable_cache(
+  async (id) => getUser(id),
+  ['my-app-user']
+);
+
+export default async function Component({ userID }) {
+  const user = await getCachedUser(userID);
+  ...
+}
+```
+
+💡 Cette `unstable fonction` sera remplacée par `“use cache”` mais ce n’est pas encore officiel
+
+- [https://nextjs.org/docs/app/api-reference/directives/use-cache](https://nextjs.org/docs/app/api-reference/directives/use-cache)
+- **🐶 Dans cet exercise tu vas devoir mettre en cache les utilisateurs publiques (`getPublicUsersDal` ) pendant 1heure avec** `unstable_cache`
 
 Fichiers
 
-- `services/__tests__/finance-service.test.ts`
+- `/app/(public)/public/page.tsx`
 
-### 2. 🚀 Test Santé
+### 2. 🚀 SSG public fiance/heath by user
 
-La même chose pour santé
+Step 1 : **🐶**La première étape est de rendre le `layout LayoutPublicUserId` SSG avec `generateStaticParams`
 
-Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
+```tsx
+//app/(public)/public/[id]/layout.tsx
+export const generateStaticParams = async () => {
+  const users = await getPublicUsersDal(1, 100)
+  return ...
+}
+```
 
-- Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
-- Test qu'un utilisateur ne peut pas créer une donnée de santé pour un autre utilisateur
-- Test qu'un administrateur peut créer une donnée de santé pour n'importe quel utilisateur
-- Test qu'un utilisateur peut voir ses propres données de santé
-- Test qu'un utilisateur ne peut pas voir les données de santé d'un autre utilisateur
+Step 2 : **🐶 Les routes**
 
-6. Test qu'un administrateur peut voir les données de santé de tous les utilisateurs
+On ne peut pas rendre SSG car il y a des `queryParam`
 
-- Test qu'un utilisateur peut modifier ses propres données de santé
-- Test qu'un utilisateur ne peut pas modifier les données de santé d'un autre utilisateur
-- Test qu'un administrateur peut modifier les données de santé de n'importe quel utilisateur
-- Test qu'un utilisateur peut supprimer ses propres données de santé
-- Test qu'un utilisateur ne peut pas supprimer les données de santé d'un autre utilisateur
-- Test qu'un administrateur peut supprimer les données de santé de n'importe quel utilisateur
+```tsx
+type SearchParams = Promise<{
+  financeYear?: string
+  page?: string
+  pageSize?: string
+}>
+
+type Params = Promise<{
+  id?: string
+}>
+```
+
+Un piste possible serait de les supprimer et de garder que la `route param (id)` et de gérer les `queryParam` uniquement dans des composants clients. De cette maniere nous pourrions avoir une page initiale statique. et des chargement si les params changent
+
+```tsx
+'use client'
+const searchParams = useSearchParams()
+const financeYear = searchParams.get('financeYear')
+const page = searchParams.get('page')
+const pageSize = searchParams.get('pageSize')
+```
+
+⚠️ Sauf que ! Il faudrait s’assurer qu’il n’y a aucune appel a un `dynamique function` (headers, cookies, nextauth etc …). Or, toutes nos appels au services sont protéger par un autorisation dépanadant de `nextAuth` ...
+
+- Solution : Exposer des services/DAL spéciaux sans auth pour avoir des données publiques utilisables par le SSG. (un peu long….)
+
+Nous allons ici plutôt essayer d’utiliser utiliser `nextCache` sur les fonction couteuses
+
+```tsx
+import { unstable_cache } from 'next/cache';
+const getCachedUsers = nextCache(
+    async () => getYearsFinancesByUid(userId),
+    [`getYearsFinancesByUid-${userId}`],
+    {revalidate: 3600}
+  )
+```
+
+Mais toujours des errors
+
+```tsx
+ Error: Route /public/[id]/finance used "headers" inside a function cached
+  with "unstable_cache(...)".
+  Accessing Dynamic data sources inside a cache scope is not supported.
+  If you need this data inside a cached function use "headers"
+  outside of the cached function and pass the required dynamic data in as
+   an argument. See more info here:
+   https://nextjs.org/docs/app/api-reference/functions/unstable_cache
+```
+
+La seul solution : Exposer des services/DAL spéciaux sans auth
 
 Fichiers
 
-- `src/services/__tests__/health-service.test.ts`
+- `/app/(public)/public/[id]/layout.tsx`
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://vitest.dev/](https://vitest.dev/)
+📑 Le lien vers la doc [https://nextjs.org/docs/app/api-reference/functions/unstable_cache](https://nextjs.org/docs/app/api-reference/functions/unstable_cache)
 
 ## Ils vont t’aider
 
@@ -198,4 +194,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=15-tests-rbac).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-react-avis).

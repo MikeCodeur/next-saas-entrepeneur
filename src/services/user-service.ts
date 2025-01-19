@@ -95,6 +95,7 @@ export const getPublicUsersWithPagination = async (
   page: number,
   limit: number
 ) => {
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   // turn page into offset & limit data per page
   const offset = (page - 1) * 10
 
