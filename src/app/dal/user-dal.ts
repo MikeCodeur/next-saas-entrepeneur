@@ -18,6 +18,10 @@ export const getConnectedUser = cache(async () => {
   return userDTO(user as User)
 })
 
+export const isConnectedUserAdmin = cache(async () => {
+  return await isAuthAdmin()
+})
+
 const userIdSchema = z.object({
   id: z.string(),
 })

@@ -1,6 +1,6 @@
-# RBAC / DTO / Filter Attribute
+# Actions conditionnées au RBAC
 
-### 💡 Description longue de l'exercice
+### 💡 Actions conditionnées au Rôles
 
 ## 📝 Tes notes
 
@@ -8,160 +8,65 @@ Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeu
 
 ## Comprendre
 
-Pour rappel, passer toutes les données de la base de données aux composants React n’est pas recommandé. Des données sensbile stocké en base de données pourraient se retrouvé exposées.
+Dans une application il arrive souvent que des actions soient conditionnées aux différents utilisateurs. Exemple un `admin` a plus d’options qu’un `user`. Mais un user peut faire des actions sur ses propres `données`.
 
-Pour cela nous pouvons introduire un couche `DAL (Data Acces Layer)` qui a pour rôle d’accéder aux données et de ne retourner que les champs utiles pour la vue. Par exemple :
+Nous allons utiliser les fonctions que nous avons maintenant a notre disposition dans le service `autorisation` pour gérer plus finement les actions dans l’application.
 
-```tsx
+Par exemple toutes les fonctions
 
-// Get user Dal ne retoune que 3 champs
-export const getConnectedUser = cache(async () => {
-  const user = await getUser()
-  if (!user) return
-  return userDTO(user as User)
-})
-
-export function userDTO(user: User): UserDTO | undefined {
-  if (!user) return undefined
-
-  return {
-    email: user?.email ?? '',
-    name: user?.name ?? '',
-    role: user?.role,
-  }
-}
-```
-
-📑 Le liens vers la doc [https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer](https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer)
-
-Dans cet exemple, le DTO supprime des champs. On pourrait utiliser la suppression des champs de manière optionnelle basé sur le ROLE et la configuration RBAC.
-
-Exemple : Un user qui lit des données `health` d’autres user, tous les champs sont autorisé sauf `category`
-
-```tsx
- {
-    role: 'user',
-    resource: 'health',
-    action: 'read:any',
-    attributes: '*,!category',
-  },
-  // le champs role skip sur update dun user
-   {
-    role: 'user',
-    resource: 'health',
-    action: 'update:own',
-    attributes: '*,!role',
-  },
-```
-
-Pour gagner du temps nous avons à notre disposition 2 fonctions, la première : `canAccessField` :
-
-- `canAccessField(permission.attributes,'role')`
-  - Va retourner `true/false` si le champs est accessible ou pas
-
-```tsx
-
-export function canAccessField(attributes: string[], field: string): boolean {
-  // Vérifie s'il y a une exclusion pour le champ spécifié, par exemple "!rating"
-  const isFieldExcluded = attributes.some((attr) =>
-    new RegExp(`^!${field}$`).test(attr)
-  )
-
-  // Vérifie si `*` est présent (accès à tous les champs) et le champ n'est pas exclu
-  const hasAllAttributes = attributes.includes('*')
-
-  // Si `*` est présent mais le champ est explicitement exclu, accès refusé
-  if (hasAllAttributes && isFieldExcluded) {
-    return false
-  }
-
-  // Si le champ est explicitement exclu, retour `false`
-  if (isFieldExcluded) {
-    return false
-  }
-
-  // Si `*` est présent et aucune exclusion, retour `true`
-  if (hasAllAttributes) {
-    return true
-  }
-
-  // Si le champ est explicitement mentionné dans les attributs, accès accordé
-  return attributes.includes(field)
-}
-```
-
-et `filterRessourceFields` : permet de filtrer les attributs grace à `perms.filter(ressource)`
-
-```tsx
-export const filterRessourceFields = <T>(
-  user: User | undefined,
-  ressourceType: Ressource,
-  action: GrantAction,
-  ressources?: T[], // La ressource est maintenant de type générique T
-  ressourceUid?: string
-): T[] => {
-  const perms = permissionAcces(user, ressourceType, action, ressourceUid)
-  //console.log("perms", perms)
-  // Pour tous les éléments de `ressources`, on filtre les attribus perms.filter(ressource) rbac
-  const filteredRessource: T[] =
-    ressources?.map((ressource) => {
-      // eslint-disable-next-line unicorn/no-array-callback-reference
-      return perms.filter(ressource) as T // Assure que le type T est respecté
-    }) ?? []
-
-  return filteredRessource
-```
-
-Nous avons donc au niveau des autorisations `Heath` et `Finance` 2 fonctions spécialisées à notre disposition
-
-- `filterFinancesAttributes`
-- `canSeeFinanceField`
-- `filterHealthsAttributes`
-- `canSeeHealthField`
-
-Nous avons également ajouté 2 fichiers `DAL`
-
-- `finance-dal.ts` : `getFinancesWithPaginationByYear`
-- `health-dal.ts` : `getHealthsWithPaginationByWeek`
-
-Et les routes et composants appellent maintenant les `DAL` au lieu des services directement
+- `canCreateXXX`
+- `isConnectedUserAdmin`
+- etc …
 
 ## Exercice
 
-Dans cette exercice nous allons travailler sur les finances et filtrer la `catégorie` et le `label` car se sont des information privé (mais le `owner` ou `admin` peut voir). Nous avons donc rajouter la config pour les role public
+**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des boutons d’ajouts
 
-```tsx
-{
-    role: 'public',
-    resource: 'finance',
-    action: 'read:any',
-    attributes: '*,!label,!category',
-  },
-```
+- `Tracker un élément de santé`
+- `Tracker une dépense / revenus`
 
-- **🐶 Dans `finance-dal` créer un DTO pour filtrer ces 2 champs**
-
-Il va falloir créer 2 fonctions (`canSeeCategory`, `canSeeLabel`) et filtrer dans le DTO
+de telle manière que les personnes sur la partie publique ne puissent pas avoir les boutons (sauf le propriétaire ou admin)
 
 Fichiers
 
-- `app/dal/finance-dal.ts`
+- `/components/dashboard/trackers/finance/finance-data-table.tsx`
+- `/components/dashboard/trackers/health/health-data-table.tsx`
 
 ## Bonus
 
-### 1. 🚀 Patterns : Filtre automatique
+### 1. 🚀 Masquer des colonnes d’actions
 
-- **🐶 Nous allons filtrer tout les champs automatiquement avec `filterHealthsAttributes`**
+**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des colonnes en fonctions de la permission.
+
+Pour cela tu vas devoir adapté `finance-columns` et `health-columns` pour contenir
+
+- un liste de colonnes pour les `users` standards
+- un liste de colonnes pour les `users` avec plus de droits
+
+et conditionner les colonnes dans `finance-data-table` et `health-data-table`
+
+Fais des test dans les differents cas
+
+- un `admin` accède aux données public
+- un `user` accède aux données public (d’autres users)
+- un `user` accède aux données public (les siennes)
 
 Fichiers
 
-- `src/app/dal/health-dal.ts`
+- `/components/dashboard/trackers/finance/finance-columns.tsx`
+- `/components/dashboard/trackers/health/health-columns.tsx`
+- `/components/dashboard/trackers/finance/finance-data-table.tsx`
+- `/components/dashboard/trackers/health/health-data-table.tsx`
 
-###
+### 2. 🚀 Adapter les routes `finance` / `health` publiques
+
+**🐶** Dans cet exercice tu vas devoir adapter les routes publiques pour les `users` n’ayant pas de données.
+
+Au lieu d’afficher `Pas de résultat`, un `admin ou proprietaire` verra un tableau vide et pourra le remplir
 
 ## Aller plus loin
 
-📑 Le lien vers la doc [https://fr.wikipedia.org/wiki/Contrôle*d'accès*à_base_de_rôles](https://fr.wikipedia.org/wiki/Contr%C3%B4le_d%27acc%C3%A8s_%C3%A0_base_de_r%C3%B4les)
+📑 Le lien vers la doc clerk rbac [https://clerk.com/docs/references/nextjs/basic-rbac](https://clerk.com/docs/references/nextjs/basic-rbac)
 
 ## Ils vont t’aider
 
@@ -173,4 +78,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-react-avis).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=14-rbac-actions).
