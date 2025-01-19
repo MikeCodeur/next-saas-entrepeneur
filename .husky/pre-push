@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "🧪 Running tests before push..."
+pnpm test-all
+pnpm build:check
+pnpm lint
+pnpm build
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. Push aborted."
+  exit 1
+fi
+
+echo "✅ Tests passed. Push allowed."
