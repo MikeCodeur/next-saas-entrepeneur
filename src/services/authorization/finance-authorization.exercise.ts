@@ -6,9 +6,8 @@ import {
 export const canReadFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const hasRoleAdmin = idAdmin(authUser?.user)
-  // if (hasRoleAdmin) return true
-  //
-  return true
+  if (hasRoleAdmin) return true
+  return false
 }
 
 export const canDeleteFinance = async (resourceUid: string) => {
@@ -21,7 +20,6 @@ export const canDeleteFinance = async (resourceUid: string) => {
 export const canCreateFinance = async (resourceUid: string) => {
   const authUser = await getUserAuthExtented()
   const hasRoleAdmin = idAdmin(authUser?.user)
-  console.log('hasRoleAdmin', hasRoleAdmin)
   if (hasRoleAdmin) return true
   return false
 }
