@@ -20,7 +20,8 @@
     "db:seed": "tsx src/data/db/scripts/seed.ts",
     "db:reset-seed": "pnpm db:clear && pnpm db:drop && pnpm db:generate && pnpm db:push && pnpm db:seed",
     "test-husky": "vitest run",
-    "test": "vitest --watch"
+    "test": "vitest --watch",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
