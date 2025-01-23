@@ -13,7 +13,13 @@ export const canReadUser = async (resourceUid: string) => {
     resourceUid
   )
 
-  return permission?.granted
+  const userToRead = await getUserByIdDao(resourceUid)
+
+  const isPublic = userToRead?.visibility === 'public'
+  const isGranted = permission?.granted
+
+  if (isPublic || isGranted) return true
+  return false
 }
 
 export const canUpdateUser = async (resourceUid: string) => {
