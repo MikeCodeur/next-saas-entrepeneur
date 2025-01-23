@@ -3,11 +3,6 @@ import PublicBreadcrumb from '../_components/public-breadcrumb'
 import {getPublicUsersDal, getUserByIdDal} from '@/app/dal/user-dal'
 import SideBarPublic from '../_components/public-sidebar'
 
-export const generateStaticParams = async () => {
-  const users = await getPublicUsersDal(1, 100)
-  return users?.data.map((user) => ({id: user.id})) || []
-}
-
 const LayoutPublicUserId = async (props: {
   children: React.ReactNode
   params: Promise<{id: string}>

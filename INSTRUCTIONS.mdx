@@ -14,18 +14,30 @@ Un `build` nous montre que presque tout est en dynamique.
 - Mais pourquoi `/privacy` `/terms` etc le sont ?
 - Peut on optimiser le rendu des pages publiques ?
 
-```html
-Route (app) Size First Load JS ┌ ƒ / 3.44 kB 153 kB ├ ○ /_not-found 990 B 107 kB
-├ ƒ /account 6.91 kB 144 kB ├ ƒ /api/auth/[...nextauth] 153 B 106 kB ├ ƒ
-/dashboard 4.94 kB 245 kB ├ ○ /error 2.33 kB 120 kB ├ ƒ /finance 1.45 kB 321 kB
-├ ƒ /health 1.7 kB 317 kB ├ ƒ /instructions 5.5 kB 112 kB ├ ƒ /logout 2.07 kB
-120 kB ├ ƒ /privacy 153 B 106 kB ├ ƒ /public 1.56 kB 165 kB ├ ƒ
-/public/[id]/finance 1.45 kB 321 kB ├ ƒ /public/[id]/health 1.7 kB 317 kB ├ ƒ
-/restricted 175 B 110 kB ├ ƒ /settings 3.15 kB 117 kB ├ ○ /sign-in 3.04 kB 120
-kB ├ ○ /sign-up 3.19 kB 121 kB ├ ƒ /terms 153 B 106 kB └ ○ /verify-request 153 B
-106 kB + First Load JS shared by all 106 kB ├
-chunks/1e75e89c-8aa0a1685f3aec44.js 53.4 kB ├ chunks/5996-a50e9f761cee33ed.js 51
-kB └ other shared chunks (total) 1.97 kB
+```typescript
+├ ○ /_not-found                          990 B           107 kB
+├ ƒ /account                             6.91 kB         144 kB
+├ ƒ /api/auth/[...nextauth]              153 B           106 kB
+├ ƒ /dashboard                           4.94 kB         245 kB
+├ ○ /error                               2.33 kB         120 kB
+├ ƒ /finance                             1.45 kB         321 kB
+├ ƒ /health                              1.7 kB          317 kB
+├ ƒ /instructions                        6.61 kB         113 kB
+├ ƒ /logout                              2.07 kB         120 kB
+├ ƒ /privacy                             153 B           106 kB
+├ ƒ /public                              1.57 kB         165 kB
+├ ƒ /public/[id]/finance                 1.45 kB         321 kB
+├ ƒ /public/[id]/health                  1.7 kB          317 kB
+├ ƒ /restricted                          174 B           110 kB
+├ ƒ /settings                            3.15 kB         117 kB
+├ ○ /sign-in                             3.04 kB         120 kB
+├ ○ /sign-up                             3.19 kB         121 kB
+├ ƒ /terms                               153 B           106 kB
+└ ○ /verify-request                      153 B           106 kB
++ First Load JS shared by all            106 kB
+  ├ chunks/1e75e89c-8aa0a1685f3aec44.js  53.4 kB
+  ├ chunks/5996-a50e9f761cee33ed.js      51 kB
+  └ other shared chunks (total)          1.97 kB
 ```
 
 ## Exercice
