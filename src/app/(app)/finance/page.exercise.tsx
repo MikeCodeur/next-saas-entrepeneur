@@ -9,17 +9,17 @@ import {notFound} from 'next/navigation'
 import React from 'react'
 
 type SearchParams = Promise<{
-  // 🐶 Ajoute les paramètres (queryParams) dans le type
-  // ⛏️ supprime todo et ajoute 'financeYear', 'page', 'pageSize'
+  // 🐶 Ajoute les paramètres `queryParams` dans le type
+  // ⛏️ Supprime `todo` et ajoute `financeYear`, `page`, `pageSize`
   todo: string
 }>
 
 const Page = async (props: {searchParams?: SearchParams}) => {
-  // 🐶 Tu vas devoir récupérer les finances ('getFinancesWithPaginationByYear') en fonction de :
-  // - l'année
-  // - l'id de l'utilisateur
-  // - la pagination (page, limit)
-  // ces 3 paramètres sont passés dans les searchParams
+  // 🐶 Tu vas devoir récupérer les finances (`getFinancesWithPaginationByYear`) en fonction de :
+  // - L'année
+  // - L'id de l'utilisateur
+  // - La pagination (page, limit)
+  // Ces 3 paramètres sont passés dans les `searchParams`
 
   // 🤖
   // await getFinancesWithPaginationByYear(
@@ -29,17 +29,17 @@ const Page = async (props: {searchParams?: SearchParams}) => {
   //   limit
   // )
 
-  // 🐶 Récupère les paramètres dans les searchParams :
-  // 🐶 - Si 'financeYear' n'est pas pr"sent, utilise une valeur par défaut (année en cours)
-  // 🐶 - Si 'page' n'est pas présent, utilise une valeur par défaut (1)
-  // 🐶 - Si 'pageSize' n'est pas présent, utilise une valeur par défaut (DATA_ROWS_PER_PAGE)
+  // 🐶 Récupère les paramètres dans les `searchParams` :
+  // 🐶 - Si `financeYear` n'est pas présent, utilise une valeur par défaut (année en cours)
+  // 🐶 - Si `page` n'est pas présent, utilise une valeur par défaut (1)
+  // 🐶 - Si `pageSize` n'est pas présent, utilise une valeur par défaut (DATA_ROWS_PER_PAGE)
 
-  // 🐶 Récupère l'id de l'utilisateur connecté ('getUserIdDal')
-  // 🐶 Si l'utilisateur n'est pas connecté, renvoie une erreur 404 ('notFound')
-  // 🐶 Récupère les années des finances de l'utilisateur ('getYearsFinancesByUid')
-  // 🐶 Récupère les finances de l'utilisateur pour l'année, la page et la taille de page ('getFinancesWithPaginationByYear')
+  // 🐶 Récupère l'id de l'utilisateur connecté (`getUserIdDal`)
+  // 🐶 Si l'utilisateur n'est pas connecté, renvoi une erreur 404 (`notFound`)
+  // 🐶 Récupère les années des finances de l'utilisateur (`getYearsFinancesByUid`)
+  // 🐶 Récupère les finances de l'utilisateur pour l'année, la page et la taille de page (`getFinancesWithPaginationByYear`)
 
-  //services
+  //Services
   const years = [] //getYearsFinancesByUid
   const finances = [] //getFinancesWithPaginationByYear
   return (
