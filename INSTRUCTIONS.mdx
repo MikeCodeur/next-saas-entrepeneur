@@ -1,32 +1,32 @@
 # React Email
 
-### 💡 Description longue de l'exercice
+### 💡 Explorer **`React Email`**
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Dans ce module, nous allons explorer **React Email**, une bibliothèque puissante pour créer des emails dynamiques et réutilisables avec React.
+Dans ce module, nous allons explorer **`React Email`**, une bibliothèque puissante pour créer des emails dynamiques et réutilisables avec `React`.
 
-Associée à **Resend**, une solution moderne pour l'envoi d'emails, nous apprendrons à concevoir et envoyer des emails professionnels facilement, tout en intégrant des pratiques modernes pour améliorer l'expérience utilisateur.
+Associée à **`Resend`**, une solution moderne pour l'envoi d'emails, nous apprendrons à concevoir et envoyer des emails professionnels facilement, tout en intégrant des pratiques modernes pour améliorer l'expérience utilisateur.
 
-Le développement y est simplifié car `react-email` inclus un server de visualisation
+Le développement y est simplifié car `react-email` inclut un serveur de visualisation
 
-📑 Le liens vers la doc [https://react.email/](https://react.email/)
+📑 Le lien vers la doc [https://react.email/](https://react.email/)
 
-### Pour démarrer le server react-email
+### Pour démarrer le serveur `react-email`
 
 - Aller dans le répertoire `react-email-starter`
-- exécuter : `pnpm i`
-- exécuter : `pnpm dev`
+- Exécuter : `pnpm i`
+- Exécuter : `pnpm dev`
 
 ## Exercice
 
-Maintenant que React-Email est configurer, tu peux générer un Email de ton choix. Maintenant il va falloir utiliser cet email avec `Resend` et `Next-Auth`
+Maintenant que `React-Email` est configuré, tu peux générer un Email de ton choix. Maintenant il va falloir utiliser cet email avec `Resend` et `Next-Auth`
 
-- **🐶 Adapte la configuration `Next-Auth` pour que `resend` envoie un react-email**
+- **🐶 Adapte la configuration `Next-Auth` pour que `resend` envoie un `react-email`**
 
 Fichiers
 
@@ -36,14 +36,14 @@ Fichiers
 
 ### 1. 🚀 Email Service
 
-L’envoie d’email dans une application est essentiel. Il peut y en avoir pour les utilisateurs pour les connexions etc … mais aussi pour les administrateurs pour être notifié de ce qu’il se passe, comme par exemple la création d’un nouvelle utilisateur.
+L’envoi d’email dans une application est essentiel. Il peut y en avoir pour les utilisateurs pour les connexions etc… mais aussi pour les administrateurs pour être notifiés de ce qu’il se passe, comme par exemple la création d’un nouvel utilisateur.
 
-Pour simplifier l’exercice nous avons créé le service email qui contient 2 fonctions
+Pour simplifier l’exercice, nous avons créé le service email qui contient 2 fonctions :
 
 - `SendEmail` (fonction que l’on pourra utiliser dans `auth-config` par exemple)
-- `sendInternalEmail` : fonction que le va utiliser sur `sign-up`
+- `sendInternalEmail` : fonction que l’on va utiliser sur `sign-up`
 
-```typescript
+```
 export const sendEmail = async (
   payload: CreateEmailOptions,
   options?: CreateEmailRequestOptions
@@ -76,8 +76,6 @@ Fichiers
 - `services/email-service.ts`
 - `app/(auth)/sign-up/action.ts`
 
-###
-
 ## Aller plus loin
 
 📑 Le lien vers la doc [https://react.email/](https://react.email/)
@@ -92,4 +90,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=03%20React-Email).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=03%20React-Email).

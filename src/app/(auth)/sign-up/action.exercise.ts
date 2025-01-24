@@ -1,5 +1,5 @@
 'use server'
-// 🐶 envoie un email interne avec 'sendInternalEmail' apres la creation d'un user
+// 🐶 Envoi un email interne avec `sendInternalEmail` après la création d'un `user`
 import {processUnknownError} from '@/lib/utils'
 import {signIn} from '@/services/authentication/auth-service'
 import {createUser, getUserByEmail} from '@/services/user-service'
@@ -33,7 +33,7 @@ export const signUpAction = async (
       } as SSRAction
     }
     const result = await createUser(validateField.data)
-    // 🐶 envoie un email interne avec 'sendInternalEmail'
+    // 🐶 Envoi un email interne avec `sendInternalEmail`
 
     const resultSignIn = await signIn('resend', {
       email: result.email,
