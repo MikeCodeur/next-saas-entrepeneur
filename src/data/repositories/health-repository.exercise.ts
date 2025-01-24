@@ -15,30 +15,30 @@ export const getHealthsChartbyWeekDao = async (
 ) => {
   const sq = db
     .select({
-      // 🐶 Ajoute un alias pour la colonne week
+      // 🐶 Ajoute un alias pour la colonne `week`
       //week: sql<Date>`MIN(${health.date})`.as('week'),
-      // 🐶 Ajoute un alias pour la colonne week cela est utile pour groupBy
+      // 🐶 Ajoute un alias pour la colonne `week`, cela est utile pour `groupBy`
       // day: sql<number>`EXTRACT(DAY FROM ${health.date} AT TIME ZONE 'UTC')`.as(
       //   'day'
       // ),
-      // 🐶 Ajoute un alias pour la colonne calories (somme des calories)
+      // 🐶 Ajoute un alias pour la colonne `calories` (somme des calories)
       // calories:
       //   sql<number>`SUM(CASE WHEN ${health.category} = 'calories' THEN ${health.value} ELSE NULL END)`.as(
       //     'calories'
       //   ),
-      // 🐶 Fait la somme des temps et poids
+      // 🐶 Fais la somme des temps et poids
     })
     .from(health)
     // 🐶 Filtre les données par l'utilisateur, la semaine et l'année
     // .where(
     //   sql`${health.userId} = ${uid} AND EXTRACT(WEEK FROM ${health.date} AT TIME ZONE 'UTC') = ${week} AND EXTRACT(YEAR FROM ${health.date} AT TIME ZONE 'UTC') = ${year}`
     // )
-    // 🐶 GroupBy la colonne DAY
+    // 🐶 `GroupBy` la colonne `DAY`
     //.groupBy(sql`EXTRACT(DAY FROM ${health.date} AT TIME ZONE 'UTC')`)
-    // 🐶 Ajoute un alias pour la table pour pouvoir requeter apres
+    // 🐶 Ajoute un alias pour la table pour pouvoir requêter après
     .as('sq')
 
-  // 🐶 Requete les données de la table sq
+  // 🐶 Requête des données de la table `sq`
   // const rows = await db
   //   .select({
   //     week: sq.week,
@@ -146,7 +146,7 @@ export const getWeeksHealthsByYearDao = async (year: string, uid: string) => {
       week: sql<string>`CONCAT(TO_CHAR(date_trunc('week', ${health.date}),'DD-MM'),' au ', TO_CHAR((DATE(date_trunc('week', ${health.date}) + INTERVAL '6 day')),'DD-MM'))`.as(
         'week'
       ),
-      // pour pouvoir trier par date dans un select distinct
+      // Pour pouvoir trier par date dans un select distinct
       weekStart: sql<Date>`date_trunc('week', ${health.date})`.as('week_start'),
     })
     .from(health)
