@@ -1,21 +1,21 @@
 # Role Based Access Control
 
-### 💡 Mettre en place RBAC
+### 💡 Mettre en place `RBAC`
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Dans une application il est important de gérer l’autorisation (`AuthZ`) . Cela permet de répondre à la question :
+Dans une application, il est important de gérer l’autorisation (`AuthZ`) . Cela permet de répondre à la question :
 
-- Cet utilisateur a t-il le droit de faire tel action ?
+- Cet utilisateur a t-il le droit de faire telle action ?
 - Exemple : Le User avec le `Role Admin` peut t-il supprimer une donnée ?
 
-Pour le moment nous avons quelque règle simple basé sur le `Role`
+Pour le moment, nous avons quelques règles simples basées sur le `Role`
 
-- Si `admin` on peut tout faire sinon (`user`) accès refusé
+- Si `admin`, on peut tout faire ; sinon (`user`), l’accès est refusé.
 
 ```tsx
 // Si le user est admin il peut supprimer une finance
@@ -27,16 +27,16 @@ export const canDeleteFinance = async () => {
 }
 ```
 
-Mais dans une application complexe ou peut avoir besoin de gerer encore plus financement
+Mais dans une application complexe, on peut avoir besoin de gérer encore plus de financements :
 
 - ressources
-- action
+- actions
 - attributs
-- etc …
+- etc…
 
-Et il devient vite compliqué d’implémenter toutes ces règles et de les maintenir. Des services tiers nous permettent de gérer cela ou des librairies
+Et il devient vite compliqué d’implémenter toutes ces règles et de les maintenir. Des services tiers ou des librairies nous permettent de gérer cela.
 
-Pour l’exercice nous allons utiliser une simple librairie : `accesscontrol` elle fonctionne comme ceci : Exemple
+Pour l’exercice, nous allons utiliser une simple librairie : `accesscontrol`. Elle fonctionne comme ceci : Exemple
 
 ```tsx
 let grantList = [
@@ -61,17 +61,17 @@ console.log(permission.granted);    // —> true
 console.log(permission.attributes); // —> ['title']
 ```
 
-Une fois mise en place dans notre code il nous suffit de modifier cette configuration (au lieu de modifier du code)
+Une fois mise en place dans notre code, il nous suffit de modifier cette configuration (au lieu de modifier du code)
 
 ## Exercice
 
-**🐶** Dans cette exercice tu vas devoir utiliser `accesscontrol` pour gérer le RBAC.
+**🐶** Dans cet exercice, tu vas devoir utiliser `accesscontrol` pour gérer le `RBAC`.
 
 Etape 1 : configuration
 
 - `rbac-config.ts`
-- Définie la configuration pour les rôles `admin`, `user` et `public`
-- Pour chaque rôle configure la `ressource`, `l’action` et les `attributs, par exemple`
+- Définis la configuration pour les rôles `admin`, `user` et `public`.
+- Pour chaque rôle, configure la `ressource`, `l’action` et les `attributs`, par exemple
 
 ```tsx
 const grantAdminList= [
@@ -91,7 +91,7 @@ const grantAdminList= [
 
 Etape 2 : Utilisation
 
-Nous avons créé un service générique “`authorization`” qui va gérer le RBAC. L’idée de de pouvoir appeler une fonction `permissionAcces` qui appellera Access control del a manière suivante
+Nous avons créé un service générique “`authorization`” qui va gérer le `RBAC`. L’idée est de pouvoir appeler une fonction `permissionAcces` qui appellera Access control de la manière suivante :
 
 ```tsx
 export const canReadFinance = async (resourceUid: string) => {
@@ -142,8 +142,6 @@ Fichiers
 
 ## Bonus
 
-###
-
 ## Ils vont t’aider
 
 - **🐶 Mowgli le Chien** : _Mowgli te guidera dans chaque exercice._
@@ -154,4 +152,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=11%20RBAC).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=11%20RBAC).
