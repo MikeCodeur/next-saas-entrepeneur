@@ -6,7 +6,7 @@ import {ThemeProvider} from 'next-themes'
 import {cn} from '@/lib/utils'
 import {Toaster} from '@/components/ui/toaster'
 import {SessionProvider} from 'next-auth/react'
-// 🐶 import le composant ModalProvider
+// 🐶 Importe le composant `ModalProvider`
 import {ModalProvider} from '@/components/modal'
 
 const geistSans = Geist({
@@ -45,7 +45,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            {/*  🐶 wrap le children dans le composant 'ModalProvider' */}
+            {/*  🐶 Wrap le children dans le composant `ModalProvider` */}
             {children}
           </SessionProvider>
           <Toaster />

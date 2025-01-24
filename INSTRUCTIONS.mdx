@@ -1,16 +1,16 @@
 # Formulaire / Modal
 
-### 💡 Faire un formulaire dans une modal (Dialog)
+### 💡 Faire un formulaire dans une modal (`Dialog`)
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
 Il existe un composant `Shadcn` permettant de gérer les `Dialog` avec (`radix`)
 
-📑 Le liens vers la doc : [https://ui.shadcn.com/docs/components/dialog](https://ui.shadcn.com/docs/components/dialog)
+📑 Le lien vers la doc : [https://ui.shadcn.com/docs/components/dialog](https://ui.shadcn.com/docs/components/dialog)
 
 Exemple :
 
@@ -59,19 +59,19 @@ export function DialogDemo() {
 
 ```
 
-Une première pourrait idée pourrait être de faire autant de `Dialog` que nécessaire (`Finance`, `Health`, `Login` etc …)
+Une première idée pourrait être de créer autant de `Dialog` que nécessaire (`Finance`, `Health`, `Login` etc…)
 
 Mais cela fait beaucoup de duplication de code :
 
 - `<Dialog>`
 - `<DialogTrigger asChild>`
-- `<DialogContent>` etc …
+- `<DialogContent>` etc…
 
-Nous voulons ici une gestion unique des `Dialog` au sein de notre application. Nous allons pour ça utiliser le `State Management Pattern` et l’`API Context.` L'idée est de gérer les états (`states`) des dialogue dans un contexte commun.
+Nous voulons ici une gestion unique des `Dialog` au sein de notre application. Nous allons pour cela, utiliser le `State Management Pattern` et l’`API Context`. L'idée est de gérer les états (`states`) des dialogues dans un contexte commun.
 
-Il faut voir cela comme des states partagés dans notre application (et non pas uniquement dans un composant donné)
+Il faut voir cela comme des `states` partagés dans notre application (et non pas uniquement dans un composant donné).
 
-Un des cas les plus classique pour représenter ce pattern est la gestion du thème dans une application
+Un des cas les plus classiques pour représenter ce pattern est la gestion du thème dans une application.
 
 ### 1. **Créer un contexte**
 
@@ -111,7 +111,7 @@ export const useTheme = () => {
 };
 ```
 
-Note : Depuis React 19 il est possible d’utiliser `use` à la place de `useContext`
+Note : Depuis `React 19`, il est possible d’utiliser `use` à la place de `useContext`
 
 - [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
 
@@ -168,14 +168,14 @@ export default ThemeSwitcher;
 
 ## Exercice
 
-Dans cet exercice tu vas devoir implémenter la gestion des modal (`shadcn`) avec le context API.
+Dans cet exercice, tu vas devoir implémenter la gestion des modals (`shadcn`) avec l’`API context`.
 
 - [https://react.dev/reference/react/createContext](https://react.dev/reference/react/createContext)
 - [https://react.dev/reference/react/use](https://react.dev/reference/react/use)
 
-**🐶** Dans un premier temps créer le `ModalProvider` / `ModalContext` et le hook `useModal` dans `componant/modal.ts`
+**🐶** Dans un premier temps, crée le `ModalProvider`/ `ModalContext` et le hook `useModal` dans `componant/modal.ts`
 
-**🐶 Ensuite utilise** `ModalProvider` dans le `RootLayout` pour pouvoir utiliser `useModal` partout dans l’application
+**🐶 Ensuite, utilise** `ModalProvider` dans le `RootLayout` pour pouvoir utiliser `useModal` partout dans l’application.
 
 Fichiers
 
@@ -186,16 +186,16 @@ Fichiers
 
 ### 1. 🚀 Modal à partir d’un bouton (Ajout)
 
-Dans cet exercice tu vas devoir créer un bouton qui ouvre la modal qui contient le formulaire d’ajout
+Dans cet exercice, tu vas devoir créer un bouton qui ouvre la modal qui contient le formulaire d’ajout.
 
-Pour gagner du temps les formulaires sont déjà créés avec [`shadcn /zod / rhf`](https://ui.shadcn.com/docs/components/form)
+Pour gagner du temps, les formulaires sont déjà créés avec [`shadcn /zod / rhf`](https://ui.shadcn.com/docs/components/form)
 
 - `component/dashboard/trackers/finance/forms/create-edit-finance-form.tsx`
 - `component/dashboard/trackers/finance/forms/delete-finance-form.tsx`
 - `component/dashboard/trackers/health/forms/create-edit-health-form.tsx`
 - `component/dashboard/trackers/health/forms/delete-health-form.tsx`
 
-Et le composant `AddItemButton` est déjà ajouté dans les `Tables`; nous allons pouvoir travailler directement dans ce composant
+Et le composant `AddItemButton` est déjà ajouté dans les `Tables`; nous allons pouvoir travailler directement dans ce composant.
 
 - `component/dashboard/trackers/add-item-button.tsx`
 
@@ -212,7 +212,7 @@ const FinanceDataTable = ({finances, uid}: FinanceDataTableProps) => {
 }
 ```
 
-- **🐶 Dans cet exercice utilise le `hook useModal` créé précédemment de la manière suivante :**
+- **🐶** Dans cet exercice, utilise le **`hook useModal`** créé précédemment de la manière suivante :
 
 ```tsx
 const {onClose, setModal, onOpen} = useModal()
@@ -232,7 +232,7 @@ return (
 
 ```
 
-💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique, des :
+💡 Attention : nous allons faire en sorte que le composant puisse prendre différents types de Formulaires pour le rendre plus générique, des :
 
 - `CreateEditFinanceForm` ou
 - `CreateEditHealthForm`
@@ -245,7 +245,7 @@ Fichiers
 
 ### 2. 🚀 Modal dans une table (Update / Delete Item)
 
-Nous avions rajouter une colonnes action avec `update` / `delete` mais sans effet. Nous allons maintenant ouvrir les modal correspondant a `update` et `delete` avec le `Formulaire` correspondant. Tout ce passe dans `data-table-row-actions`
+Nous avions rajouté une colonne action avec `update`/ `delete` mais sans effet. Nous allons maintenant ouvrir les modals correspondantes à `update` et `delete` avec le `Formulaire` approprié. Tout se passe dans `data-table-row-actions`
 
 ```tsx
   <DropdownMenu>
@@ -262,7 +262,7 @@ Nous avions rajouter une colonnes action avec `update` / `delete` mais sans effe
     </DropdownMenu>
 ```
 
-💡 Attention : nous allons faire en sorte que le composant puisse prendre différents type de Formulaires pour le rendre plus générique.
+💡 Attention : nous allons faire en sorte que le composant puisse prendre différents types de Formulaires pour le rendre plus générique.
 
 💡 Vérifie l’appel des servers actions `health-action` / `finance-action`
 
@@ -284,4 +284,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=07-modal-form-edition).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=07%20modal-form-edition).
