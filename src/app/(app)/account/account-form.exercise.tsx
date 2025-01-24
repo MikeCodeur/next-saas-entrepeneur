@@ -1,5 +1,5 @@
 'use client'
-//1. 🚀 Mise à jour de la session coté client
+//1. 🚀 Mise à jour de la session côté client
 import {
   Form,
   FormControl,
@@ -20,15 +20,15 @@ import {useForm} from 'react-hook-form'
 import {useRouter} from 'next/navigation'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {toast} from '@/components/hooks/use-toast'
-// 🐶 Importe le Hook useSession
+// 🐶 Importe le Hook `useSession`
 // 🤖 import {useSession} from 'next-auth/react'
 
 type KeysUpdateUser = keyof UpdateUser
 export function AccountForm(props: User & {uid: string}) {
-  // 🐶 Importe le Hook useSession
+  // 🐶 Importe le Hook `useSession`
   // 🤖 const session = useSession()
 
-  // 🐶 utilise ce hook plus bas
+  // 🐶 Utilise ce Hook plus bas
   const form = useForm<UpdateUser>({
     resolver: zodResolver(updateUserFormSchema),
     defaultValues: {
@@ -55,7 +55,7 @@ export function AccountForm(props: User & {uid: string}) {
         description: result.data,
       })
 
-      // 🐶 met a jour la session
+      // 🐶 Met à jour la session
       // 🤖 session.update()
     } else if (result.message) {
       toast({

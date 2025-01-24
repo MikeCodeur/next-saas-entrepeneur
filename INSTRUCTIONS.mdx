@@ -1,23 +1,23 @@
 # Dashboard Layout / Session Account
 
-### 💡 Description longue de l'exercice
+### 💡 Gestion des `layouts`
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Nous allons maintenant gérer le `layout` du `dashboard` avec 2 routes simples
+Nous allons maintenant gérer le `layout` du `dashboard` avec 2 routes simples :
 
 - `Account` : Gestion du compte utilisateur
-- `Options` : Page d’option pour le `theme`
+- `Options` : Page d’options pour le `theme`
 
-Ce `layout` contiendra une `SideBar`, un menu à gauche qui contiendra le nom d’utilisateur ou email
+Ce `layout` contiendra une `SideBar`, un menu à gauche qui contiendra le nom d’utilisateur ou l’email
 
 ## Exercice
 
-Pour simplifier l’exercice, le `layout` du `dashboard` est fournis, il contient un composant `client  <Sidebar />`
+Pour simplifier l’exercice, le `layout` du `dashboard` est fourni, il contient un composant `client  <Sidebar />`
 
 ```tsx
 //app/(app)/layout.tsx
@@ -33,7 +33,7 @@ const DashboardLayout = async ({children}: PropsWithChildren) => {
 }
 ```
 
-Pour le moment `SideBar` contient : USER UNDEFINED
+Pour le moment, `SideBar` contient : `USER UNDEFINED`
 
 ```tsx
 // component/dashboard/sidebar.tsx
@@ -42,16 +42,16 @@ Pour le moment `SideBar` contient : USER UNDEFINED
 </p>
 ```
 
-🐶 Dans cet exercice tu vas devoir récupérer le `user` coté client à partir de la session
+🐶 Dans cet exercice, tu vas devoir récupérer le `user` côté client à partir de la session.
 
-Dans un premier temps modifie `components/dashboard/sidebar.tsx`
+Dans un premier temps, modifie `components/dashboard/sidebar.tsx`
 
 ```tsx
 const session = useSession()
 console.log('session', session?.data?.user?.name)
 ```
 
-🐶 Dans un second temps tu vas devoir ajouter le `sessionProvider` au `RootLayout`
+🐶 Dans un second temps, tu vas devoir ajouter le `sessionProvider` au `RootLayout`
 
 ```tsx
 //app/layout.tsx
@@ -66,11 +66,11 @@ Fichiers
 
 ## Bonus
 
-### 1. 🚀 Mise à jour de la session coté client
+### 1. 🚀 Mise à jour de la session côté client
 
-Pour tester la mise à jour de la session coté client il va d'abord falloir implémenter la route `account`. Ensuite, une fois que la mise a jour du compte est possible, nous voulons que le nom de l’utilisateur soit mis à jour dans la sidebar en temps réel (sans avoir à `refresh` la page)
+Pour tester la mise à jour de la session côté client, il va d'abord falloir implémenter la route `account`. Ensuite, une fois que la mise à jour du compte est possible, nous voulons que le nom de l’utilisateur soit mis à jour dans la `sidebar` en temps réel (sans avoir à `refresh` la page)
 
-🐶 Dans un premier temps implémente le formulaire de modification du compte. Le formulaire est prêt, tu n’as plus qu’a implémenter l’action
+🐶 Dans un premier temps, implémente le formulaire de modification du compte. Le formulaire est prêt, tu n’as plus qu’à implémenter l’action
 
 - `app/(app)/account/action.tsx`
 
@@ -83,11 +83,11 @@ export const saveUserAction = async (values: UpdateUser) => {
 <aside>
 💡
 
-Constate que nous devons encore rafraichir la page pour voir le nom de l’utilisateur à jour dans la sidebar
+Constate que nous devons encore rafraîchir la page pour voir le nom de l’utilisateur mis à jour dans la sidebar
 
 </aside>
 
-🐶 Pour mettre à jour la session coté client, nous allons devoir modifier `app/(app)/account/account-form.tsx` pour forcer la mise a jour de session
+🐶 Pour mettre à jour la session côté client, nous allons devoir modifier `app/(app)/account/account-form.tsx` pour forcer la mise à jour de la session
 
 ```tsx
 //app/(app)/account/account-form.tsx
@@ -100,9 +100,9 @@ Fichiers
 - `app/(app)/account/action.tsx`
 - `app/(app)/account/account-form.tsx`
 
-### 2. 🚀 Mise à jour utilisateur coté serveur
+### 2. 🚀 Mise à jour utilisateur côté serveur
 
-Une autre manière plus simple est de fournir le `user` en `props` à la sidebar
+Une autre manière plus simple est de fournir le `user` en `props` à la `sidebar`
 
 ```tsx
 // app/(app)/layout.tsx
@@ -110,8 +110,8 @@ const user = await getUserDal()
 <Sidebar user={user} />
 ```
 
-- 🐶 Adapte le `dashboardLayout` et la `sidebar` dans un premier temps
-- 🐶 Gère la mise à jour du user avec `revalidatePath` dans `action`
+- 🐶 Adapte le `dashboardLayout` et la `sidebar` dans un premier temps.
+- 🐶 Gère la mise à jour du `user` avec `revalidatePath` dans `action`
 
 ```tsx
 //app/(app)/account/action.tsx
@@ -127,7 +127,7 @@ Fichiers
 
 ### 3. 🚀 Implémente la page de settings
 
-- 🐶 implémente la page de settings, elle contiens des buttons pour changer le thème
+- 🐶 Implémente la page de settings, elle contient des buttons pour changer le thème.
 
 Fichiers
 
@@ -143,4 +143,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=04%20Layout-Session-Account).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=04%20Layout-Session-Account).

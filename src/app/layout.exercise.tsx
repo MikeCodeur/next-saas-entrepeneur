@@ -6,7 +6,7 @@ import {ThemeProvider} from 'next-themes'
 import {cn} from '@/lib/utils'
 import {Toaster} from '@/components/ui/toaster'
 
-// 🐶 Importe le composant SessionProvider
+// 🐶 Importe le composant `SessionProvider`
 // 🤖 import {SessionProvider} from 'next-auth/react'
 
 const geistSans = Geist({
@@ -44,7 +44,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* 🐶 Wrappe le children dans un SessionProvider */}
+          {/* 🐶 Wrappe le children dans un `SessionProvider` */}
           {/* 🤖 <SessionProvider> */}
           {children}
           <Toaster />

@@ -4,13 +4,13 @@ import {UpdateUser} from '@/types/domain/user-types'
 import {processUnknownError} from '@/lib/utils'
 import {CSRAction} from '@/types/actions-types'
 
-// 🐶 Importations le schema Zod ,le service user et le dal user
+// 🐶 Importe le schéma Zod ,le service user et le dal user
 // import {updateUserFormSchema} from '@/components/forms/form-validators/user-form-schema'
 // import {updateUser} from '@/services/user-service'
 // import {getUserDal} from '@/app/dal/user-dal'
 
 export const saveUserAction = async (values: UpdateUser) => {
-  // 🐶 Étape 1: Récupérer l'utilisateur authentifié 'getUserDal'
+  // 🐶 Étape 1: Récupérer l'utilisateur authentifié `getUserDal`
 
   // 🐶 Étape 2: Valider les champs du formulaire
   // 🤖 const validateFields = updateUserFormSchema.safeParse(values)
@@ -38,7 +38,7 @@ export const saveUserAction = async (values: UpdateUser) => {
       errors: {},
     } satisfies CSRAction
   }
-  // ⛏️ code à supprimer : juste la pour passer le ts check
+  // ⛏️ Code à supprimer : juste là pour passer le ts check
   return {
     success: true,
     data: 'not implemented',
