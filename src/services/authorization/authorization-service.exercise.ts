@@ -9,7 +9,7 @@ export const permissionAcces = (
   action: GrantAction,
   ressourceUid?: string
 ) => {
-  // 🐶 implemente tous les cas de figure
+  // 🐶 Implémente tous les cas de figure
   // Cas où l'utilisateur n'est pas authentifié (undefined)
   // Cas où l'utilisateur est propriétaire de la ressource
   // Cas utilisateur authentifié mais non-propriétaire
@@ -18,13 +18,13 @@ export const permissionAcces = (
     return ac.can('admin').readAny(ressourceType)
   }
 
-  // 🐶 Une maniere plus generique des faire ci-dessous
+  // 🐶 Une manière plus générique de faire ci-dessous
   // Ces 2 lignes sont identiques
   // ac.can('admin').readAny(ressourceType)
   // ac.can('admin')[`${action}Any`](ressourceType)
   //
 
-  // 🐶 Utilise cette maniere plus generique des faire ci-dessous
+  // 🐶 Utilise cette manière plus générique de faire ci-dessous
   // if (user?.role.includes('admin')) {
   //   return ac.can('admin')[`${action}Any`](ressourceType) // Admin a toujours accès à `any`
   // }
