@@ -6,7 +6,7 @@
 
 ---
 
-### **User Stories**
+### **`User Stories`**
 
 ### **1. Visualisation des Données de Santé**
 
@@ -23,7 +23,7 @@ Afin de suivre mon état de santé global
 - [ ] Filtrage par semaine et mois
 - [ ] Mise en évidence des tendances (progression, stagnation, régression)
 
-**Definition of Done** :
+**`Definition of Done`** :
 
 - Interface responsive
 - Tests utilisateurs validés
@@ -46,7 +46,7 @@ Afin de maintenir un suivi précis de mes progrès
 - [ ] Suppression d'une entrée
 - [ ] Catégorisation (par activité ou objectif, par exemple sport, alimentation)
 
-**Definition of Done** :
+**`Definition of Done`** :
 
 - Validation des données
 - Mise à jour en temps réel du tableau de bord
@@ -180,11 +180,11 @@ Afin de retrouver rapidement les informations recherchées
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Nous allons faire la même chose que précédemment pour Finance mais avec `Heath`
+Nous allons faire la même chose que précédemment pour `Finance` mais avec `Heath`
 
 - Modélisation de `Heath`
 
@@ -213,31 +213,31 @@ export const health = pgTable('health', {
 - Service `Heath`
   - CRUD de base + Autorisation de base
 
-Comme c’est 80% identique pour la partie tableau, les exercices se concentrons sur les différences , le reste sera fourni.
+Comme c’est 80% identique pour la partie tableau, les exercices se concentrent sur les différences, le reste sera fourni.
 
 ## Exercice
 
-Un différence majeure par rapport à la feature `Finance` est que nous avons en plus des années, une agrégation par semaine. Nous voulons pouvoir tracker ce qu’un utilisateur a fait sur une semaine du lundi au dimanche la semaine X. Exemple
+Une différence majeure par rapport à la feature `Finance`, est que nous avons en plus des années, une agrégation par semaine. Nous voulons pouvoir tracker ce qu’un utilisateur a fait sur une semaine du lundi au dimanche de la semaine X. Exemple :
 
 - Lundi : Poids : 80 Kilos | Sport : 2 heures | Calories : 2000k
 - Mardi : Poids : 81 Kilos | Sport : 1 heures | Calories : 2200k
 - etc …
 
-Les 2 grandes fonctions majeures ç adapter / créer sont
+Les 2 grandes fonctions majeures à adapter / créer sont :
 
 - `getHealthsWithPaginationByWeekDao` : Les `heaths` par année et semaine pour un `user`
-- `getWeeksHealthsByYearDao`: Les `weeks` par `année` ou des données sont disponibles. Les semaines disponibles pourront etre inserer dans un seconde `<Select>` pour avoir par exemple les données du
+- `getWeeksHealthsByYearDao` : Les `weeks` par `année` où des données sont disponibles. Les semaines disponibles pourront être insérées dans un second `<Select>` pour avoir par exemple les données du
   - 2025 : Semaine du ‘28-07 au 03-08’
 
-**🐶 Implémente ces 2 fonctions de le `repository Health`**
+**🐶 Implémente ces 2 fonctions de `repository Health`**
 
-💡 Astuce pout `getHealthsWithPaginationByWeekDao` : `Postgrees` permet de filtrer par années comme cela
+💡 Astuce pour `getHealthsWithPaginationByWeekDao` : `Postgrees` permet de filtrer par année comme cela
 
 ```tsx
 EXTRACT(YEAR FROM ${date}) = "2025"` //match avec les date de 2025
 ```
 
-Pour filtrer par semaine il est possible de faire :
+Pour filtrer par semaine, il est possible de faire :
 
 ```tsx
 EXTRACT(WEEK FROM ${date}) = 52 // match avec les 52ème semaine de l'année
@@ -247,12 +247,12 @@ Nous verrons plus tard comment convertir `‘28-07 au 03-08’` en numéro de `w
 
 Doc : [https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract](https://neon.tech/postgresql/postgresql-date-functions/postgresql-extract)
 
-💡 Astuce pout `getWeeksHealthsByYearDao` :
+💡 Astuce pour `getWeeksHealthsByYearDao` :
 
-- Filtrer par `année` par `user`
+- Filtrer par `année` pour un `user`
 - Concaténer avec [CONCAT](https://neon.tech/postgresql/postgresql-string-functions/postgresql-concat-function#summary)
-- Avoir le lundi avoir [DATE_TRUNC(’week’)](https://neon.tech/postgresql/postgresql-date-functions/postgresql-date_trunc#summary)
-- Avoir le vendredi avec [`DATE(... + INTERVAL '6 day')`](https://neon.tech/postgresql/postgresql-tutorial/postgresql-interval)
+- Obtenir le lundi avec [DATE_TRUNC(’week’)](https://neon.tech/postgresql/postgresql-date-functions/postgresql-date_trunc#summary)
+- Obtenir le dimanche avec [`DATE(... + INTERVAL '6 day')`](https://neon.tech/postgresql/postgresql-tutorial/postgresql-interval)
 
 ```tsx
 date_trunc('week', ${health.date}) //Donne le premier jour de la semaine de la date
@@ -276,13 +276,13 @@ Fichiers
 
 ## Bonus
 
-### 1. 🚀 Filtrer par semaine : Select
+### 1. 🚀 Filtrer par semaine : `Select`
 
-Pour filtrer par semaine, la première chose a faire et d’ajouter un `queryParam` : `healthWeek` à la route `/heath`, par exemple :
+Pour filtrer par semaine, la première chose à faire est d’ajouter un `queryParam` : `healthWeek` à la route `/heath`, par exemple :
 
 - `/health?healthWeek=28-07+au+03-08`
 
-Dans un second temps il va falloir convertir cette chaine ‘`28-07+au+03-08`’ en numéro de semaine dans l’année, pour cela tu as a ta disposition `getWeekFromLabel`
+Dans un second temps, il va falloir convertir cette chaine ‘`28-07+au+03-08`’ en numéro de semaine dans l’année. Pour cela, tu as à ta disposition `getWeekFromLabel`
 
 ```tsx
 export const getWeekFromLabel = (label: string, year: string) => {
@@ -303,8 +303,8 @@ export const getWeekFromLabel = (label: string, year: string) => {
 }
 ```
 
-- 🐶 Dans un premier temps , adapte la route (`app/(app)/health/page`) pour avoir les bons params et faire les bon appels aux services
-- 🐶 Dans un second temps, occuper toi du `Select Year Week` (`health-year-select.tsx`)
+- 🐶 Dans un premier temps, adapte la route (`app/(app)/health/page`) pour avoir les bons params et faire les bons appels aux services
+- 🐶 Dans un second temps, occupe-toi du `Select Year Week` (`health-year-select.tsx`)
   - Ajoute un deuxième select pour les `weeks`
   - Change les `queryParams` lors d’un changement d’item dans le select
   ```tsx
@@ -333,4 +333,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=06-feature-health-crud).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=06%20feature-health-crud).

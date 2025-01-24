@@ -2,7 +2,7 @@
 import {getUserIdDal} from '@/app/dal/user-dal'
 import {
   getHealthsWithPaginationByWeek,
-  // 🐶 Ajoute la fonction 'getWeeksHealthsByYear'
+  // 🐶 Ajoute la fonction `getWeeksHealthsByYear`
   getWeeksHealthsByYear,
   getYearsHealthsByUid,
 } from '@/services/health-service'
@@ -15,7 +15,7 @@ import {DATA_ROWS_PER_PAGE} from '@/utils/constants'
 
 type SearchParams = Promise<{
   healthYear?: string
-  // 🐶 Ajoute la params 'healthWeek' de type string
+  // 🐶 Ajoute le params `healthWeek` de type string
   page?: string
   pageSize?: string
 }>
@@ -40,25 +40,25 @@ const Page = async (props: {searchParams?: SearchParams}) => {
       ? requestedYear
       : years?.[0]?.year || defaultYear
 
-  // 🐶 Appelle la fonction 'getWeeksHealthsByYear'
+  // 🐶 Appelle la fonction `getWeeksHealthsByYear`
   // 🤖 const weeks = (await getWeeksHealthsByYear(healthYear, userId)) ?? []
 
-  // 🐶 Récupere la semaine demandée
+  // 🐶 Récupère la semaine demandée
   // 🤖 const requestedWeek = params?.healthWeek
 
-  // 🐶 Si la semaine demandée existe dans weeks, on l'utilise, sinon on prend la première semaine disponible
+  // 🐶 Si la semaine demandée existe dans `weeks`, on l'utilise, sinon on prend la première semaine disponible
   // 🤖 const healthWeek =
   //   requestedWeek && weeks.some((w) => w.week === requestedWeek)
   //     ? requestedWeek
   //     : weeks?.[0]?.week
 
-  // 🐶 Vérifie si la semaine demandée existe dans weeks
+  // 🐶 Vérifie si la semaine demandée existe dans `weeks`
   const hasCurrentWeek = false // 🤖 weeks?.find((week) => week.week === healthWeek)?.week
 
-  // 🐶 Récupère la semaine (number) à partir du label avec la fonction 'getWeekFromLabel'
+  // 🐶 Récupère la semaine (number) à partir du label avec la fonction `getWeekFromLabel`
   // 🤖 const weekFromLabel = getWeekFromLabel(healthWeek, healthYear)
   const healthData = await getHealthsWithPaginationByWeek(
-    1, // Semaine 1 de l'année pour le moment, utilise 'weekFromLabel'
+    1, // Semaine 1 de l'année pour le moment, utilise `weekFromLabel`
     healthYear,
     userId,
     page,
