@@ -4,17 +4,17 @@
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
 Le graphique de santé est un graphique sous forme de barres.
 
-- sur l’axe X : Les jours de la semaine sélectionnée
-- sur l’axe Y :
-  - 3 barres par jours (Poids / Calories / Temps de sport )
+- Sur l’axe X : Les jours de la semaine sélectionnée
+- Sur l’axe Y :
+  - 3 barres par jour (Poids / Calories / Temps de sport )
 
-Pour faire des graphique en barre nous avons à notre disposition avec [shadcn](https://ui.shadcn.com/docs/components/chart) un composant `<BarChart>` : Voila un exemple basique
+Pour faire des graphiques en barre, nous avons à notre disposition avec [shadcn](https://ui.shadcn.com/docs/components/chart) un composant `<BarChart>` : Voilà un exemple basique :
 
 ```tsx
 <ChartContainer
@@ -55,14 +55,14 @@ Pour faire des graphique en barre nous avons à notre disposition avec [shadcn](
     </ChartContainer>
 ```
 
-📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
+📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
 
 ## Exercice
 
-Dans cet exercice nous allons devoir créer `une requête imbriquée`
+Dans cet exercice, nous allons devoir créer `une requête imbriquée`
 
-- Dans un premier temps créer la requête permettant de de récupérer les données de santé pour :
-- Un `user` a une `année` et `semaine` precise
+- Dans un premier temps, crée la requête permettant de récupérer les données de santé pour :
+- Un `user` à une `année` et `semaine` précises.
 
 ```tsx
 .where(
@@ -70,13 +70,13 @@ Dans cet exercice nous allons devoir créer `une requête imbriquée`
     )
 ```
 
-- Groupé par jour de la semaine (monday … sunday)
+- Groupées par jour de la semaine (monday … sunday)
 
 ```tsx
 .groupBy(sql`EXTRACT(DAY FROM ${health.date} AT TIME ZONE 'UTC')`)
 ```
 
-- Avec la sommes des éléments catégorie sur une jours : (ex : toutes les calories du jours X)
+- Avec la somme des éléments par catégorie sur un jour : (ex : toutes les calories du jour X)
 
 ```tsx
  calories:
@@ -85,13 +85,13 @@ Dans cet exercice nous allons devoir créer `une requête imbriquée`
     ),
 ```
 
-- Creation d’un alias
+- Création d’un alias
 
 ```tsx
 .as('sq')
 ```
 
-Nous pourrons ensuite faire une requête sur l’alias créé percement
+Nous pourrons ensuite faire une requête sur l’alias créé précédemment.
 
 ```tsx
 const rows = await db
@@ -105,9 +105,9 @@ const rows = await db
     .orderBy(sq.week)
 ```
 
-- **🐶 Dans cet exercice implémente `getHealthsChartbyWeekDao` dans** `health-repository.ts`
+- **🐶** Dans cet exercice, implémente **`getHealthsChartbyWeekDao`** dans \*\*\*\*`health-repository.ts`
 
-Fais en sorte d’avoir des donnée sous cette forme
+Fais en sorte d’avoir des données sous cette forme :
 
 ```tsx
 healths [
@@ -126,7 +126,7 @@ healths [
 ]
 ```
 
-- **🐶 Dans un second temps appelle cette fonction dans la route**
+- **🐶** Dans un second temps, appelle cette fonction dans la route :
 
 ```tsx
 const healths = await getHealthsChartbyWeek
@@ -146,7 +146,7 @@ Fichiers
 
 ### 1. 🚀 Créer le graphique en barre
 
-Le graphique en barre s’utilise avec un `<BarChart accessibilityLayer data={data}>` et des `<Bar>` exemple
+Le graphique en barre s’utilise avec un `<BarChart accessibilityLayer data={data}>` et des `<Bar>`. Exemple :
 
 ```tsx
  <Bar
@@ -157,15 +157,15 @@ Le graphique en barre s’utilise avec un `<BarChart accessibilityLayer data={da
 	/>
 ```
 
-- **🐶 Créé le graphique en barre**
+- **🐶** Crée le graphique en barre
 
 Fichiers
 
 - `/components/dashboard/trackers/health/health-bar-chart.tsx`
 
-### 2. 🚀 Valeur par default
+### 2. 🚀 Valeur par défaut
 
-Fais en sorte d'avoir des valeur à zéro pour les jour vide
+Fais en sorte d'avoir des valeurs à zéro pour les jours vides.
 
 Fichiers
 
@@ -185,4 +185,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=09%20chart-bar-heath).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=09%20chart-health-bar).
