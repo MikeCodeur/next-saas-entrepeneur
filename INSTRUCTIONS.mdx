@@ -1,27 +1,25 @@
 # Créer un Dashboard optimisé
 
-### 💡 Utiliser le streaming pour un dashboard optimisé
+### 💡 Utiliser le streaming pour un `dashboard` optimisé
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Dans un premier temps nous allons créer un `dashboard` une route qui contiendra les 2 graphiques
-
-.
+Dans un premier temps, nous allons créer un `dashboard`, une route qui contiendra les 2 graphiques.
 
 ## Exercice
 
-- **🐶 Dans cet exercice tu va devoir implémenter la route `dashboard` qui contiendra les `queryParam` nécessaires.**
-- **Faire les appels aux services nécessaires**
-- Afficher les 2 Charts
+- **🐶** Dans cet exercice, tu va devoir implémenter la route **`dashboard`** qui contiendra les **`queryParam`** nécessaires.
+- Faire les appels aux services nécessaires. \*\*\*\*
+- Afficher les 2 Charts.
 
-PS : Nous avons ajouter de la latence dans les repositories volontairement pour ensuite l’optimiser via le streaming (exo suivant)
+PS : Nous avons ajouté de la latence dans les repositories volontairement pour ensuite l’optimiser via le streaming (exercice suivant)
 
-- 3 seconde pour `Health`
-- 5 pour `Finance`
+- 3 secondes pour `Health`
+- 5 secondes pour `Finance`
 
 ```tsx
 export const getYearsHealthsByUid = async (uid: string) => {
@@ -38,18 +36,18 @@ Fichiers
 
 ### 1. 🚀 Optimisation : Streaming
 
-Les `Dashboards` sont souvent gourmant en ressources (Beacoup d’appels en base de de données / Calcul / agrégation etc … ) ce qui rend leur affichage plus ou moins long.
+Les `Dashboards` sont souvent gourmands en ressources (beaucoup d’appels en base de données / Calcul / agrégation etc… ) ce qui rend leur affichage plus ou moins long.
 
-Certains graphiques peuvent être rapide , d’autres plus longs. Dans le Dashboard précèdent l’affichage de la page arrive à la fin du graphique le plus long.
+Certains graphiques peuvent être rapides, d’autres plus longs. Dans le Dashboard précédent, l’affichage de la page arrive à la fin du graphique le plus long.
 
-- **🐶 Dans cet exercice tu vas devoir utiliser le streaming**
+- **🐶** Dans cet exercice, tu vas devoir utiliser le streaming. \*\*\*\*
 
-Pour gagner du temps nous avons découper en deux RSC distinct (qui contiennent les appels à la base de données )
+Pour gagner du temps, nous avons découpé en deux `RSC` distincts (qui contiennent les appels à la base de données )
 
 - `finance-chart.tsx (<FinanceChart>)`
 - `finance-chart.tsx` `(<HealthChart>)`
 
-Utilise `<Suspense>` pour gérer le streaming
+Utilise `<Suspense>` pour gérer le streaming.
 
 ```tsx
 <Suspense fallback={<ChartBodySkeleton />}>
@@ -57,13 +55,11 @@ Utilise `<Suspense>` pour gérer le streaming
 </Suspense>
 ```
 
-ps : `ChartBodySkeleton` est un skeleton disponible pour les charts
+PS : `ChartBodySkeleton` est un skeleton disponible pour les charts.
 
 Fichiers
 
 - `app/(apps)/dashboard/page.tsx`
-
-###
 
 ## Aller plus loin
 
@@ -79,4 +75,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=10%20dashbaord-streaming).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=10%20dashbaord-streaming).

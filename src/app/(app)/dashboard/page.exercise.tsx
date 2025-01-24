@@ -62,7 +62,7 @@ export default async function Page(props: {searchParams?: SearchParams}) {
       ? requestedWeek
       : weeks[0]?.week
 
-  // 🐶 fais les appels à la base de données
+  // 🐶 Fais les appels à la base de données
   // const financesForChart = await getFinancesChartByYear(financeYear, userId)
   // const financeFormatted = formatedFinanceData(financesForChart, 'month')
 
@@ -78,7 +78,7 @@ export default async function Page(props: {searchParams?: SearchParams}) {
       <div className="space-y-8">
         <div className="rounded-lg border p-4">
           <h2 className="mb-4 text-xl font-semibold">Finances</h2>
-          {/* 🐶 Appelle les composant FinanceYearSelect et FinanceLineChart */}
+          {/* 🐶 Appelle les composants `FinanceYearSelect` et `FinanceLineChart` */}
           {/* <FinanceYearSelect years={financeYears} currentYear={financeYear}>
             <FinanceLineChart data={financeFormatted} />
           </FinanceYearSelect> */}
@@ -86,7 +86,7 @@ export default async function Page(props: {searchParams?: SearchParams}) {
 
         <div className="rounded-lg border p-4">
           <h2 className="mb-4 text-xl font-semibold">Santé</h2>
-          {/* 🐶 Appelle les composant HealthYearSelect et HealthBarChart */}
+          {/* 🐶 Appelle les composants `HealthYearSelect` et `HealthBarChart` */}
           {/* <HealthYearSelect
             years={healthYears}
             currentYear={healthYear}
