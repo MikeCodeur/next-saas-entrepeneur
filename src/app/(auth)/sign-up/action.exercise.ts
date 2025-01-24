@@ -1,5 +1,5 @@
 'use server'
-// 🐶 Implemente le sign-up resend
+// 🐶 Implémente le `sign-up` resend
 import {processUnknownError} from '@/lib/utils'
 import {signIn} from '@/services/authentication/auth-service'
 import {createUser, getUserByEmail} from '@/services/user-service'
@@ -35,13 +35,13 @@ export const signUpAction = async (
     // 🐶 Crée un utilisateur
     // const result = await createUser(validateField.data)
 
-    // 🐶 Appelle le signIn avec le provider resend
+    // 🐶 Appelle le `signIn` avec le `provider` resend
     // const resultSignIn = await signIn('resend', {
     //   email: result.email,
     //   redirect: false,
     // })
 
-    // 🐶 Si resultSignIn est un lien de redirection, redirige vers resultSignIn
+    // 🐶 Si `resultSignIn` est un lien de redirection, redirige vers `resultSignIn`
   } catch (error) {
     // 🐶 Gestion des erreurs NEXT_REDIRECT workaround
     //https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-8046451

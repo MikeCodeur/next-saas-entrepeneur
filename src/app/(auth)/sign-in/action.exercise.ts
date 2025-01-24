@@ -1,5 +1,5 @@
 'use server'
-// 🐶 Implemente le sign-in resend
+// 🐶 Implémente le `sign-in` resend
 
 import {AuthError} from 'next-auth'
 import {baseUserFormSchema} from '@/components/forms/form-validators/user-form-schema'
@@ -28,7 +28,7 @@ export const signInAction = async (
     if (!request) {
       return "Aucun compte n'est associé à cet e-mail." as const
     }
-    // 🐶 Appelle le signIn avec le provider resend
+    // 🐶 Appelle le `signIn` avec le `provider` resend
     // 🤖
     // const result = await signIn('resend', {
     //   email: request.email,
@@ -36,7 +36,7 @@ export const signInAction = async (
     // })
 
     // 🐶 result contient le lien de redirection (error ou verifyUrl)
-    // redirige vers result avec 'redirect'
+    // Redirige vers `result` avec `redirect`
   } catch (error) {
     // 🐶 Gestion des erreurs NEXT_REDIRECT workaround
     //https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-8046451

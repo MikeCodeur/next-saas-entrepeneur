@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 
-// 🐶 Exporte les handlers GET et POST de @/services/authentication/auth-service
+// 🐶 Exporte les handlers `GET` et `POST` de `@/services/authentication/auth-service`
 
 // export {GET, POST} from '@/services/authentication/auth-service'
 

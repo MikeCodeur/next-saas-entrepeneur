@@ -1,32 +1,32 @@
 # Next-Auth Resend
 
-### 💡 Description longue de l'exercice
+### 💡 Utiliser `Resend`
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-**Dans les exercices précédents**, nous avons utilisé `next-auth` avec le mode `Credentials` (login / password) comme fournisseur. Cependant, ce mode est de moins en moins recommandé en raison des pratiques de sécurité actuelles.
+Dans les exercices précédents, nous avons utilisé `next-auth` avec le mode `Credentials` (login / password) comme fournisseur. Cependant, ce mode est de moins en moins recommandé en raison des pratiques de sécurité actuelles.
 
-Dans ce module, nous allons utiliser **Resend**, un service qui permet à la fois :
+Dans ce module, nous allons utiliser **`Resend`**, un service qui permet à la fois :
 
 - **L'envoi d'e-mails** dans notre SaaS,
 - Et **la gestion de l'authentification** via l'envoi d'un lien magique pour une connexion sécurisée.
 
-Pour rappel `Next-Auth` est toujours utilisé avec `Drizzle` comme adapter, et le model est deja créé pour simplifié l’exercice car nous l’avons déjà fait dans les modules précèdent
+Pour rappel, `Next-Auth` est toujours utilisé avec `Drizzle` comme `adapter`, et le model est déjà créé pour simplifier l’exercice car nous l’avons déjà fait dans les modules précédents.
 
 - [https://authjs.dev/getting-started/adapters/drizzle](https://authjs.dev/getting-started/adapters/drizzle)
 
-Nous allons maintenant configure le provider `Resend`
+Nous allons maintenant configurer le provider `Resend`
 
 - [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
 
-Pour cela il faut
+Pour cela il faut :
 
-- ouvrir un compte gratuit [https://resend.com/](https://resend.com/) et
-- créer une clef API [https://resend.com/api-keys](https://resend.com/api-keys)
+- Ouvrir un compte gratuit [https://resend.com/](https://resend.com/) et
+- Créer une clef API [https://resend.com/api-keys](https://resend.com/api-keys)
 
 La mettre dans `.env.developpement`
 
@@ -35,18 +35,18 @@ La mettre dans `.env.developpement`
 RESEND_API_KEY="re_xxxxxxxxxx"
 ```
 
-Dépendances
+Dépendances :
 
 - `"@auth/drizzle-adapter": "^1.7.4",`
 - `"resend": "^4.0.1",`
 
-note : pense a bien nettoyer tes `cookies` et `localstorage` pour bien déamrrer les exerices
+Note : Pense à bien nettoyer tes `cookies` et `localstorage` pour bien démarrer les exercices
 
-📑 Le liens vers la doc [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
+📑 Le lien vers la doc [https://authjs.dev/getting-started/providers/resend](https://authjs.dev/getting-started/providers/resend)
 
 ## Exercice
 
-- **🐶** Dans un premier temps tu vas devoir configurer le provider `Resend` dans `Next-Auth` de la manière suivante dans `auth-config.ts`:
+- **🐶** Dans un premier temps, tu vas devoir configurer le provider `Resend` dans `Next-Auth` de la manière suivante dans `auth-config.ts`:
 
 ```tsx
 import NextAuth from "next-auth"
@@ -77,14 +77,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 ```
 
-Note : `EMAIL_FROM` et `EMAIL_TO` doit être un email vérifier en terme de domaine (ou l’email du compte `resend`) pour que l’email soit envoyer. Pour le mode test nous utiliseront : `onboarding@resend.dev`
+Note : `EMAIL_FROM` et `EMAIL_TO` doivent être des emails vérifiés en termes de domaine (ou l’email du compte `resend`) pour que l’email soit envoyé. Pour le mode test, nous utiliserons : `onboarding@resend.dev`
 
 ```bash
 #.env.developpement
 EMAIL_FROM="onboarding@resend.dev"
 ```
 
-Pense à bien `configurer` l’`adapter` `nextauth`
+Pense à bien configurer l’`adapter` `nextauth`
 
 ```tsx
 session: {
@@ -93,7 +93,7 @@ session: {
   adapter: DrizzleAdapter(db),
 ```
 
-- **🐶** Dans un second temps tu vas pouvoir utiliser la fonction `sign-in` de `next-auth` avec le `provider resend` dans les `actions` de `sign-in` et `sign-up`
+- **🐶** Dans un second temps, tu vas pouvoir utiliser la fonction `sign-in` de `next-auth` avec le `provider resend` dans les `actions` de `sign-in` et `sign-up`
 
 ```tsx
 const result = await signIn('resend', {
@@ -102,7 +102,7 @@ const result = await signIn('resend', {
 })
 ```
 
-- **🐶** La 3 -ème étape consiste à aller dans l’interface de [Resend](https://resend.com/emails) et cliquer sur le lien de l’email reçu après le `sign-in` (ou copier coller dans url).
+- **🐶** La 3ème étape, consiste à aller dans l’interface de [Resend](https://resend.com/emails) et cliquer sur le lien de l’email reçu après le `sign-in` (ou copier coller dans url).
 
 Ce lien est un lien vers un api route `next-auth`
 
@@ -126,7 +126,7 @@ Fichiers
 
 ### 1. 🚀 Créer une page `verify-request` custom
 
-Dans l’exercice précèdent nous sommes rediriger vers la page `verify-request` par default de `next-auth`
+Dans l’exercice précédent, nous sommes redirigés vers la page `verify-request` par défaut de `next-auth`
 
 ```tsx
 if (result) {
@@ -134,9 +134,9 @@ if (result) {
 }
 ```
 
-**🐶 Dans cet exercice** tu vas devoir ne rediriger uniquement si `result` contient `error` (exemple `/api/auth/error?error=Configuration`)
+**🐶 Dans cet exercice,** tu vas devoir nous rediriger uniquement si `result` contient `error` (exemple `/api/auth/error?error=Configuration`)
 
-et à la fin rediriger fait notre propre route qui existe déjà (`redirect('/verify-request')`)
+et à la fin, rediriger vers notre propre route qui existe déjà (`redirect('/verify-request')`)
 
 - [http://localhost:3000/verify-request](http://localhost:3000/verify-request)
 
@@ -147,21 +147,19 @@ Fichiers
 
 ### 2. 🚀 Protéger les routes avec un HOC
 
-Pour cela nous utiliseront un HOC `withAuth` comme nous l’avons fait dans les modules précédents.
+Pour cela, nous utiliserons un HOC `withAuth` comme nous l’avons fait dans les modules précédents.
 
-**🐶** Protèges l’accès aux routes du `dashboard` avec `withAuth`
+**🐶** Protège l’accès aux routes du `dashboard` avec `withAuth`
 
 Fichiers
 
 - `app/(app)/dashboard/layout`
 
-###
-
 ### 3. 🚀 Redirection vers le dashboard
 
-Par default l’url envoyer par email est la page en cours (`sign-in`). Nous allons ici rediriger vers `Dashboard`
+Par défaut, l’url envoyée par email est la page en cours (`sign-in`). Nous allons ici rediriger vers `Dashboard`
 
-- **🐶p**our cela adapte la config `next-auth`
+- **🐶P**our cela, adapte la config `next-auth`
 
 ```tsx
  callbacks: {
@@ -189,4 +187,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=02%20Next-Auth-Resend).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=02%20Next-Auth-Resend).
