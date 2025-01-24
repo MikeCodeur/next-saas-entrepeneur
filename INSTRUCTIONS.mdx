@@ -1,16 +1,16 @@
 # Chart Finance (ReChart)
 
-### 💡 Fait des graphiques
+### 💡 Faire des graphiques
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Pour faire des graphiques il existe une excellent librairie React : [ReChart](https://recharts.org/en-US/)
+Pour faire des graphiques, il existe une excellente librairie `React` : [ReChart](https://recharts.org/en-US/)
 
-De plus [shadcn](https://ui.shadcn.com/docs/components/chart) a introduit un composant chart basé sur reChart, nous l’avons ajouté au projet.
+De plus, [shadcn](https://ui.shadcn.com/docs/components/chart) a introduit un composant chart basé sur `reChart`, nous l’avons ajouté au projet.
 
 ```tsx
 pnpm dlx shadcn@latest add chart
@@ -19,11 +19,11 @@ pnpm dlx shadcn@latest add chart
 Nous allons ici utiliser 2 types de graphiques
 
 - Sous forme de ligne `LineChart`
-- Sous forme de bar `BarChart`
+- Sous forme de barre `BarChart`
 
-📑 Le liens vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
+📑 Le lien vers la doc [https://ui.shadcn.com/docs/components/chart](https://ui.shadcn.com/docs/components/chart)
 
-Pour gagner du temps nous avons mise en place dans `global.css`
+Pour gagner du temps, nous avons mis en place dans `global.css`
 
 ```css
 --chart-1: 12 76% 61%;
@@ -33,7 +33,7 @@ Pour gagner du temps nous avons mise en place dans `global.css`
 --chart-5: 27 87% 67%;
 ```
 
-que nous pouvons utiliser pour de la configuration comme par exemple
+que nous pouvons utiliser pour la configuration comme par exemple :
 
 ### LineChart
 
@@ -55,7 +55,7 @@ const chartConfig = {
 } satisfies ChartConfig
 ```
 
-Exemple de graphique:
+Exemple de graphique :
 
 ```tsx
    <ChartContainer
@@ -97,43 +97,43 @@ Exemple de graphique:
 
 ## Exercice
 
-Dans cet exercice tu vas devoir créer un `LineChart` pour les finances .
+Dans cet exercice, tu vas devoir créer un `LineChart` pour les finances.
 
-Le but est d’avoir toutes les données sur une années grouper par mois et types
+Le but est d’avoir toutes les données sur une année groupées par mois et type.
 
-- Sur l’axe X : Les mois de l’années ou il y a des données
-- Sur l’axe Y : La valeurs en euros
-- Line 1 : La courbes des revenus
-- Line 2 : La courbes des dépenses
-- Line 3 : La courbes des actifs
+- Sur l’axe X : Les mois de l’année où il y a des données.
+- Sur l’axe Y : La valeur en euros.
+- Line 1 : La courbe des revenus.
+- Line 2 : La courbe des dépenses.
+- Line 3 : La courbe des actifs.
 
-- **🐶 Dans un premier temps créé le Dao `getFinancesChartByYearDao`**
+- **🐶** Dans un premier temps, crée le Dao **`getFinancesChartByYearDao`**
 
-Récupère les totaux mensuels des dépenses, revenus et actifs d'un utilisateur pour une année donnée, triés chronologiquement.
+Récupère les totaux mensuels des dépenses, des revenus et des actifs d'un utilisateur pour une année donnée, triés chronologiquement.
 
 En terme SQL :
 
-- filtre par année et user :
+- Filtre par année et user :
   ```tsx
    .where(
         sql`${finance.userId} = ${uid} AND EXTRACT(YEAR FROM ${finance.date}) = ${year}`
       )
   ```
-- groupe par mois et années
+- Groupe par mois et année
   ```tsx
    .groupBy(
         sql`EXTRACT(YEAR FROM ${finance.date})`,
         sql`EXTRACT(MONTH FROM ${finance.date})`
       )
   ```
-- trie
+- Trie
   ```tsx
   .orderBy(
       desc(sql`EXTRACT(YEAR FROM ${finance.date})`),
       sql`EXTRACT(MONTH FROM ${finance.date})`
     )
   ```
-- Sommes de chaque `catégorie`
+- Somme de chaque `catégorie`
 
 ```tsx
 sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amount} END)`.as(
@@ -141,7 +141,7 @@ sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amoun
         ),
 ```
 
-- **🐶 Implémente cette fonction dans** `finance-repository.ts` dans**le but d’avoir cette forme la**
+- **🐶** Implémente cette fonction dans \*\*\*\*`finance-repository.ts` dans le but d’avoir cette forme là
 
 ```tsx
 [
@@ -152,7 +152,7 @@ sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amoun
 ]
 ```
 
-note : le service appelle déjà le repository, il n’y a rien a faire , tu peux appeler le service `getFinancesChartByYear` depuis la route
+Note : Le service appelle déjà le repository, il n’y a rien à faire, tu peux appeler le service `getFinancesChartByYear` depuis la route.
 
 - **🐶**Adapte la route `app/(app)/finance/page.ts` pour appeler `getFinancesChartByYear` et passer les données à notre `LineChart`
 
@@ -161,7 +161,7 @@ const financesForChart = await getFinancesChartByYear(financeYear, userId)
 <FinanceLineChart data={financeFormatted} />
 ```
 
-Note : utilise `formatedFinanceData` une fonction qui formatte les valeurs `null` et `undefined` pour le graphique
+Note : Utilise `formatedFinanceData`, une fonction qui formate les valeurs `null` et `undefined` pour le graphique.
 
 Fichiers
 
@@ -172,20 +172,20 @@ Fichiers
 
 ### 1. 🚀 Chart Finance
 
-**🐶** Dans cette exercice tu vas devoir créer le graphique en ligne `FinanceLineChart`
+**🐶** Dans cet exercice, tu vas devoir créer le graphique en ligne `FinanceLineChart`
 
-- Step 1 : `chartConfig` avec les couleurs des lignes
-- Step 2 : Créer un `ChartContainer` `LineChart`
-- Step 3 : Créer un `XAxis` pour configurer l’axe des abscisses
-- Step 4 : Créer les 3 lignes avec le composant `Line`
+- Step 1 : `chartConfig` avec les couleurs des lignes.
+- Step 2 : Créer un `ChartContainer` `LineChart`.
+- Step 3 : Créer un `XAxis` pour configurer l’axe des abscisses.
+- Step 4 : Créer les 3 lignes avec le composant `Line`.
 
 Fichiers
 
 - `component/dashboard/finance/finance-line-chart.tsx`
 
-### 2. 🚀 Mettre les mois vide à zero
+### 2. 🚀 Mettre les mois vides à zéro
 
-Il se peut que l’utilisateur n’entre pas de données sur certains mois. Dans ce cas il est possible d’adapter `formatedFinanceData` pour mettre les mois à zéro
+Il se peut que l’utilisateur n’entre pas de données sur certains mois. Dans ce cas, il est possible d’adapter `formatedFinanceData` pour mettre les mois à zéro
 
 Fichiers
 
@@ -205,4 +205,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=08-chart-finance-line).
+Remplir le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=08%20chart-finance-line).

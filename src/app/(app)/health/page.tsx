@@ -33,7 +33,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
   ]
 
   const requestedYear = params?.healthYear
-  // Si l'année demandée existe dans years, on l'utilise, sinon on prend la première année disponible
+  // Si l'année demandée existe dans `years`, on l'utilise, sinon on prend la première année disponible
   const healthYear =
     requestedYear && years.some((y) => y.year === requestedYear)
       ? requestedYear
@@ -42,7 +42,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
   const weeks = (await getWeeksHealthsByYear(healthYear, userId)) ?? []
 
   const requestedWeek = params?.healthWeek
-  // Si la semaine demandée existe dans weeks, on l'utilise, sinon on prend la première semaine disponible
+  // Si la semaine demandée existe dans `weeks`, on l'utilise, sinon on prend la première semaine disponible
   const healthWeek =
     requestedWeek && weeks.some((w) => w.week === requestedWeek)
       ? requestedWeek

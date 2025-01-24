@@ -34,7 +34,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
   ]
 
   const requestedYear = params?.financeYear
-  // Si l'année demandée existe dans years, on l'utilise, sinon on prend la première année disponible
+  // Si l'année demandée existe dans `years`, on l'utilise, sinon on prend la première année disponible
   const financeYear =
     requestedYear && years.some((y) => y.year === requestedYear)
       ? requestedYear
@@ -49,10 +49,10 @@ const Page = async (props: {searchParams?: SearchParams}) => {
     limit
   )
 
-  // 🐶 Applelle getFinancesChartByYearDao
+  // 🐶 Appelle `getFinancesChartByYearDao`
   // 🤖 const financesForChart = await getFinancesChartByYear
 
-  // 🐶 formatte les données avec cette fonction
+  // 🐶 Formate les données avec cette fonction
   // 🤖 const financeFormatted = formatedFinanceData(financesForChart, 'month')
 
   return (
@@ -61,7 +61,7 @@ const Page = async (props: {searchParams?: SearchParams}) => {
       <Separator className="my-4" />
 
       <FinanceYearSelect years={years} currentYear={financeYear}>
-        {/* 🐶 Appelle le composant  <FinanceLineChart data={financeFormatted} /> */}
+        {/* 🐶 Appelle le composant  `<FinanceLineChart data={financeFormatted} />` */}
 
         {hasCurrentYear ? (
           <FinanceDataTable finances={finances} uid={userId} />
