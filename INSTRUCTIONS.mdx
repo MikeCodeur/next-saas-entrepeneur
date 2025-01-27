@@ -1,14 +1,14 @@
-# Gérer les profils publiques
+# Gérer les profils publics
 
 ### 💡 Mettre en place les profils publiques
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Dans l’application il y a un `feature` d’affichage des profils publiques pour les utilisateur qui voudraient partager leurs performances. Pour cela les utilisateur doivent passer leur compte en public (`user.visibility`) Pour cela nous avons a notre disposition dans le repository une fonction qui permet de faire cela `getPublicUsersWithPaginationDao` , elle est remonté au `user-service` et ensuite au `user-dal`
+Dans l’application, il y a une `feature` d’affichage des profils publics pour les utilisateurs qui souhaitent partager leurs performances. Pour cela les utilisateur doivent passer leur compte en public (`user.visibility`) . Pour cela, nous avons à notre disposition dans le repository une fonction qui permet de faire cela : `getPublicUsersWithPaginationDao`, elle est remontée au `user-service` et ensuite au `user-dal`
 
 ```tsx
 
@@ -38,19 +38,19 @@ export const getPublicUsersWithPaginationDao = async (pagination: {
 }
 ```
 
-Pour gagner du temps les routes suivantes sont déjà créées :
+Pour gagner du temps, les routes suivantes sont déjà créées :
 
 - `/public`
 - `/public/[id]/finance`
 - `/public/[id]/heath`
 
-Mais n’affiche aucune données
+Mais elles n’affichent aucune donnée.
 
 ## Exercice
 
-**🐶** Dans un premier temps utilise `getPublicUsersDal` pour afficher la liste des utilisateurs publiques et les afficher dans un tableau
+**🐶** Dans un premier temps, utilise `getPublicUsersDal` pour afficher la liste des utilisateurs publics et les afficher dans un tableau.
 
-Note : Le tableau contient une définition des colonnes avec un liens pour visualiser les données d’un utilisation
+Note : Le tableau contient une définition des colonnes avec un lien pour visualiser les données d’un utilisateur.
 
 ```tsx
 
@@ -77,7 +77,7 @@ export const publicColumns: ColumnDef<Partial<User>>[] = [
 ]
 ```
 
-Note : Le lien devrait sortie une erreur si pas d’utilisateur connecté nous allons résoudre ça dans l’exercice suivant
+Note : Le lien devrait générer une erreur si aucun utilisateur n’est connecté, nous allons résoudre cela dans l’exercice suivant.
 
 Fichiers
 
@@ -87,7 +87,7 @@ Fichiers
 
 ### 1. 🚀 Gérer les ressources publiques
 
-Le lien vers public finance (en mode déconnecté) devrait sortir une erreur car nous essayons d’accéder a des données Finance donc appel a `canReadFinance`
+Le lien vers public finance (en mode déconnecté) devrait générer une erreur car nous essayons d’accéder à des données `Finance` donc l’appel à `canReadFinance`
 
 ```tsx
 export const canReadFinance = async (resourceUid: string) => {
@@ -102,7 +102,7 @@ export const canReadFinance = async (resourceUid: string) => {
 }
 ```
 
-Quand il n’y a pas d’utilisateur connecté `l’accesscontrol` suivant est activé
+Quand il n’y a pas d’utilisateur connecté, l’`accesscontrol` suivant est activé
 
 ```tsx
 return ac.can('public').readAny('finance')
@@ -110,11 +110,11 @@ return ac.can('public').readAny('finance')
 // et nous allons pas l'authoriser dans les regles generiques
 ```
 
-Par contre nous allons ajouter une spécificité dans le service finance authorisation
+Par contre, nous allons ajouter une spécificité dans le service `finance authorisation`
 
-- On check `permissionAcces` (si jamais un admin veux lire un user privé)
-- Et si pas d’accès on verifie le champs `visibility`
-- Si public on autorise
+- On check `permissionAcces` (si jamais un admin veut lire un user privé)
+- Et si pas d’accès, on vérifie le champ `visibility`
+- Si public, on autorise
 
 ```tsx
 
@@ -136,7 +136,7 @@ export const canReadFinance = async (resourceUid: string) => {
 }
 ```
 
-- **🐶 Implémente cela dans `finance-authorization`**
+- **🐶** Implémente cela dans **`finance-authorization`**
 
 Fichiers
 
@@ -144,16 +144,14 @@ Fichiers
 
 ### 2. 🚀 Redirection `/restricted`
 
-Maintenant que nous protégeons correctement notre routes nous allons gérer l’erreur
+Maintenant que nous protégeons correctement notre route, nous allons gérer l’erreur
 `GrantedError()` et rediriger vers une page `/restricted`
 
-- **🐶 Adapte la route** `/finance/page.tsx`
+- **🐶** Adapte la route \*\*\*\*`/finance/page.tsx`
 
 Fichiers
 
 - `/(public)/public/[id]/(trackers)/finance/page.tsx`
-
-##
 
 ## Ils vont t’aider
 
@@ -165,4 +163,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=12-public-profil).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=12%20public-profil).

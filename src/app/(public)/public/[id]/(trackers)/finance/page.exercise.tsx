@@ -19,8 +19,8 @@ const Page = async (props: {params: Params; searchParams?: SearchParams}) => {
   const params = await props.params
   const userId = params?.id
 
-  // 🐶 Vérifie si l'utilisateur a les permissions avec canReadFinance
-  // redirige vers //redirect('/restricted')
+  // 🐶 Vérifie si l'utilisateur a les permissions avec `canReadFinance`
+  // Redirige vers //redirect('/restricted')
 
   const years = await getYearsFinancesByUid(userId ?? '')
   if (!years) {

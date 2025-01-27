@@ -14,7 +14,7 @@ export const canReadFinance = async (resourceUid: string) => {
     resourceUid
   )
 
-  // 🐶 Apelle le DAO pour récupérer les données de l'utilisateur
+  // 🐶 Appelle le `DAO` pour récupérer les données de l'utilisateur
   //const userToRead = await getUserByIdDao(resourceUid)
 
   // 🐶 Vérifie si l'utilisateur est public

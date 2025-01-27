@@ -35,7 +35,7 @@ const FinanceDashboard = async (props: FinanceDashboardProps) => {
   ]
 
   const requestedYear = params?.financeYear
-  // Si l'année demandée existe dans years, on l'utilise, sinon on prend la première année disponible
+  // Si l'année demandée existe dans `years`, on l'utilise, sinon on prend la première année disponible
   const financeYear =
     requestedYear && years.some((y) => y.year === requestedYear)
       ? requestedYear
