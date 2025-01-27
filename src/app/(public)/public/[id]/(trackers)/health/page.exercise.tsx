@@ -26,7 +26,7 @@ const Page = async (props: {params: Params; searchParams?: SearchParams}) => {
     redirect('/restricted')
   }
   const years = await getYearsHealthsByUid(userId)
-  //🐶 Utilise 'isConnectedUserAdmin' pour afficher le tableau meme si il n'y a pas de données
+  //🐶 Utilise `isConnectedUserAdmin` pour afficher le tableau même s'il n'y a pas de donnée
 
   if (!years) {
     return (

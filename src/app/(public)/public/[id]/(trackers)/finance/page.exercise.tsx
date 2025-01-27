@@ -29,7 +29,7 @@ const Page = async (props: {params: Params; searchParams?: SearchParams}) => {
 
   const years = await getYearsFinancesByUid(userId)
 
-  //🐶 Utilise 'isConnectedUserAdmin' pour afficher le tableau meme si il n'y a pas de données
+  //🐶 Utilise `isConnectedUserAdmin` pour afficher le tableau même s'il n'y a pas de donnée
 
   if (!years) {
     return (

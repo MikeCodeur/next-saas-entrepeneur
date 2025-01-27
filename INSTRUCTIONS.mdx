@@ -1,31 +1,31 @@
 # Actions conditionnées au RBAC
 
-### 💡 Actions conditionnées au Rôles
+### 💡 Actions conditionnées aux Rôles
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Dans une application il arrive souvent que des actions soient conditionnées aux différents utilisateurs. Exemple un `admin` a plus d’options qu’un `user`. Mais un user peut faire des actions sur ses propres `données`.
+Dans une application, il arrive souvent que des actions soient conditionnées aux différents utilisateurs. Exemple, un `admin` a plus d’options qu’un `user`. Mais un `user` peut faire des actions sur ses propres `données`.
 
-Nous allons utiliser les fonctions que nous avons maintenant a notre disposition dans le service `autorisation` pour gérer plus finement les actions dans l’application.
+Nous allons utiliser les fonctions que nous avons maintenant à notre disposition dans le service `autorisation` pour gérer plus finement les actions dans l’application.
 
-Par exemple toutes les fonctions
+Par exemple, toutes les fonctions :
 
 - `canCreateXXX`
 - `isConnectedUserAdmin`
-- etc …
+- etc…
 
 ## Exercice
 
-**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des boutons d’ajouts
+**🐶** Dans cet exercice, tu vas devoir conditionner l’affichage des boutons d’ajout :
 
 - `Tracker un élément de santé`
 - `Tracker une dépense / revenus`
 
-de telle manière que les personnes sur la partie publique ne puissent pas avoir les boutons (sauf le propriétaire ou admin)
+De telle manière que les personnes sur la partie publique ne puissent pas avoir ces boutons (sauf le propriétaire ou l’admin)
 
 Fichiers
 
@@ -36,20 +36,20 @@ Fichiers
 
 ### 1. 🚀 Masquer des colonnes d’actions
 
-**🐶** Dans cet exercice tu vas devoir conditionner l’affichage des colonnes en fonctions de la permission.
+**🐶** Dans cet exercice, tu vas devoir conditionner l’affichage des colonnes en fonction de la permission.
 
-Pour cela tu vas devoir adapté `finance-columns` et `health-columns` pour contenir
+Pour cela, tu vas devoir adapter `finance-columns` et `health-columns` pour contenir :
 
-- un liste de colonnes pour les `users` standards
-- un liste de colonnes pour les `users` avec plus de droits
+- Une liste de colonnes pour les `users` standards.
+- Une liste de colonnes pour les `users` ayant plus de droits.
 
-et conditionner les colonnes dans `finance-data-table` et `health-data-table`
+Et conditionner les colonnes dans `finance-data-table` et `health-data-table`
 
-Fais des test dans les differents cas
+Fais des tests dans les différents cas :
 
-- un `admin` accède aux données public
-- un `user` accède aux données public (d’autres users)
-- un `user` accède aux données public (les siennes)
+- Un `admin` accède aux données publiques.
+- Un `user` accède aux données publiques (d’autres `users`).
+- Un `user` accède aux données publiques (les siennes).
 
 Fichiers
 
@@ -58,11 +58,11 @@ Fichiers
 - `/components/dashboard/trackers/finance/finance-data-table.tsx`
 - `/components/dashboard/trackers/health/health-data-table.tsx`
 
-### 2. 🚀 Adapter les routes `finance` / `health` publiques
+### 2. 🚀 Adapter les routes `finance`/ `health` publiques
 
-**🐶** Dans cet exercice tu vas devoir adapter les routes publiques pour les `users` n’ayant pas de données.
+**🐶** Dans cet exercice, tu vas devoir adapter les routes publiques pour les `users` n’ayant pas de données.
 
-Au lieu d’afficher `Pas de résultat`, un `admin ou proprietaire` verra un tableau vide et pourra le remplir
+Au lieu d’afficher `Pas de résultat`, un `admin` ou `proprietaire` verra un tableau vide et pourra le remplir.
 
 ## Aller plus loin
 
@@ -78,4 +78,4 @@ Au lieu d’afficher `Pas de résultat`, un `admin ou proprietaire` verra un tab
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=14-rbac-actions).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=14%20rbac-actions).

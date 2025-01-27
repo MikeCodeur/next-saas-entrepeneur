@@ -79,14 +79,14 @@ export const filterHealthsAttributes = async (
   return filtered
 }
 
-//permet de savoir si un utilisateur peut voir un champ de la ressource health
+//Permet de savoir si un utilisateur peut voir un champ de la ressource health
 export function canSeeHealthField(
   user?: UserDTO | User,
   field?: string
 ): boolean {
   const permission = ac.can(user?.role ?? 'public').readOwn('health')
 
-  // Utilise les permissions pour déterminer si un champs est accessible
+  // Utilise les permissions pour déterminer si un champ est accessible
   const canSeeField = canAccessField(permission.attributes, field ?? '')
   return canSeeField
 }
