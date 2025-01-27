@@ -1,5 +1,5 @@
 'use client'
-//1. 🚀 Mise à jour de la session coté client
+//1. 🚀 Mise à jour de la session côté client
 import {
   Form,
   FormControl,

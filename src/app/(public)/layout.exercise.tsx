@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const PublicLayout = ({children}: PropsWithChildren) => {
   return (
     <div>
-      {/* 🐶 Utilise le composant StaticHeader */}
+      {/* 🐶 Utilise le composant `StaticHeader` */}
       <Header />
       {children}
       <Footer />

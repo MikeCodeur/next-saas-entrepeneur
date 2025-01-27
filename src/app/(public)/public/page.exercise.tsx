@@ -4,7 +4,7 @@ import {DataTable} from '@/components/ui/data-table'
 import {publicColumns} from './_components/public-columns'
 import {getPublicUsersDal} from '@/app/dal/user-dal'
 import PublicBreadcrumb from './_components/public-breadcrumb'
-//  🐶 Importe nextCache
+//  🐶 Importe `nextCache`
 // 🤖 import {unstable_cache as nextCache} from 'next/cache'
 
 type SearchParams = Promise<{
@@ -17,10 +17,10 @@ const Page = async (props: {searchParams?: SearchParams}) => {
   const page = Number(searchParams?.page) || 1
   const pageSize = Number(searchParams?.pageSize) || 10
 
-  // ⛏️ Supprime l'appel à getPublicUsersDal
+  // ⛏️ Supprime l'appel à `getPublicUsersDal`
   const users = await getPublicUsersDal(page, pageSize)
 
-  // 🐶 Cache les données avec nextCache
+  // 🐶 Cache les données avec `nextCache`
   // 🤖
   // const getCachedUsers = nextCache(
   //   async () => getPublicUsersDal(page, pageSize),

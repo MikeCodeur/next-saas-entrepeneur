@@ -1,62 +1,50 @@
 # Optimisation SSG
 
-### 💡 Description longue de l'exercice
+### 💡 Optimiser le rendu
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
 Un `build` nous montre que presque tout est en dynamique.
 
-- C’est ok pour certaines comme le `dashboard` , `account` ,`health ,finance`
-- Mais pourquoi `/privacy` `/terms` etc le sont ?
-- Peut on optimiser le rendu des pages publiques ?
+- C’est OK pour certaines pages comme le `dashboard`, `account` ,`health`, `finance`
+- Mais pourquoi `/privacy` `/terms`, etc. le sont-elles ?
+- Peut-on optimiser le rendu des pages publiques ?
 
-```typescript
-├ ○ /_not-found                          990 B           107 kB
-├ ƒ /account                             6.91 kB         144 kB
-├ ƒ /api/auth/[...nextauth]              153 B           106 kB
-├ ƒ /dashboard                           4.94 kB         245 kB
-├ ○ /error                               2.33 kB         120 kB
-├ ƒ /finance                             1.45 kB         321 kB
-├ ƒ /health                              1.7 kB          317 kB
-├ ƒ /instructions                        6.61 kB         113 kB
-├ ƒ /logout                              2.07 kB         120 kB
-├ ƒ /privacy                             153 B           106 kB
-├ ƒ /public                              1.57 kB         165 kB
-├ ƒ /public/[id]/finance                 1.45 kB         321 kB
-├ ƒ /public/[id]/health                  1.7 kB          317 kB
-├ ƒ /restricted                          174 B           110 kB
-├ ƒ /settings                            3.15 kB         117 kB
-├ ○ /sign-in                             3.04 kB         120 kB
-├ ○ /sign-up                             3.19 kB         121 kB
-├ ƒ /terms                               153 B           106 kB
-└ ○ /verify-request                      153 B           106 kB
-+ First Load JS shared by all            106 kB
-  ├ chunks/1e75e89c-8aa0a1685f3aec44.js  53.4 kB
-  ├ chunks/5996-a50e9f761cee33ed.js      51 kB
-  └ other shared chunks (total)          1.97 kB
+```html
+Route (app) Size First Load JS ┌ ƒ / 3.44 kB 153 kB ├ ○ /_not-found 990 B 107 kB
+├ ƒ /account 6.91 kB 144 kB ├ ƒ /api/auth/[...nextauth] 153 B 106 kB ├ ƒ
+/dashboard 4.94 kB 245 kB ├ ○ /error 2.33 kB 120 kB ├ ƒ /finance 1.45 kB 321 kB
+├ ƒ /health 1.7 kB 317 kB ├ ƒ /instructions 5.5 kB 112 kB ├ ƒ /logout 2.07 kB
+120 kB ├ ƒ /privacy 153 B 106 kB ├ ƒ /public 1.56 kB 165 kB ├ ƒ
+/public/[id]/finance 1.45 kB 321 kB ├ ƒ /public/[id]/health 1.7 kB 317 kB ├ ƒ
+/restricted 175 B 110 kB ├ ƒ /settings 3.15 kB 117 kB ├ ○ /sign-in 3.04 kB 120
+kB ├ ○ /sign-up 3.19 kB 121 kB ├ ƒ /terms 153 B 106 kB └ ○ /verify-request 153 B
+106 kB + First Load JS shared by all 106 kB ├
+chunks/1e75e89c-8aa0a1685f3aec44.js 53.4 kB ├ chunks/5996-a50e9f761cee33ed.js 51
+kB └ other shared chunks (total) 1.97 kB
 ```
 
 ## Exercice
 
-Optimisation des routes publiques ont un layout en commun `PublicLayout` qui contient un `<Header />` qui contient du code dépendant des cookies nextauth. Cela rend automatiquement la page dynamique.
+L’optimisation des routes publiques a un layout en commun `PublicLayout` qui contient un `<Header />` avec du code dépendant des cookies `nextauth`. Cela rend automatiquement la page dynamique.
 
 ```tsx
 const session = await auth()
 ```
 
-Il s’agit ici de faire un compromis entre performance ou fonctionnalité.
+Il s’agit ici de faire un compromis entre performance et fonctionnalité.
 
-- Avoir l’information du user connecté ou non → Perte du rendu statique sur toutes les pages publiques avec ce layout
+- Avoir l’information du user connecté ou non → Perte du rendu statique sur toutes les pages publiques avec ce layout.
 
-Faisons le choix de perdre cette information et d’avoir un maximum de page publique statique .
+Faisons le choix de perdre cette information et d’avoir un maximum de pages publiques statiques.
 
-- **🐶 Créé une copie du `<Header>` que l’on appellera `<StaticHeader>` , composant ne contenant pas d’appel a `auth()` et utilisons le dans le `layout` des pages publiques**
+- **🐶** Crée une copie du `<Header>` que l’on appellera `<StaticHeader>` , un composant ne contenant pas d’appel à `auth()` et utilisons le dans le `layout` des pages publiques.
 
-`/privacy` `/terms` devrait redevenir `static`
+`/privacy` et `/terms` devraient redevenir `static`
 
 Fichiers
 
@@ -65,9 +53,9 @@ Fichiers
 
 ## Bonus
 
-### 1. 🚀 Optimisation liste des user publiques
+### 1. 🚀 Optimisation liste des users publics
 
-Il n’est pas possible de rendre cette route statique ou mise en cache avec `revalidate` a cause des `queryParam`
+Il n’est pas possible de rendre cette route statique ou mise en cache avec `revalidate` à cause des `queryParam`
 
 ```tsx
 export const revalidate = 3600
@@ -75,7 +63,7 @@ export const revalidate = 3600
 
 Ce qui est couteux est l’appel aux données en base de données.
 
-- Ces données `sont mises en cache` dans le DAL avec `React Cache`
+- Ces données `sont mises en cache` dans le `DAL` avec `React Cache`
 
 ```tsx
 import {cache} from 'react'
@@ -89,11 +77,11 @@ export const getPublicUsersDal = cache(
 // await new Promise((resolve) => setTimeout(resolve, 5000))
 ```
 
-Malheureusement React Cache ne fonctionne qu’au niveau `“Request“` (Si lors d’une requête serveur plusieurs appels à `getPublicUsersDal` sont fait)
+Malheureusement, `React Cache` ne fonctionne qu’au niveau `“Request“` (Si, lors d’une requête serveur, plusieurs appels à `getPublicUsersDal` sont faits)
 
-Mais lors d’un nouvelle requête serveur, le cache est invalide.
+Mais lors d’une nouvelle requête serveur, le cache est invalide.
 
-L’API Next nous propose un solution pour mettre en cache des données.
+L’API Next nous propose une solution pour mettre en cache des données.
 
 - [https://nextjs.org/docs/app/api-reference/functions/unstable_cache](https://nextjs.org/docs/app/api-reference/functions/unstable_cache) `unstable_cache`
 
@@ -112,10 +100,11 @@ export default async function Component({ userID }) {
 }
 ```
 
-💡 Cette `unstable fonction` sera remplacée par `“use cache”` mais ce n’est pas encore officiel
+💡 Cette `unstable fonction` sera remplacée par `“use cache”` mais ce n’est pas encore officiel.
 
 - [https://nextjs.org/docs/app/api-reference/directives/use-cache](https://nextjs.org/docs/app/api-reference/directives/use-cache)
-- **🐶 Dans cet exercise tu vas devoir mettre en cache les utilisateurs publiques (`getPublicUsersDal` ) pendant 1heure avec** `unstable_cache`
+
+**🐶** Dans cet exercice, tu vas devoir mettre en cache les utilisateurs publics (`getPublicUsersDal`) pendant 1 heure avec \*\*\*\*`unstable_cache`.
 
 Fichiers
 
@@ -149,7 +138,7 @@ type Params = Promise<{
 }>
 ```
 
-Un piste possible serait de les supprimer et de garder que la `route param (id)` et de gérer les `queryParam` uniquement dans des composants clients. De cette maniere nous pourrions avoir une page initiale statique. et des chargement si les params changent
+Une piste possible serait de les supprimer et de garder uniquement la `route param (id)` et en gérant les `queryParam` uniquement dans des composants clients. De cette manière, nous pourrions avoir une page initiale statique et des chargements si les params changent.
 
 ```tsx
 'use client'
@@ -159,11 +148,11 @@ const page = searchParams.get('page')
 const pageSize = searchParams.get('pageSize')
 ```
 
-⚠️ Sauf que ! Il faudrait s’assurer qu’il n’y a aucune appel a un `dynamique function` (headers, cookies, nextauth etc …). Or, toutes nos appels au services sont protéger par un autorisation dépanadant de `nextAuth` ...
+⚠️ Sauf que ! Il faudrait s’assurer qu’il n’y a aucun appel à une `dynamique function` (headers, cookies, `nextauth`, etc…). Or, tous nos appels aux services sont protégés par une autorisation dépendant de `nextAuth`
 
-- Solution : Exposer des services/DAL spéciaux sans auth pour avoir des données publiques utilisables par le SSG. (un peu long….)
+- Solution : Exposer des services/DAL spéciaux sans `auth` pour avoir des données publiques utilisables par le SSG. (un peu long….)
 
-Nous allons ici plutôt essayer d’utiliser utiliser `nextCache` sur les fonction couteuses
+Nous allons ici plutôt essayer d’utiliser `nextCache` sur les fonctions couteuses.
 
 ```tsx
 import { unstable_cache } from 'next/cache';
@@ -174,7 +163,7 @@ const getCachedUsers = nextCache(
   )
 ```
 
-Mais toujours des errors
+Mais toujours des erreurs
 
 ```tsx
  Error: Route /public/[id]/finance used "headers" inside a function cached
@@ -186,7 +175,7 @@ Mais toujours des errors
    https://nextjs.org/docs/app/api-reference/functions/unstable_cache
 ```
 
-La seul solution : Exposer des services/DAL spéciaux sans auth
+La seule solution : Exposer des services/DAL spéciaux sans auth
 
 Fichiers
 
@@ -206,4 +195,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-react-avis).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=16%20optimisation%20ssg).
