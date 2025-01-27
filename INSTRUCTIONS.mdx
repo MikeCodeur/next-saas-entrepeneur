@@ -1,14 +1,14 @@
 # Mettre en place les tests avec Vitest
 
-### 💡 Description longue de l'exercice
+### 💡 Exécuter des tests
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Pour utiliser les tests dans notre projets nous avons ajouté les dépendances suivantes
+Pour utiliser les tests dans notre projet, nous avons ajouté les dépendances suivantes :
 
 ```tsx
 "devDependencies": {
@@ -30,7 +30,7 @@ Pour utiliser les tests dans notre projets nous avons ajouté les dépendances s
 }
 ```
 
-- Nous avons créer un fichier de configuration `vitest`
+- Nous avons créé un fichier de configuration `vitest`
 
 ```tsx
 //vitest.config.ts
@@ -49,12 +49,11 @@ export default defineConfig({
     },
   },
 })
-
 ```
 
-📑 Le liens vers la doc [https://vitest.dev/](https://vitest.dev/)
+📑 Le lien vers la doc [https://vitest.dev/](https://vitest.dev/)
 
-Un test de composant React simple est déjà en place pour vérifier que l’environnement de test s’exécute
+Un test de composant `React` simple est déjà en place pour vérifier que l’environnement de test s’exécute :
 
 ```tsx
 describe('app', () => {
@@ -72,7 +71,6 @@ describe('app', () => {
 - Si tout est ok
 
 ```tsx
-
  Test Files  1 passed (1)
       Tests  1 passed (1)
    Start at  10:53:48
@@ -81,11 +79,11 @@ describe('app', () => {
 
 ## Exercice
 
-Dans cet exercice tu vas devoir tester une des parties les plus importante de l’application, la `couche service.`
+Dans cet exercice, tu vas devoir tester une des parties les plus importantes de l’application, la `couche service`.
 
-En appelant des fonctions du services cela va utiliser la validation, l’autorisation et les repository.
+En appelant des fonctions du service, cela va utiliser la validation, l’autorisation et les repositories.
 
-- Nous allons `mocker` les repositories (qui peuvent être testé séparément) exemp
+- Nous allons `mocker` les repositories (qui peuvent être testés séparément). Exemple :
 
 ```tsx
 vi.mock('@/data/repositories/user-repository', () => ({
@@ -99,25 +97,22 @@ beforeEach(() => {
   })
 ```
 
-- Nous allons rédiger des jeux de tests pour s’assurer que les cas fonctionnels lié au RBAC sont respecté
--
+- Nous allons rédiger des jeux de tests pour s’assurer que les cas fonctionnels liés au `RBAC` sont respectés.
 
-**🐶 Dans un premier temps commence par les test du services user (CRUD) avec différents rôles (USER ADMIN PUBLIC)**
+**🐶** Dans un premier temps, commence par les tests du service user (`CRUD`) avec différents rôles (`USER` `ADMIN` `PUBLIC`)
 
-- Nous avons a notre disposition `setupUserAuthExtented`, qui permet de simuler l’utilisateur connecté. Ce sera utile pour chaque test
+- Nous avons à notre disposition `setupUserAuthExtented`, qui permet de simuler l’utilisateur connecté. Cela sera utile pour chaque test.
 
 ```tsx
 setupUserAuthExtented({user: userTest})
 ```
 
-Les tests sont `skip` pour le moment pour les activer supprime le `skip`
+Les tests sont `skip` pour le moment, pour les activer, supprime le `skip`
 
 ```tsx
 it.skip("[USER] devrait ...")
 it("[USER] devrait ...")
 ```
-
-Test qu'un utilisateur connecté peut voir son propre profil
 
 - Test qu'un utilisateur connecté peut voir son propre profil
 - Test qu'un utilisateur ne peut pas voir le profil privé d'un autre utilisateur
@@ -161,18 +156,14 @@ Fichiers
 
 ### 2. 🚀 Test Santé
 
-La même chose pour santé
-
-Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
+La même chose pour santé :
 
 - Test qu'un utilisateur peut créer une donnée de santé pour son propre compte
 - Test qu'un utilisateur ne peut pas créer une donnée de santé pour un autre utilisateur
 - Test qu'un administrateur peut créer une donnée de santé pour n'importe quel utilisateur
 - Test qu'un utilisateur peut voir ses propres données de santé
 - Test qu'un utilisateur ne peut pas voir les données de santé d'un autre utilisateur
-
-6. Test qu'un administrateur peut voir les données de santé de tous les utilisateurs
-
+- Test qu'un administrateur peut voir les données de santé de tous les utilisateurs
 - Test qu'un utilisateur peut modifier ses propres données de santé
 - Test qu'un utilisateur ne peut pas modifier les données de santé d'un autre utilisateur
 - Test qu'un administrateur peut modifier les données de santé de n'importe quel utilisateur
@@ -198,4 +189,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=8.SAAS%20Entrepreneur&entry.533578441=15-tests-rbac).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=15%20tests-rbac).

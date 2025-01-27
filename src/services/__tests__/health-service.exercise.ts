@@ -61,18 +61,18 @@ describe('[deleteHealthById] Quand la fonction est appelée', () => {
   })
 
   it("[USER] devrait appeler 'deleteHealthDao' si l'utilisateur est l'auteur", async () => {
-    //🐶todo
-    expect(1).equal(2) //fail volontaire, 🐶 a toi de faire le test
+    //🐶Todo
+    expect(1).equal(2) //Fail volontaire, 🐶 à toi de faire le test
   })
 
-  // 🐶 Implémentez un test qui vérifie que 'deleteHealthDao' est appelé si l'utilisateur est l'auteur.
-  // Utilisez `deleteHealthByid` avec `healthId.id` et vérifiez que `deleteHealthByIdDao` est appelé avec `healthId`.
+  // 🐶 Implémente un test qui vérifie que `deleteHealthDao` est appelé si l'utilisateur est l'auteur.
+  // Utilise `deleteHealthByid` avec `healthId.id` et vérifie que `deleteHealthByIdDao` est appelé avec `healthId`.
 
-  // 🐶 Implémentez un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
-  // Utilisez `setupUserAuthExtented` pour simuler un utilisateur différent et vérifiez que l'appel à `deleteHealthByid` lève une erreur.
+  // 🐶 Implémente un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
+  // Utilise `setupUserAuthExtented` pour simuler un utilisateur différent et vérifie que l'appel à `deleteHealthByid` lève une erreur.
 
-  // 🐶 Implémentez un test qui vérifie que 'deleteHealthDao' est appelé si l'utilisateur est un admin.
-  // Simulez un utilisateur admin avec `setupUserAuthExtented` et vérifiez que `deleteHealthByIdDao` est appelé avec `healthId`.
+  // 🐶 Implémente un test qui vérifie que `deleteHealthDao` est appelé si l'utilisateur est un admin.
+  // Simule un utilisateur admin avec `setupUserAuthExtented` et vérifie que `deleteHealthByIdDao` est appelé avec `healthId`.
 })
 
 describe('[createHealthByUid] Quand la fonction est appelée', () => {
@@ -89,14 +89,14 @@ describe('[createHealthByUid] Quand la fonction est appelée', () => {
   it("[USER] devrait appelé `createHealthByUid` si l'utilisateur est l'auteur", async () => {
     // 🐶
   })
-  // 🐶 Implémentez un test qui vérifie que `createHealthByUid` est appelé si l'utilisateur est l'auteur.
-  // Utilisez `createHealthByUid` avec `healthParams` et `user.id` et vérifiez que `createHealthByUidDao` est appelé une fois.
+  // 🐶 Implémente un test qui vérifie que `createHealthByUid` est appelé si l'utilisateur est l'auteur.
+  // Utilise `createHealthByUid` avec `healthParams` et `user.id` et vérifie que `createHealthByUidDao` est appelé une fois.
 
-  // 🐶 Implémentez un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
-  // Utilisez `createHealthByUid` avec `healthParams` et `differentUserId` et vérifiez que l'appel lève une erreur.
+  // 🐶 Implémente un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
+  // Utilise `createHealthByUid` avec `healthParams` et `differentUserId` et vérifie que l'appel lève une erreur.
 
-  // 🐶 Implémentez un test qui vérifie que `createHealthByUid` est appelé si l'utilisateur est un admin.
-  // Simulez un utilisateur admin avec `setupUserAuthExtented` et vérifiez que `createHealthByUidDao` est appelé une fois.
+  // 🐶 Implémente un test qui vérifie que `createHealthByUid` est appelé si l'utilisateur est un admin.
+  // Simule un utilisateur admin avec `setupUserAuthExtented` et vérifie que `createHealthByUidDao` est appelé une fois.
 })
 
 describe('[updateHealth] Quand la fonction est appelée', () => {
@@ -112,16 +112,16 @@ describe('[updateHealth] Quand la fonction est appelée', () => {
     userId: user.id,
   } satisfies Health
   it("[USER] devrait appelé `updateHealthByUidDao` si l'utilisateur est l'auteur", async () => {
-    //todo
+    //Todo
   })
-  // 🐶 Implémentez un test qui vérifie que `updateHealthByUidDao` est appelé si l'utilisateur est l'auteur.
-  // Utilisez `updateHealth` avec `healthParams` et vérifiez que `updateHealthByIdDao` est appelé une fois.
+  // 🐶 Implémente un test qui vérifie que `updateHealthByUidDao` est appelé si l'utilisateur est l'auteur.
+  // Utilise `updateHealth` avec `healthParams` et vérifie que `updateHealthByIdDao` est appelé une fois.
 
-  // 🐶 Implémentez un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
-  // Simulez un utilisateur différent avec `setupUserAuthExtented` et vérifiez que l'appel à `updateHealth` lève une erreur.
+  // 🐶 Implémente un test qui lève une erreur si l'utilisateur n'est pas l'auteur.
+  // Simule un utilisateur différent avec `setupUserAuthExtented` et vérifie que l'appel à `updateHealth` lève une erreur.
 
-  // 🐶 Implémentez un test qui vérifie que `updateHealthByUidDao` est appelé si l'utilisateur est un admin.
-  // Simulez un utilisateur admin avec `setupUserAuthExtented` et vérifiez que `updateHealthByIdDao` est appelé une fois.
+  // 🐶 Implémente un test qui vérifie que `updateHealthByUidDao` est appelé si l'utilisateur est un admin.
+  // Simule un utilisateur admin avec `setupUserAuthExtented` et vérifie que `updateHealthByIdDao` est appelé une fois.
 })
-//inutile, mais pour que ça compile l'exprt *
+//Inutile, mais pour que ça compile l'export *
 export const forExercise = 1

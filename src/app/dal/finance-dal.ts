@@ -54,7 +54,7 @@ export async function financeDTO(
 ): Promise<FinanceDTO | undefined> {
   if (!finance) return undefined
   // LE DTO Supprime des champs
-  // LE DTO peut rendre des champs masqué
+  // LE DTO peut rendre des champs masqués
   return {
     category: (await canSeeCategory()) ? finance?.category : undefined,
     date: finance?.date,

@@ -8,17 +8,17 @@ import {getUserById, updateUser} from '../user-service'
 import {setupUserAuthExtented} from './test-service-helpers'
 import {updateUserServiceSchema} from '../validations/user-validation'
 
-// 🐶 Mock les fonctions de 'userRepository' des que necessaire
+// 🐶 Mock les fonctions de `userRepository` dès que nécessaire
 // vi.mock('@/data/repositories/user-repository', () => ({
 //   createUserDao: vi.fn(),
 //   ...
 // }))
 
-// 🐶 Définir les valeurs des constantes
+// 🐶 Définis les valeurs des constantes
 const currentAuthUserId = '6a4de94e-7f0f-4a1b-89d1-0ba0af89afe9'
 const randomUserId = '7a4de94e-7f0f-4a1b-89d1-0ba0af89afe5'
 
-// 🐶 Définir un user de test
+// 🐶 Définis un user de test
 const userTest = {
   id: currentAuthUserId,
   name: 'Test User',
@@ -29,7 +29,7 @@ const userTest = {
   visibility: 'private',
 } satisfies User
 
-// 🐶 Mock les fonction lié a authentification
+// 🐶 Mock les fonctions liées à `authentification`
 // vi.mock('@/services/authentication/auth-utils', () => ({
 //   getUserAuthExtented: vi.fn(() => ({session: {}, userTest, role: 'user'})),
 // }))
@@ -38,42 +38,42 @@ const userTest = {
 // }))
 describe('Teste [getUserById] avec les permissions', () => {
   const userId = currentAuthUserId
-  // 🐶 Définir les valeurs que getUserByIdDao doit retourner sur chaque test
+  // 🐶 Définis les valeurs que `getUserByIdDao` doit retourner sur chaque test
   // beforeEach(() => {
   //   vi.clearAllMocks()
   //   vi.mocked(userRepository.getUserByIdDao).mockResolvedValue(userTest)
   // })
 
   it.skip("[USER] devrait appelé `getUserByIdDao` si l'utilisateur est celui qui est connecté", async () => {
-    // 🐶 Utilise setupUserAuthExtented pour simuler l'authentification
+    // 🐶 Utilise `setupUserAuthExtented` pour simuler l'authentification
     // setupUserAuthExtented({user: userTest})
-    // 🐶 Utilise getUserById pour récupérer le user
+    // 🐶 Utilise `getUserById` pour récupérer le user
     // const result = await getUserById(userId)
-    // 🐶 Vérifie que le résultat est égal au userTest
+    // 🐶 Vérifie que le résultat est égal au `userTest`
     // expect(result).toEqual(userTest)
-    // 🐶 Vérifie que getUserByIdDao a été appelé deux fois (car appelé dans canReadUser)
+    // 🐶 Vérifie que `getUserByIdDao` a été appelé deux fois (car appelé dans `canReadUser`)
     // expect(userRepository.getUserByIdDao).toHaveBeenCalledTimes(2)
   })
   it.skip("[USER] devrait levé une erreur si l'utilisateur n'est pas celui connecté et privé", async () => {
-    // 🐶 Utilise setupUserAuthExtented pour simuler l'authentification
-    // d'un user (randomUserId) qui n'est pas celui que l'on veut récupérer (currentAuthUserId)
+    // 🐶 Utilise `setupUserAuthExtented` pour simuler l'authentification
+    // d'un user (`randomUserId`) qui n'est pas celui que l'on veut récupérer (`currentAuthUserId`)
     // setupUserAuthExtented({
     //   user: {
     //     ...userTest,
     //     id: randomUserId,
     //   },
     // })
-    // 🐶 Utilise getUserById pour récupérer le user
+    // 🐶 Utilise `getUserById` pour récupérer le user
     // await expect(
     // await expect(
     //   getUserById(currentAuthUserId)
     // ).rejects.toThrowErrorMatchingInlineSnapshot(`[GrantedError: Accès refusé]`)
   })
   it.skip("[ADMIN] devrait appelé `getUserByIdDao` si l'utilisateur est un `admin`", async () => {
-    // 🐶 Utilise setupUserAuthExtented pour simuler l'authentification un ADMIN
+    // 🐶 Utilise `setupUserAuthExtented` pour simuler l'authentification d'un ADMIN
   })
   it.skip("[PUBLIC] devrait appelé `getUserByIdDao` si l'utilisateur est `public`", async () => {
-    // 🐶 Utilise setupUserAuthExtented pour simuler l'authentification un user avec visibilité public
+    // 🐶 Utilise `setupUserAuthExtented` pour simuler l'authentification d'un user avec visibilité publique
     // const userPublic = {
     //   ...userTest,
     //   id: randomUserId,
@@ -82,7 +82,7 @@ describe('Teste [getUserById] avec les permissions', () => {
     // setupUserAuthExtented({user: undefined})
   })
   it.skip("[PUBLIC] devrait levé une erreur si l'utilisateur est `privé`", async () => {
-    // 🐶 Utilise setupUserAuthExtented pour simuler l'authentification un user avec visibilité privé
+    // 🐶 Utilise `setupUserAuthExtented` pour simuler l'authentification d'un user avec visibilité privée
   })
 })
 
@@ -103,7 +103,7 @@ describe('Teste [updateUserById] avec les permissions', () => {
     //   parsedData,
     //   userTest.id
     // )
-    expect(1).equal(2) //fail volontaire, 🐶 a toi de faire le test
+    expect(1).equal(2) //Fail volontaire, 🐶 à toi de faire le test
   })
   it.skip("[USER] devrait levé une erreur si l'utilisateur n'est pas celui connecté", async () => {
     // setupUserAuthExtented({
@@ -145,5 +145,5 @@ describe('Teste [updateUserById] avec les permissions', () => {
     // ).rejects.toThrowErrorMatchingInlineSnapshot(`[GrantedError: Accès refusé]`)
   })
 })
-//inutile, mais pour que ça compile l'exprt *
+//Inutile, mais pour que ça compile l'export *
 export const forExercise = 1

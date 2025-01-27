@@ -12,7 +12,7 @@ import {User} from '@/types/domain/user-types'
 import {setupUserAuthExtented} from './test-service-helpers'
 import {Finance, UpdateFinance} from '@/types/domain/finance-types'
 
-// 🐶 Mock les fonctions de financeRepository
+// 🐶 Mock les fonctions de `financeRepository`
 // vi.mock('@/data/repositories/finance-repository', () => ({
 //   createFinanceByUidDao: vi.fn(),
 //   deleteFinanceByidDao: vi.fn(),
@@ -32,7 +32,7 @@ const user = {
   visibility: 'public',
 } satisfies User
 
-// 🐶 Mock les fonctions de auth-utils
+// 🐶 Mock les fonctions de `auth-utils`
 // vi.mock('@/services/authentication/auth-utils', () => ({
 //   getUserAuthExtented: vi.fn(() => ({
 //     session: {},
@@ -63,20 +63,20 @@ describe('[deleteFinanceById] Quand la fonction est appelée', () => {
   })
 
   it("[USER] devrait appeler 'deleteFinanceDao' si l'utilisateur est l'auteur", async () => {
-    // 🐶 Test la fonction deleteFinanceByid
+    // 🐶 Teste la fonction `deleteFinanceByid`
     // await deleteFinanceByid(financeId.id)
     // expect(financeRepository.deleteFinanceByidDao).toHaveBeenCalledWith(
     //   financeId.id
     // )
-    expect(1).equal(2) //fail volontaire, 🐶 a toi de faire le test
+    expect(1).equal(2) //Fail volontaire, 🐶 à toi de faire le test
   })
   it.skip("[USER] devrait levé une erreur si l'utilisateur n'est pas l'auteur", async () => {
-    // 🐶 Test la fonction deleteFinanceByid avec un user différent
+    // 🐶 Teste la fonction `deleteFinanceByid` avec un user différent
     // setupUserAuthExtented({user: {...user, id: differentUserId}})
   })
 
   it.skip("[ADMIN] devrait appeler 'deleteFinanceDao' si l'utilisateur est un admin", async () => {
-    // 🐶 Test la fonction deleteFinanceByid avec un user admin
+    // 🐶 Teste la fonction `deleteFinanceByid` avec un user admin
     // setupUserAuthExtented({user: {...user, role: 'admin', id: differentUserId}})
   })
 })
@@ -92,21 +92,21 @@ describe('[createFinanceByUid] Quand la fonction est appelée', () => {
     userId: financeUserId,
     id: financeId.id,
   }
-  // 🐶 setup le user
+  // 🐶 Setup le user
   // beforeEach(() => {
   //   setupUserAuthExtented({user})
   //   vi.clearAllMocks()
   // })
   it.skip("[USER] devrait appelé `createFinanceByUidDao` si l'utilisateur est l'auteur", async () => {
-    // 🐶 Test la fonction createFinanceByUid
+    // 🐶 Teste la fonction `createFinanceByUid`
   })
 
   it.skip("[USER] devrait une erreur si l'utilisateur n'est pas l'auteur", async () => {
-    // 🐶 Test la fonction createFinanceByUid avec un user différent
+    // 🐶 Teste la fonction `createFinanceByUid` avec un user différent
   })
 
   it.skip("[ADMIN] devrait appelé `createFinanceByUid` si l'utilisateur est un admin", async () => {
-    // 🐶 Test la fonction createFinanceByUid avec un user admin
+    // 🐶 Teste la fonction `createFinanceByUid` avec un user admin
   })
 })
 
@@ -122,23 +122,23 @@ describe('[updateFinance] Quand la fonction est appelée', () => {
     userId: financeUserId,
   } satisfies UpdateFinance
 
-  // 🐶 setup le user
+  // 🐶 Setup le user
   // beforeEach(() => {
   //   vi.clearAllMocks()
   //   setupUserAuthExtented({user})
   // })
 
   it.skip("[USER] devrait appelé `updateFinanceByUidDao` si l'utilisateur est l'auteur", async () => {
-    // 🐶 Test la fonction updateFinance
+    // 🐶 Teste la fonction `updateFinance`
   })
 
   it.skip("[USER] devrait levé une erreur si l'utilisateur n'est pas l'auteur", async () => {
-    // 🐶 Test la fonction updateFinance avec un user différent
+    // 🐶 Teste la fonction `updateFinance` avec un user différent
   })
 
   it.skip("[ADMIN] devrait appelé `updateFinanceByUidDao` si l'utilisateur est un admin", async () => {
-    // 🐶 Test la fonction updateFinance avec un user admin
+    // 🐶 Teste la fonction `updateFinance` avec un user admin
   })
 })
-//inutile, mais pour que ça compile l'exprt *
+//Inutile, mais pour que ça compile l'export *
 export const forExercise = 1

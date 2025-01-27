@@ -170,5 +170,5 @@ describe('[updateFinance] Quand la fonction est appelée', () => {
     )
   })
 })
-//inutile, mais pour que ça compile l'exprt *
+//Inutile, mais pour que ça compile l'export *
 export const forExercise = 1
