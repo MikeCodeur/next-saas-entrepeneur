@@ -1,6 +1,6 @@
 import type {NextAuthConfig} from 'next-auth'
 
-// 🐶 Configure NextAuth pour avec le provider Rensend
+// 🐶 Configure `NextAuth` pour avec le provider `Rensend`
 
 // 🐶 Importe les modules suivants
 // import ResendProvider from 'next-auth/providers/resend'
@@ -8,14 +8,14 @@ import type {NextAuthConfig} from 'next-auth'
 // import {DrizzleAdapter} from '@auth/drizzle-adapter'
 // import db from '@/data/db/client'
 
-// 🐶 Crée une instance de Resend avec l'API key
+// 🐶 Crée une instance de `Resend` avec l'API key
 // const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const authConfig = {
   trustHost: true,
   callbacks: {},
   providers: [
-    // 🐶 Ajoute le provider Resend
+    // 🐶 Ajoute le provider `Resend`
     // 🤖
     // ResendProvider({
     //   apiKey: process.env.RESEND_API_KEY,
@@ -23,7 +23,7 @@ export const authConfig = {
     //     const fromEmail = process.env.EMAIL_FROM
     //   },
     // }),
-    // 🐶 Pense a envoyer l'email de verification
+    // 🐶 Pense à envoyer l'email de vérification
     // 🤖
     //const {error} = await resend.emails.send({ ...
   ],
@@ -31,7 +31,7 @@ export const authConfig = {
   session: {
     // 🐶 Ajoute la stratégie database
   },
-  // 🐶 ajoute l'adapter Drizzler
+  // 🐶 Ajoute l'adapter `Drizzler`
   // 🤖
   // adapter: DrizzleAdapter(db),
 } satisfies NextAuthConfig

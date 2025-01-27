@@ -43,7 +43,7 @@ export const signUpAction = async (
 
     // 🐶 Si `resultSignIn` est un lien de redirection, redirige vers `resultSignIn`
   } catch (error) {
-    // 🐶 Gestion des erreurs NEXT_REDIRECT workaround
+    // 🐶 Gestion des erreurs `NEXT_REDIRECT` workaround
     //https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-8046451
     // if (isRedirectError(error)) {
     //   throw error

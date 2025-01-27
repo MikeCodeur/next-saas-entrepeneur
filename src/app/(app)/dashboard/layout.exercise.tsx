@@ -1,6 +1,6 @@
 import {Metadata} from 'next'
 import {PropsWithChildren} from 'react'
-// 🐶 Protège ce layout avec withAuth
+// 🐶 Protège ce layout avec `withAuth`
 export const metadata: Metadata = {
   title: 'Dashboard',
   description: 'Dashboard regroupant les traqueurs de finance et de santé',
@@ -14,5 +14,5 @@ const DashboardLayout = async ({children}: PropsWithChildren) => {
     </div>
   )
 }
-// 🐶 Ajoute le HOC withAuth
+// 🐶 Ajoute le HOC `withAuth`
 export default DashboardLayout
