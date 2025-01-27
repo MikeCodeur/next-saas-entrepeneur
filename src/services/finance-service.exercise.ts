@@ -11,7 +11,7 @@ import {
   updateFinanceByidDao,
 } from '@/data/repositories/finance-repository'
 
-// 🐶 'createFinanceByUid' est déja créé avec
+// 🐶 `createFinanceByUid` est déja créé avec
 // 🐶 Authorization
 // 🐶 Service Data Validation
 // 🐶 Data Sanitized (creation)
