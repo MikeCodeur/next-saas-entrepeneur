@@ -27,7 +27,7 @@ export const getHealthsByWeekDal = cache(
       )
 
       return {
-        data: healths.data, //🐶 utilise  healthsDTOAccessControl(healths.data),
+        data: healths.data, //🐶 Utilise  `healthsDTOAccessControl(healths.data)`,
         pagination: healths.pagination,
       }
     } catch (error) {
@@ -43,7 +43,7 @@ export const getHealthsByWeekDal = cache(
 export async function healthsDTOAccessControl(
   healths: Health[]
 ): Promise<HealthDTO[]> {
-  // 🐶 Utilise "filterHealthsAttributes" pour filtrer les champs
+  // 🐶 Utilise `filterHealthsAttributes` pour filtrer les champs
   // 🤖 filterHealthsAttributes(healths)
   return healths
 }

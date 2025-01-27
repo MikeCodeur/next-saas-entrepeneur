@@ -14,11 +14,11 @@ import {
 import {getConnectedUser} from './user-dal'
 
 async function canSeeCategory() {
-  // 🐶 appele "canSeeFinanceField" pour "category"
+  // 🐶 Appelle `canSeeFinanceField` pour `category`
 }
 
 async function canSeeLabel() {
-  // 🐶 appele "canSeeFinanceField" pour "label"
+  // 🐶 Appelle `canSeeFinanceField` pour `label`
 }
 
 // DAL : React CACHE, Check  Session Auth, UID Redirect, DTO
@@ -32,7 +32,7 @@ export const getFinancesByYearDal = cache(
         pageSize
       )
       return {
-        //  🐶 Utilise "financesDTO" pour filtrer les champs
+        //  🐶 Utilise `financesDTO` pour filtrer les champs
         data: finances.data, //🤖 await financesDTO(finances.data),
         pagination: finances.pagination,
       }
@@ -52,10 +52,10 @@ export async function financeDTO(
   if (!finance) return undefined
 
   return {
-    category: finance?.category, // 🐶 Utilise "canSeeCategory" pour "category"
+    category: finance?.category, // 🐶 Utilise `canSeeCategory` pour `category`
     date: finance?.date,
     amount: finance?.amount,
-    label: finance?.label, // 🐶 Utilise "canSeeLabel" pour "category"
+    label: finance?.label, // 🐶 Utilise `canSeeLabel` pour `category`
     id: finance?.id,
     userId: finance?.userId,
   }

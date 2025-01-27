@@ -56,7 +56,7 @@ export const filterRessourceFields = <T>(
   return filteredRessource
 }
 export function canAccessField(attributes: string[], field: string): boolean {
-  // Vérifie s'il y a une exclusion pour le champ spécifié, par exemple "!rating"
+  // Vérifie s'il y a une exclusion pour le champ spécifié, par exemple `!rating`
   const isFieldExcluded = attributes.some((attr) =>
     new RegExp(`^!${field}$`).test(attr)
   )

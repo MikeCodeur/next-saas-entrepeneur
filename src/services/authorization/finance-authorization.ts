@@ -87,7 +87,7 @@ export function canSeeFinanceField(
 ): boolean {
   const permission = ac.can(user?.role ?? 'public').readOwn('finance')
 
-  // Utilise les permissions pour déterminer si un champs est accessible
+  // Utilise les permissions pour déterminer si un champ est accessible
   const canSeeField = canAccessField(permission.attributes, field ?? '')
   return canSeeField
 }

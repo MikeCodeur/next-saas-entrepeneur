@@ -1,19 +1,18 @@
 # RBAC / DTO / Filter Attribute
 
-### 💡 Description longue de l'exercice
+### 💡 Création de `DTO`
 
 ## 📝 Tes notes
 
-Detaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
+Détaille ce que tu as appris ici, sur une page [Notion](https://go.mikecodeur.com/course-notes-template)
 
 ## Comprendre
 
-Pour rappel, passer toutes les données de la base de données aux composants React n’est pas recommandé. Des données sensbile stocké en base de données pourraient se retrouvé exposées.
+Pour rappel, passer toutes les données de la base de données aux composants `React` n’est pas recommandé. Des données sensibles stockées en base de données pourraient se retrouver exposées.
 
-Pour cela nous pouvons introduire un couche `DAL (Data Acces Layer)` qui a pour rôle d’accéder aux données et de ne retourner que les champs utiles pour la vue. Par exemple :
+Pour cela, nous pouvons introduire une couche `DAL (Data Acces Layer)` qui a pour rôle d’accéder aux données et de ne retourner que les champs utiles pour la vue. Par exemple :
 
 ```tsx
-
 // Get user Dal ne retoune que 3 champs
 export const getConnectedUser = cache(async () => {
   const user = await getUser()
@@ -32,11 +31,11 @@ export function userDTO(user: User): UserDTO | undefined {
 }
 ```
 
-📑 Le liens vers la doc [https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer](https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer)
+📑 Le lien vers la doc [https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer](https://nextjs.org/blog/security-nextjs-server-components-actions#data-access-layer)
 
-Dans cet exemple, le DTO supprime des champs. On pourrait utiliser la suppression des champs de manière optionnelle basé sur le ROLE et la configuration RBAC.
+Dans cet exemple, le `DTO` supprime des champs. On pourrait utiliser la suppression des champs de manière optionnelle basée sur le `ROLE` et la configuration `RBAC`.
 
-Exemple : Un user qui lit des données `health` d’autres user, tous les champs sont autorisé sauf `category`
+Exemple : Un `user` qui lit des données `health` d’autres `user`, tous les champs sont autorisés sauf `category`
 
 ```tsx
  {
@@ -54,10 +53,10 @@ Exemple : Un user qui lit des données `health` d’autres user, tous les champs
   },
 ```
 
-Pour gagner du temps nous avons à notre disposition 2 fonctions, la première : `canAccessField` :
+Pour gagner du temps, nous avons à notre disposition 2 fonctions, la première : `canAccessField` :
 
 - `canAccessField(permission.attributes,'role')`
-  - Va retourner `true/false` si le champs est accessible ou pas
+  - Va retourner `true/false` si le champ est accessible ou non.
 
 ```tsx
 
@@ -90,7 +89,7 @@ export function canAccessField(attributes: string[], field: string): boolean {
 }
 ```
 
-et `filterRessourceFields` : permet de filtrer les attributs grace à `perms.filter(ressource)`
+et `filterRessourceFields` : Permet de filtrer les attributs grâce à `perms.filter(ressource)`
 
 ```tsx
 export const filterRessourceFields = <T>(
@@ -112,23 +111,23 @@ export const filterRessourceFields = <T>(
   return filteredRessource
 ```
 
-Nous avons donc au niveau des autorisations `Heath` et `Finance` 2 fonctions spécialisées à notre disposition
+Nous avons donc, au niveau des autorisations `Heath` et `Finance`, 2 fonctions spécialisées à notre disposition :
 
 - `filterFinancesAttributes`
 - `canSeeFinanceField`
 - `filterHealthsAttributes`
 - `canSeeHealthField`
 
-Nous avons également ajouté 2 fichiers `DAL`
+Nous avons également ajouté 2 fichiers `DAL` :
 
 - `finance-dal.ts` : `getFinancesWithPaginationByYear`
 - `health-dal.ts` : `getHealthsWithPaginationByWeek`
 
-Et les routes et composants appellent maintenant les `DAL` au lieu des services directement
+Et les routes et composants appellent maintenant les `DAL` au lieu des services directement.
 
 ## Exercice
 
-Dans cette exercice nous allons travailler sur les finances et filtrer la `catégorie` et le `label` car se sont des information privé (mais le `owner` ou `admin` peut voir). Nous avons donc rajouter la config pour les role public
+Dans cet exercice, nous allons travailler sur les finances et filtrer la `catégorie` et le `label` car ce sont des informations privées (mais le `owner` ou `admin` peut les voir). Nous avons donc rajouté la config pour les rôles publics :
 
 ```tsx
 {
@@ -139,9 +138,9 @@ Dans cette exercice nous allons travailler sur les finances et filtrer la `caté
   },
 ```
 
-- **🐶 Dans `finance-dal` créer un DTO pour filtrer ces 2 champs**
+- **🐶** Dans **`finance-dal`,** crée un `DTO` pour filtrer ces 2 champs.
 
-Il va falloir créer 2 fonctions (`canSeeCategory`, `canSeeLabel`) et filtrer dans le DTO
+Il va falloir créer 2 fonctions (`canSeeCategory`, `canSeeLabel`) et filtrer dans le `DTO`.
 
 Fichiers
 
@@ -151,13 +150,11 @@ Fichiers
 
 ### 1. 🚀 Patterns : Filtre automatique
 
-- **🐶 Nous allons filtrer tout les champs automatiquement avec `filterHealthsAttributes`**
+- **🐶** Nous allons filtrer tout les champs automatiquement avec **`filterHealthsAttributes`**
 
 Fichiers
 
 - `src/app/dal/health-dal.ts`
-
-###
 
 ## Aller plus loin
 
@@ -173,4 +170,4 @@ Fichiers
 
 ## 🐜 Feedback
 
-Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-react-avis).
+Remplir le formulaire le [formulaire de FeedBack](https://go.mikecodeur.com/cours-next-avis?entry.1912869708=Next%20Mastery&entry.1430994900=9.SAAS%20Entrepreneur&entry.533578441=13%20rbac-dto-filter%20attribute).
