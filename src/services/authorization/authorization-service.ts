@@ -46,7 +46,7 @@ export const filterRessourceFields = <T>(
 ): T[] => {
   const perms = permissionAcces(user, ressourceType, action, ressourceUid)
   //console.log("perms", perms)
-  // Pour tous les éléments de `ressources`, on filtre les attribus perms.filter(ressource) rbac
+  // Pour tous les éléments de `ressources`, on filtre les attributs `perms.filter(ressource)` `rbac`
   const filteredRessource: T[] =
     ressources?.map((ressource) => {
       // eslint-disable-next-line unicorn/no-array-callback-reference
