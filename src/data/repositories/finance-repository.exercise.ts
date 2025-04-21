@@ -4,6 +4,43 @@ import {eq, sql, desc} from 'drizzle-orm'
 import db from '@/data/db/client'
 import {finance} from '@/data/models/finance-model'
 
+export const getFinancesChartByYearDao = async (year: string, uid: string) => {
+  const rows = await db
+    .select({
+      // 🐶 Recupère les mois et leurs totaux
+      //
+      // 🐶 Les mois
+      // 🤖 month: sql<string>`EXTRACT(MONTH FROM ${finance.date})`.as('month'),
+      //
+      // 🐶 Les dépenses
+      // 🤖
+      //  dépenses:
+      //  sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amount} END)`.as(
+      //     'dépenses'
+      //   ),
+      // 🐶 revenus:
+      // 🐶 actifs:
+    })
+    .from(finance)
+  // 🐶 filtre par année et uid
+  // .where(
+  //   sql`...`
+  // )
+  //
+  // 🐶 groupe par année et mois
+  // .groupBy(
+  // utilise EXTRACT(YEAR FROM ${finance.date})
+  // utilise EXTRACT(MONTH FROM ${finance.date})
+  // 🐶 trie par année et mois
+  //
+  // .orderBy(
+  //   desc(sql`EXTRACT(YEAR FROM ${finance.date})`),
+  //   sql`EXTRACT(MONTH FROM ${finance.date})`
+  // )
+
+  return rows
+}
+
 export const createFinanceByUidDao = async (
   financeParams: CreateFinance,
   uid: string
@@ -75,7 +112,6 @@ export const getFinancesWithPaginationByYearDao = async (
     offset: number
   }
 ) => {
-  console.log('pagination', pagination)
   const [rows, [{count}]] = await Promise.all([
     db
       .select()
@@ -101,37 +137,4 @@ export const getFinancesWithPaginationByYearDao = async (
       pageSize: pagination.limit,
     },
   }
-}
-
-export const getFinancesChartByYearDao = async (year: string, uid: string) => {
-  const rows = await db
-    .select({
-      month: sql<string>`EXTRACT(MONTH FROM ${finance.date})`.as('month'),
-      dépenses:
-        sql<number>`SUM(CASE WHEN ${finance.category} = 'dépenses' THEN ${finance.amount} END)`.as(
-          'dépenses'
-        ),
-      revenus:
-        sql<number>`SUM(CASE WHEN ${finance.category} = 'revenus' THEN ${finance.amount} END)`.as(
-          'revenus'
-        ),
-      actifs:
-        sql<number>`SUM(CASE WHEN ${finance.category} = 'actifs' THEN ${finance.amount} END)`.as(
-          'actifs'
-        ),
-    })
-    .from(finance)
-    .where(
-      sql`${finance.userId} = ${uid} AND EXTRACT(YEAR FROM ${finance.date}) = ${year}`
-    )
-    .groupBy(
-      sql`EXTRACT(YEAR FROM ${finance.date})`,
-      sql`EXTRACT(MONTH FROM ${finance.date})`
-    )
-    .orderBy(
-      desc(sql`EXTRACT(YEAR FROM ${finance.date})`),
-      sql`EXTRACT(MONTH FROM ${finance.date})`
-    )
-
-  return rows
 }
