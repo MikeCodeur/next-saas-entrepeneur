@@ -6,12 +6,12 @@ const config = {
   semi: false,
   bracketSpacing: false,
   singleQuote: true,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   printWidth: 80,
-  endOfLine: "lf",
-  plugins: ["prettier-plugin-tailwindcss"],
-  tailwindConfig: "./tailwind.config.ts",
-  tailwindFunctions: ["clsx"],
+  endOfLine: 'lf',
+  plugins: ['prettier-plugin-tailwindcss'],
+  tailwindConfig: './tailwind.config.ts',
+  tailwindFunctions: ['clsx'],
 }
 
 module.exports = config

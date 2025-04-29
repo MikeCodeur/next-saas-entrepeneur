@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 
-import createMDX from "@next/mdx"
-import remarkGfm from "remark-gfm"
-import rehypePrism from "rehype-prism-plus"
-import remarkRehype from "remark-rehype"
+import createMDX from '@next/mdx'
+import remarkGfm from 'remark-gfm'
+import rehypePrism from 'rehype-prism-plus'
+import remarkRehype from 'remark-rehype'
 
 const withMDX = createMDX({
   options: {
@@ -18,13 +18,13 @@ const withMDX = createMDX({
 })
 
 const nextConfig = {
-  pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
+  pageExtensions: ['js', 'jsx', 'mdx', 'md', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "via.placeholder.com",
-        port: "",
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
       },
     ],
   },

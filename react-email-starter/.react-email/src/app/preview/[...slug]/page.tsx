@@ -88,6 +88,6 @@ export default Page;
 
 export function generateStaticParams() { 
   return Promise.resolve(
-    [{"slug":["magic-link-email"]},{"slug":["notion-magic-link"]},{"slug":["plaid-verify-identity"]},{"slug":["stripe-welcome"]},{"slug":["vercel-invite-user"]}]
+    [{"slug":["internal-email"]},{"slug":["magic-link-email"]},{"slug":["notion-magic-link"]},{"slug":["plaid-verify-identity"]},{"slug":["stripe-welcome"]},{"slug":["vercel-invite-user"]}]
   );
 }
